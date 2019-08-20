@@ -142,13 +142,24 @@ class _VisorOSState extends State<VisorOS> {
                     },
                   cells: [
                     DataCell(
-                      Text(ordenServicio.fecha),
+                      Container(
+                        color:Colors.white,
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.fecha, style: TextStyle(backgroundColor: Colors.white, fontSize: 14.0, ),),
+                      ),
+                      
                       onTap: () {
                         print('Selected ${ordenServicio.nombre}');
                         },
                     ),
                     DataCell(
-                      Text(ordenServicio.nombre),
+                      Celda(texto:'hola')/* ontainer(
+                        color:Colors.white,
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle(backgroundColor: Colors.white, fontSize: 14.0, ),),
+                      ), */
                     ),
                   ]),
             ).toList()
@@ -229,15 +240,25 @@ class _VisorOSState extends State<VisorOS> {
     );
   }
 
+  
+
+
+
+
+
     onSelectedRow(bool selected, OrdenServicio ordenServicio) async {
     setState(() {
+      
       if (selected) {
         selectedOS.add(ordenServicio);
       } else {
         selectedOS.remove(ordenServicio);
       }
+      print(selectedOS.length);
     });
   }
+
+  
 
   Container filtroVisor() {
     return Container(
@@ -362,3 +383,19 @@ hexStringToHexInt(String hex) {
   int val = int.parse(hex, radix: 16);
   return val;
 }
+
+
+
+class Celda extends StatelessWidget {
+
+  String texto;
+
+  Celda({this.texto});
+
+    @override
+    Widget build(BuildContext context) {
+      return Container(
+        child: Text(texto),
+      );
+    }
+  }
