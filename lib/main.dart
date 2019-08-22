@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'login.dart';
 import 'logingFields.dart';
 import 'VisorOS.dart';
+import 'visorFicha.dart';
 
 //https://flutterbyexample.com/flutter-widgets
 //https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VisorOS(),
+      home: VisorFicha(),
     );
   }
 }

@@ -91,7 +91,8 @@ class _VisorOSState extends State<VisorOS> {
 
   DataTable listaVisor() {
     return DataTable(
-      horizontalMargin: 3.0,
+      horizontalMargin: 1.0,
+      columnSpacing: 9.0,
       headingRowHeight: 44.7,
       dataRowHeight: 59.6,
       sortAscending: true,
@@ -107,12 +108,12 @@ class _VisorOSState extends State<VisorOS> {
             label: Text("NOMBRE", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
             numeric: false,
           ),
-          /*  DataColumn(
+           DataColumn(
             label: Text("TIPO ORDEN", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
             numeric: false,
           ),
           DataColumn(
-            label: Text("MOTIVO DE CONSULTA", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
+            label: Text("MOTIVO", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
             numeric: false,
           ),
           DataColumn(
@@ -124,11 +125,11 @@ class _VisorOSState extends State<VisorOS> {
             numeric: false,
           ),
            DataColumn(
-            label: Text("ESTADO"),
+            label: Text("ESTADO", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
             numeric: false,
           ),
-          DataColumn(
-            label: Text("ESTADO"),
+          /*  DataColumn(
+            label: Text("s", style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),),
             numeric: false,
           ), */
          
@@ -142,30 +143,89 @@ class _VisorOSState extends State<VisorOS> {
                     },
                   cells: [
                     DataCell(
+                      
                       Container(
-                        color:Colors.white,
+                        
                         alignment: Alignment.centerLeft,
                         height: 59.4,
-                        child: Text(ordenServicio.fecha, style: TextStyle(backgroundColor: Colors.white, fontSize: 14.0, ),),
+                        child: Text(ordenServicio.fecha, style: TextStyle( fontSize: 14.0, ),),
                       ),
-                      
                       onTap: () {
                         print('Selected ${ordenServicio.nombre}');
                         },
                     ),
                     DataCell(
-                      Celda(texto:'hola')/* ontainer(
-                        color:Colors.white,
+                      Container(
+                        
                         alignment: Alignment.centerLeft,
                         height: 59.4,
-                        child: Text(ordenServicio.nombre, style: TextStyle(backgroundColor: Colors.white, fontSize: 14.0, ),),
-                      ), */
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
                     ),
+                    DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ),
+                    DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ),
+                    DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ),
+                    DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ),
+                    DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ),
+                    /*  DataCell(
+                      Container(
+                        
+                        alignment: Alignment.centerLeft,
+                        height: 59.4,
+                        child: Text(ordenServicio.nombre, style: TextStyle( fontSize: 14.0, ),),
+                      ), 
+                    ), */
                   ]),
             ).toList()
  
         
+        /*
+        String fecha;
+  String nombre;
+  String tipoOrden;
+  String motivoConsulta;
+  String direccion;
+  String localidad;
+  String estado;
+  String idOrdenServicio;
         
+        
+         */
         
         
         /*<DataRow>[
