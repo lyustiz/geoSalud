@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'login.dart';
 import 'logingFields.dart';
 import 'VisorOS.dart';
@@ -10,7 +11,12 @@ import 'visorFicha.dart';
 //https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4
 //https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1
 //https://www.adictosaltrabajo.com/2019/04/30/primeros-pasos-con-flutter/
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+
+void main(){
+  //debugPaintSizeEnabled =true;
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
