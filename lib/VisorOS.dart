@@ -91,10 +91,10 @@ class _VisorOSState extends State<VisorOS> {
 
   DataTable listaVisor() {
     return DataTable(
-      horizontalMargin: 1.0,
+      /* horizontalMargin: 1.0,
       columnSpacing: 9.0,
       headingRowHeight: 44.7,
-      dataRowHeight: 59.6,
+      dataRowHeight: 59.6, */
       sortAscending: true,
         columns: [
           DataColumn(
