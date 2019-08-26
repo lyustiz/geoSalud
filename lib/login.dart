@@ -7,8 +7,10 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Image.asset('assets/images/logomd.png',
-                          width: 297.9,
-                          height: 64.4,),
+      fit: BoxFit.fill,), 
+      width: 297.9,
+      height: 64.4,
+
     );
   }
 }

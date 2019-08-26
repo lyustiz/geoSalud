@@ -1,0 +1,319 @@
+-- PARA SER GENERADO POR SQLITE
+-- EL ARCHIVO .db RESULTANTE DEBE SER NOMBRADO geosalud.db 
+-- Y COPIADO A LA RUTA ./assets/db/
+
+CREATE TABLE IF NOT EXISTS Ficha -- Ficha
+(
+    FicId INTEGER PRIMARY KEY NOT NULL, -- Id. de Ficha
+    FicNom TEXT NOT NULL, -- Descripción de Ficha
+    FicFlagHab INTEGER NOT NULL -- Ficha Habilitada
+);
+
+
+CREATE TABLE IF NOT EXISTS FichaVer -- Versiones de las fichas
+(
+    FicId INTEGER NOT NULL, -- Id. de ficha
+    FicVerId INTEGER PRIMARY KEY NOT NULL, -- Número de versión
+    FicVerSts TEXT NOT NULL, -- Estatus de la versión
+    FOREIGN KEY (FicId) REFERENCES Ficha(FicId) -- Clave foránea Ficha
+);
+
+
+CREATE TABLE IF NOT EXISTS FichaVerItems -- Items de las fichas
+(
+    FicId INTEGER NOT NULL, -- Id. de ficha
+    FicVerId INTEGER NOT NULL, -- Número de versión
+    FicVerItemsId INTEGER PRIMARY KEY NOT NULL, -- Código del Item
+    FicVerItemsNom TEXT NOT NULL, -- Nombre del Item
+    FicVerItemsOrd INTEGER NOT NULL, -- Orden del Item
+    FicVerItemsFlgEvolu INTEGER NOT NULL, -- Es evolutivo
+    FOREIGN KEY (FicId) REFERENCES Ficha(FicId), -- Clave foránea Ficha
+    FOREIGN KEY (FicVerId) REFERENCES FichaVer(FicVerId) -- Clave foránea Versiones de las fichas
+);
+
+CREATE TABLE IF NOT EXISTS PregFrmDina -- Preguntas dinámicas
+(
+    PregFrmDinaId INTEGER PRIMARY KEY NOT NULL, -- Código de pregunta
+    PregFrmDinaDesc TEXT NOT NULL, -- Descripción de la pregunta
+    PregFrmDinaTitulo TEXT NOT NULL, -- Título de la pregunta
+    PregFrmDinaTipPreg INTEGER NOT NULL, -- Tipo de pregunta
+    PregFrmDinaDefaNomTabDinId INTEGER NOT NULL, -- Código de tabla dinámica sobre la que va a preguntar
+    PregFrmDinaValMin INTEGER NOT NULL, -- Valor mínimo
+    PregFrmDinaValMax INTEGER NOT NULL, -- Valor máximo
+    PregFrmDinaTipDefa TEXT NOT NULL, -- Tipo de valor por defecto
+    PregFrmDinaValDefa TEXT NOT NULL, -- Valor por defecto Entero, Caracter, fecha, numero (9,2), numero(9,3)
+    PregFrmDinaDefaValMemo TEXT NOT NULL, --Valor por defecto Memo
+    PregFrmDinaDefaTabDinValId INTEGER NOT NULL, -- Valor por defecto de la pregunta, aplica a Combo
+    PregFrmDinaSufijo TEXT NOT NULL, -- Sufijo de la pregunta
+    PregFrmDinaHelp TEXT NOT NULL -- Ayuda de la pregunta
+);
+
+
+CREATE TABLE IF NOT EXISTS FichaVerPreg -- Preguntas de los ítems
+(
+    FicId INTEGER NOT NULL, -- Id. de ficha
+    FicVerId INTEGER NOT NULL, -- Número de versión
+    FicVerItemsId INTEGER NOT NULL, -- Código del Item
+    PregFrmDinaId INTEGER NOT NULL, -- Código de pregunta
+    PregFrmDinaOrd INTEGER NOT NULL, -- Orden de la pregunta
+    FichaVerPregFlgObli INTEGER NOT NULL, -- Pregunta Obligatoria
+    FichaVerCondPregFrmDinaId INTEGER NOT NULL, -- Pregunta que la condiciona
+    FichaVerPregSex TEXT NOT NULL, -- Sexo al que aplica la pregunta
+    FichaVerPregFlgSexObl TEXT NOT NULL, -- Obligatoria para ese sexo
+    FichaVerPregEdadMin INTEGER NOT NULL, -- Edad mínima
+    FichaVerPregEdadMax INTEGER NOT NULL, -- Edad máxima
+    FichaVerPregEdadEd TEXT NOT NULL, -- Unidad de la edad mínima y máxima
+    FichaVerPregFlgEdadObl INTEGER NOT NULL, -- Obligatoria para el rango de edades
+    FOREIGN KEY (FicId) REFERENCES Ficha(FicId), -- Clave foránea Ficha
+    FOREIGN KEY (FicVerId) REFERENCES FichaVer(FicVerId), -- Clave foránea Versiones de las fichas
+    FOREIGN KEY (FicVerItemsId) REFERENCES FichaVerItems(FicVerItemsId), -- Clave foránea Items de las fichas
+    FOREIGN KEY (PregFrmDinaId) REFERENCES PregFrmDina(PregFrmDinaId) -- Clave foránea Preguntas dinámicas
+);
+
+CREATE TABLE IF NOT EXISTS FichaVerItemsPregTabDin -- Valores que condicionan preguntas
+(
+    FicId INTEGER NOT NULL, -- Id. de ficha
+    FicVerId INTEGER NOT NULL, -- Número de versión
+    FicVerItemsId INTEGER NOT NULL, -- Código del Item
+    PregFrmDinaId INTEGER NOT NULL, -- Código de pregunta
+    FichaVerTabDinId INTEGER PRIMARY KEY NOT NULL, -- Código de la tabla dinámica
+    FichaVerTabDinValId INTEGER NOT NULL, -- Código de la respuesta de Tabla Dinámica
+    FOREIGN KEY (FicId) REFERENCES Ficha(FicId), -- Clave foránea Ficha
+    FOREIGN KEY (FicVerId) REFERENCES FichaVer(FicVerId), -- Clave foránea Versiones de las fichas
+    FOREIGN KEY (FicVerItemsId) REFERENCES FichaVerItems(FicVerItemsId), -- Clave foránea Items de las fichas
+    FOREIGN KEY (PregFrmDinaId) REFERENCES PregFrmDina(PregFrmDinaId) -- Clave foránea Preguntas de los items
+);
+
+CREATE TABLE IF NOT EXISTS OpcFich -- Opciones
+(
+    OpcFichCod TEXT PRIMARY KEY NOT NULL, -- Código de opción
+    OpcFichDesc TEXT NOT NULL -- Descripción de opción
+);
+
+
+CREATE TABLE IF NOT EXISTS FichaOpc -- Opciones de ficha
+(
+    FicId INTEGER NOT NULL, -- Id. de ficha
+    OpcFichCod TEXT NOT NULL, -- Código de opción
+    FOREIGN KEY (FicId) REFERENCES Ficha(FicId), -- Clave foránea Ficha
+    FOREIGN KEY (OpcFichCod) REFERENCES OpcFich(OpcFichCod)
+);
+
+
+CREATE TABLE IF NOT EXISTS NomTabDin -- Tablas dinamicas
+(
+    NomTabDinId INTEGER PRIMARY KEY NOT NULL, -- Código de Tabla dinámica
+    NomTabDinNom TEXT NOT NULL, -- Nombre de tabla dinámica
+    NomTabDinFlgAct INTEGER NOT NULL -- Tabla dinámica esta activa
+);
+
+
+CREATE TABLE IF NOT EXISTS TabDinVal -- Valores de la tabla dinámica
+(
+    NomTabDinId INTEGER NOT NULL, -- Código de Tabla dinámica
+    TabDinValId INTEGER PRIMARY KEY NOT NULL, -- Código del valor de la tabla dinámica
+    TabDinValFlgAct INTEGER NOT NULL, -- Valor de la tabla dinámica esta activo
+    FOREIGN KEY (NomTabDinId) REFERENCES NomTabDin(NomTabDinId) -- Clave foránea Tablas dinámicas
+);
+
+
+CREATE TABLE IF NOT EXISTS TabDinValCond -- Valores de la tabla dinámica
+(
+    TabDinValCondTDId INTEGER NOT NULL, -- Código de Tabla dinámica que condiciona
+    TabDinValCondTDValId INTEGER NOT NULL, -- Código del valor de la tabla dinámica que condiciona
+    FOREIGN KEY (TabDinValCondTDId) REFERENCES NomTabDin(NomTabDinId), -- Clave foránea Tablas dinámicas
+    FOREIGN KEY (TabDinValCondTDValId) REFERENCES TabDinVal(TabDinValId) -- Clave foránea Valores Tablas dinámicas
+);
+
+CREATE TABLE IF NOT EXISTS Usuarios -- Usuarios
+(
+    UsuId INTEGER PRIMARY KEY NOT NULL, -- Codigo de usuario
+    UsuNom TEXT NOT NULL, -- Primer Nombre del usuario
+    UsuNom2 TEXT NOT NULL, -- Segundo Nombre del usuario
+    UsuApe TEXT NOT NULL, -- Primer Apellido del usuario
+    UsuApe2 TEXT NOT NULL, -- Segundo Apellido del usuario
+    UsuNick TEXT NOT NULL, -- Nick del usuario
+    UsuKeyPass TEXT NOT NULL, -- Clave para desencriptar
+    UsuHashPass TEXT NOT NULL, -- Hash de la contraseña
+    UsuPassAlgoritmo TEXT NOT NULL, -- Algoritmo de la contraseña
+    UsuFlgAct INTEGER NOT NULL, -- Usuario activo
+    UsuFlgGenerico INTEGER NOT NULL -- Usuario genérico
+);
+
+CREATE TABLE IF NOT EXISTS PerfSis -- Perfiles del usuario por sistema
+(
+    PerfSisId INTEGER PRIMARY KEY NOT NULL, -- Código de perfil
+    PerfSisDesc TEXT NOT NULL -- Descripcion del perfil
+);
+
+
+CREATE TABLE IF NOT EXISTS SisUsuPerf -- Perfiles del usuario por sistema
+(
+    SisId INTEGER NOT NULL, -- Código de sistema
+    PerfSisId INTEGER NOT NULL, -- Código de perfil
+    UsuId INTEGER NOT NULL, -- Código de Usuario
+    SisUsuPerfHab INTEGER NOT NULL, -- Perfil Habilitado
+    FOREIGN KEY (PerfSisId) REFERENCES PerfSis(PerfSisId), -- Clave foránea Perfiles Sistema
+    FOREIGN KEY (UsuId) REFERENCES Usuarios(UsuId) -- Clave foránea Usuarios
+);
+
+
+CREATE TABLE IF NOT EXISTS Roles -- Roles
+(
+    RolId INTEGER PRIMARY KEY NOT NULL, -- Código de rol
+    RolNom TEXT NOT NULL -- nombre de rol
+);
+
+
+CREATE TABLE IF NOT EXISTS RRHH -- Recursos Humanos
+(
+    RRHHId INTEGER PRIMARY KEY NOT NULL, -- Código de RRHH
+    RRHHDesc TEXT NOT NULL, -- Descripción del RRHH
+    RRHHFlgAct INTEGER NOT NULL, -- El RRHH está activo
+    RRHHPref TEXT NOT NULL, -- Prefijo del RRHH 
+    RRHHSuf TEXT NOT NULL -- Sufijo del RRHH
+);
+
+
+CREATE TABLE IF NOT EXISTS RRHHPers
+(
+    RRHHId INTEGER NOT NULL, -- Código de RRHH
+    UsuId INTEGER NOT NULL, -- Codigo de usuario
+    FOREIGN KEY (UsuId) REFERENCES Usuarios(UsuId) -- Clave foránea Usuarios
+);
+
+
+create table if not exists RRHHRol
+(
+    RRHHId INTEGER NOT NULL, -- Código RRHH
+    RRHHRolFchIni TEXT NOT NULL, -- Fecha RRHH
+    RolId INTEGER NOT NULL, -- Codigo Rol
+    FOREIGN KEY (RolId) REFERENCES Roles(RolId) -- Clave Foránea Roles
+);
+
+
+CREATE TABLE IF NOT EXISTS TipActAsist -- Tipos de Actos Asistenciales
+(
+    TipActAsistId INTEGER PRIMARY KEY NOT NULL, -- Codigo de tipo de acto asistencial
+    TipActAsistDesc TEXT NOT NULL, -- Descripcion de tipo de acto asistencial
+    TipActAsistFlgSeIndica INTEGER NOT NULL, -- Se puede indicar
+    TipActAsistFlgParacl INTEGER NOT NULL -- Es paraclinica
+);
+
+
+CREATE TABLE IF NOT EXISTS UnidMed -- Unidades de medida
+(
+    UnidMedId INTEGER PRIMARY KEY NOT NULL, -- Codigo unidad de medida
+    UnidMedDesc TEXT NOT NULL, -- Descripcion de unidad de medida
+    UnidMedAbrev TEXT NOT NULL, -- Abreviacion de unidad de medida
+    UnidMedFlgHab INTEGER NOT NULL -- Habilitado
+);
+
+
+CREATE TABLE IF NOT EXISTS ViaAdmMedic -- Vias de administracion
+(
+    ViaAdmMedicId INTEGER PRIMARY KEY NOT NULL, -- Codigo de via de administracion
+    ViaAdmMedicDesc TEXT NOT NULL, -- Descripcion de via de administracion
+    ViaAdmMedicAbrev TEXT NOT NULL, -- Abreviacion de via de administracion
+    ViaAdmMedicFlgHab INTEGER NOT NULL -- Habilitada
+);
+
+
+CREATE TABLE IF NOT EXISTS ActAsist -- Actos asistenciales
+(
+    ActAsistId INTEGER PRIMARY KEY NOT NULL, -- Codigo de acto asistencial
+    ActAsistDesc TEXT NOT NULL, -- Descripcion del acto asistencial
+    ActAsistAbrev TEXT NOT NULL, -- Abreviación de acto asistencial
+    TipActAsistId INTEGER NOT NULL, -- Código de tipo de acto asistencial
+    ActAsistFlgHab INTEGER NOT NULL, -- Habilitado
+    ActAsistTipDat INTEGER NOT NULL, -- Tipo de datos del resultado
+    ActAsistValMin INTEGER NOT NULL, -- Valor mínimo
+    ActAsistValMax INTEGER NOT NULL, -- Valor máximo
+    UnidMedId INTEGER NOT NULL, -- Código unidad de medida
+    FOREIGN KEY (TipActAsistId) REFERENCES TipActAsist(TipActAsistId) -- Clave foranea Tipos de actos asistenciales
+    FOREIGN KEY (UnidMedId) REFERENCES UnidMed(UnidMedId) -- Clave Foranea Unidades de medida
+);
+
+
+CREATE TABLE IF NOT EXISTS AtnClin -- Antecedentes clínicos
+(
+    AntClinId INTEGER PRIMARY KEY NOT NULL, -- Código de antecedente
+    AntClinDesc TEXT NOT NULL, -- Descripción de antecedente
+    AntClinFlgHab INTEGER NOT NULL, -- Habilitado
+    TipAntClinId INTEGER NOT NULL, -- Código de tipo de antecedente
+    AntClinAlert INTEGER NOT NULL, -- Alertar
+    AntClinAlertDsc INTEGER NOT NULL, -- Texto del alerta
+    AntClinSexo TEXT NOT NULL, -- Sexo del antecedente
+    AntClinFlgFactRiesg INTEGER NOT NULL, -- Es factor de riesgo
+    AntCliFlgHabRep INTEGER NOT NULL -- Puede repetirse
+);
+
+
+CREATE TABLE IF NOT EXISTS Drogas -- Drogas
+(
+    DroId INTEGER PRIMARY KEY NOT NULL, -- Código de droga
+    DroDesc TEXT NOT NULL -- Descripción de droga 
+);
+
+
+CREATE TABLE IF NOT EXISTS Farmacos -- Farmacos
+(
+    FarId INTEGER PRIMARY KEY NOT NULL, -- Código de farmaco
+    FarNom TEXT NOT NULL, -- Nombre del farmaco
+    FarFlgHab INTEGER NOT NULL, -- Farmaco habilitado
+    FarDrogComp TEXT NOT NULL, -- Composicion
+    FarPresMedicId INTEGER NOT NULL, -- Codigo de la presentacion
+    FarDosCnt INTEGER NOT NULL, -- Cantidad de la presentacion
+    FarDosUnidMedId INTEGER NOT NULL, -- Codigo de unidad de la presentacion
+    FarFlgEsSuero INTEGER NOT NULL, -- Es suero
+    FarFlgEsAdit INTEGER NOT NULL -- Es aditivo 
+);
+
+
+CREATE TABLE IF NOT EXISTS FarVia -- Vias de administración del fármaco
+(
+    FarId INTEGER PRIMARY KEY NOT NULL, -- Código del fármaco
+    ViaAdmMedicId INTEGER NOT NULL, -- Código de la vía de administración
+    FOREIGN KEY (ViaAdmMedicId) REFERENCES ViaAdmMedic(ViaAdmMedicId) -- Clave Foranea Vias de administracion
+);
+
+
+CREATE TABLE IF NOT EXISTS Materiales -- Materiales
+(
+    MatId INTEGER PRIMARY KEY NOT NULL, -- Codigo de material
+    MatNom TEXT NOT NULL, -- Nombre de material
+    MatBajFlg INTEGER NOT NULL -- De baja
+);
+
+
+CREATE TABLE IF NOT EXISTS MatUniMed -- Unidades de medida de los materiales
+(
+    MatId INTEGER NOT NULL, -- Codigo de material
+    MatUnidMedId INTEGER NOT NULL, -- Codigo de unidad de medida del material
+    FOREIGN KEY (MatId) REFERENCES Materiales(MatId) -- Clave foránea Materiales
+);
+
+
+CREATE TABLE IF NOT EXISTS Presentaciones -- Presentaciones
+(
+    PresMedicId INTEGER PRIMARY KEY NOT NULL, -- codigo de presentacion
+    PresMedicNom TEXT NOT NULL -- Nombre de presentacion
+);
+
+
+CREATE TABLE IF NOT EXISTS PresMedicVia -- Vias de administración de presentacion
+(
+    PresMedicId INTEGER NOT NULL, -- Codigo de presentacion
+    ViaAdmMedicId INTEGER NOT NULL, -- Codigo de via de administracion
+    FOREIGN KEY (PresMedicId) REFERENCES Presentaciones(PresMedicId), -- Clave foránea Presentaciones
+    FOREIGN KEY (ViaAdmMedicId) REFERENCES ViaAdmMedic(ViaAdmMedicId) -- Clave Foranea Vias de administracion
+);
+
+
+CREATE TABLE IF NOT EXISTS PresMedicUniMed -- Unidades de medida de la presentacion
+(
+    PresMedicId INTEGER NOT NULL, -- Código de la presentacion
+    UnidMedId INTEGER NOT NULL, -- Codigo de unidad de medida
+    FOREIGN KEY (PresMedicId) REFERENCES Presentaciones(PresMedicId), -- Clave foránea Presentaciones
+    FOREIGN KEY (UnidMedId) REFERENCES UnidMed(UnidMedId) -- Clave foranea Unidades de medida 
+);

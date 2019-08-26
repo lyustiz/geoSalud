@@ -1,121 +1,84 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
+import 'login.dart';
+import 'logingFields.dart';
+import 'VisorOS.dart';
+import 'visorFicha.dart';
 
-void main() => runApp(MyApp());
+//https://flutterbyexample.com/flutter-widgets
+//https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4
+//https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1
+//https://www.adictosaltrabajo.com/2019/04/30/primeros-pasos-con-flutter/
+//void main() => runApp(MyApp());
+
+void main(){
+  //debugPaintSizeEnabled =true;
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
-
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-
 
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: VisorFicha(),
     );
   }
 }
-
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
+
+      drawerDragStartBehavior: DragStartBehavior.start,
       body: Center(
         child: Row(
-            children: <Widget>[
-              Expanded(
-                child:Image.asset('assets/images/login.jpg')
-              ),
-              Expanded(
-                child: Text('Prueba2', textAlign: TextAlign.center,),
-              )
-            ],
-          ),
-      )
-
-    );
-    /*
-    /*
-    Container(
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Text('Prueba', textAlign: TextAlign.center,),
-              ),
-              Expanded(
-                child: Text('Prueba2', textAlign: TextAlign.center,),
-              )
-            ],
-          )
-        ),
-    
-     */
-    return ;*/
-  }
-}
-
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-
-        title: Text(widget.title),
-      ),
-      body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/login.jpg'),
+                    fit: BoxFit.cover
+                  )
+                ),
+                height: screenSize.height,
+                child: Text('login')
+                ),
+              ),
+            Expanded(
+                child: Column(
+                  children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(top:165.9),
+                                child: Login(),
+                              ), 
+                              LoginFields()
+                            ],
+                ))
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), 
+      resizeToAvoidBottomInset: false,
     );
   }
 }
+
+
