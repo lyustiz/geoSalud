@@ -2,17 +2,29 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 part 'database.g.dart';
 
-class Usuario extends Table {
+@DataClassName('Usuario')
+class Usuarios extends Table {
 
-  IntColumn get id => integer().autoincrement()();
-  TextColumn get nombre => text()();
+  IntColumn  get id       => integer().autoIncrement()();
+  TextColumn get nombre   => text()();
   TextColumn get password => text()();
-  IntColumn get active => integer()(); 
+  IntColumn  get active   => integer()(); 
 } 
 
-@UseMoor(tables: [Todos, Categories])
+@UseMoor(tables: [Usuarios])
 
-class GeoDatabase {
+class GeoDatabase extends _$GeoDatabase{
+  
+  GeoDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path : 'geo_database.sqlite'));
+  
+  @override
+  int get schemaVersion => 1; 
+
+  Future<List<Usuario>> get allUsusarios => select(usuarios).get();
+
+  /*Future<List<TodoEntry>> sortEntriesAlphabetically() {
+    return (select(todos)..orderBy([(t) => OrderingTerm(expression: t.title)])).get();
+  }*/
 
 }
 
