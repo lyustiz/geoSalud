@@ -7,23 +7,23 @@ typedef ValidatorCallBack = String Function(String value);
 
 /// Widget that wraps [TextFormField] inside a container and adds some
 /// default values to reduce space when using it
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormFieldContained extends StatelessWidget {
+  final String inputLabel;
   final TextEditingController customTextFieldController;
   final EdgeInsets margin, contentPadding;
-  final String inputLabel;
   final TextStyle labelStyle, textStyle, errorStyle;
   final bool obscureText;
   final ValidatorCallBack validatorCallBack;
 
-  CustomTextFormField(
-      {this.customTextFieldController,
+  CustomTextFormFieldContained(
+      {@required this.inputLabel,
+      @required this.customTextFieldController,
       this.margin,
       this.contentPadding,
-      this.inputLabel,
       this.labelStyle,
       this.textStyle,
       this.errorStyle,
-      this.obscureText,
+      this.obscureText = false,
       this.validatorCallBack});
 
   @override
@@ -36,7 +36,7 @@ class CustomTextFormField extends StatelessWidget {
           : EdgeInsets.only(
               bottom: Tools.getSizeByPercentage(screenSize.height, 1.5)),
       child: TextFormField(
-        obscureText: (obscureText != null) ? obscureText : false,
+        obscureText: obscureText,
         style: (textStyle != null)
             ? textStyle
             : TextStyle(

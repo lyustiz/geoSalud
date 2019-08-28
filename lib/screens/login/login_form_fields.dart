@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 import "../../utils/tools.dart";
-import "../../utils/validator.dart";
-import "../../widgets/form/custom_text_form_field.dart";
-import "../../widgets/form/custom_dropdown_button.dart";
+import "../../widgets/form/custom_text_form_field_contained.dart";
+import "../../widgets/form/custom_dropdown_button_contained.dart";
 
 class LoginFormFields extends StatefulWidget {
 
@@ -31,101 +30,34 @@ class _LoginFormFieldsState extends State<LoginFormFields> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CustomTextFormField(
+            CustomTextFormFieldContained(
               customTextFieldController: _usernameController,
               inputLabel: "Usuario",
             ),
-            CustomTextFormField(
+            CustomTextFormFieldContained(
               customTextFieldController: _passwordController,
               inputLabel: "Contraseña",
               obscureText: true,
             ),
-            CustomDropdownButton(
-              icon: Icon(
-                Icons.keyboard_arrow_down,
-                color: Color(Tools.hexStringToHexInt('#2b2e37')),
-                size: 13.0,
-              ),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                alignLabelWithHint: true,
-                hasFloatingPlaceholder: true,
-                labelText: 'Rol',
-                labelStyle: TextStyle(
-                  fontSize: Tools.getFontSizeBySP(16.0),
-                  color: Color(Tools.hexStringToHexInt('#2b2e37')),
-                ),
-                errorStyle: TextStyle(
-                  fontSize: Tools.getFontSizeBySP(14.0),
-                  color: Color(Tools.hexStringToHexInt('#ff746a')),
-                ),
-              ),
+            CustomDropdownButtonContained(
+              inputLabel: 'Rol',
               value: _rol,
-              onChanged: (value) {
+              items: <String>['Medicina General'],
+              changeCallBack: (value) {
                 setState(() {
                   _rol = value;
                 });
               },
-              validator: (value) =>
-                  Validator.isRequired(value: value, fieldName: 'rol'),
-              items: <String>['Medicina General']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    textScaleFactor: 1.0,
-                    style: TextStyle(
-                      fontSize: Tools.getFontSizeBySP(16.0),
-                    ),
-                  ),
-                );
-              }).toList(),
             ),
-            Container(
-              height: Tools.getSizeByPercentage(screenSize.height, 1.5),
-            ),
-            CustomDropdownButton(
-              icon: Icon(
-                Icons.keyboard_arrow_down,
-                color: Color(Tools.hexStringToHexInt('#2b2e37')),
-                size: 13.0,
-              ),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                alignLabelWithHint: true,
-                hasFloatingPlaceholder: true,
-                labelText: 'Perfil',
-                labelStyle: TextStyle(
-                  fontSize: Tools.getFontSizeBySP(16.0),
-                  color: Color(Tools.hexStringToHexInt('#2b2e37')),
-                ),
-                errorStyle: TextStyle(
-                  fontSize: Tools.getFontSizeBySP(14.0),
-                  color: Color(Tools.hexStringToHexInt('#ff746a')),
-                ),
-              ),
-              value: _perfil,
-              onChanged: (value) {
+            CustomDropdownButtonContained(
+              inputLabel: 'Perfil',
+              value: _rol,
+              items: <String>['Medico a domicilio'],
+              changeCallBack: (value) {
                 setState(() {
-                  _perfil = value;
+                  _rol = value;
                 });
               },
-              validator: (value) =>
-                  Validator.isRequired(value: value, fieldName: 'perfil'),
-              items: <String>['Medico a domicilio']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    textScaleFactor: 1.0,
-                    style: TextStyle(
-                      fontSize: Tools.getFontSizeBySP(16.0),
-                    ),
-                  ),
-                );
-              }).toList(),
             ),
             Padding(
                 padding: EdgeInsets.only(top: 20.0),
