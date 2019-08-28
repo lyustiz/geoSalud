@@ -3,9 +3,10 @@ class Validator {
 
   /// Validates a TextField
   /// Returns null if everything is OK or a String with the error.
-  static isRequired(String value){
-     if (value.isEmpty) {
-      return 'El campo no puede estar vacio';
+  /// Expects a String 'value' and a String 'fieldName'
+  static isRequired({String value, String fieldName = 'informacion'}){
+    if (value == null || value.isEmpty) {
+      return 'Debe ingresar su' + ' ' + fieldName;
     }
     return null;
   }

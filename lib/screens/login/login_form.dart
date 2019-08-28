@@ -4,12 +4,13 @@ import "./login_form_fields.dart";
 
 class LoginForm extends StatelessWidget {
 
-  final Size screenSize;
-
-  const LoginForm({Key key, this.screenSize}) : super(key: key);
+  const LoginForm({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final screenSize = MediaQuery.of(context).size;
+
     return Column(
       children: <Widget>[
         Text(
@@ -21,7 +22,7 @@ class LoginForm extends StatelessWidget {
           ),
         ),
         Container(
-          child: LoginFormFields(screenSize: screenSize),
+          child: LoginFormFields(),
           margin: EdgeInsets.symmetric(horizontal: 20.0),
         )
       ],

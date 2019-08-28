@@ -42,9 +42,7 @@ class LoginScreen extends StatelessWidget {
                   margin: EdgeInsets.only(
                     top: Tools.getSizeByPercentage(screenSize.height, 1.2),
                   ),
-                  child: LoginForm(
-                    screenSize: screenSize,
-                  ),
+                  child: LoginForm(),
                 ),
               ],
             ))

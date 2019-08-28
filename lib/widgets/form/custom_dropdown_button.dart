@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 
 /// A convenience widget that wraps a [DropdownButton] in a [FormField].
-class DropdownButtonFormFieldWithVariableIcon<T> extends FormField<T> {
+class CustomDropdownButton<T> extends FormField<T> {
   /// Creates a [DropdownButton] widget wrapped in an [InputDecorator] and
   /// [FormField].
   ///
   /// The [DropdownButton] [items] parameters must not be null.
-  DropdownButtonFormFieldWithVariableIcon({
+  CustomDropdownButton({
     Key key,
     T value,
     @required List<DropdownMenuItem<T>> items,
@@ -53,12 +53,12 @@ class DropdownButtonFormFieldWithVariableIcon<T> extends FormField<T> {
 
   @override
   FormFieldState<T> createState() =>
-      _DropdownButtonFormFieldWithVariableState<T>();
+      _CustomDropdownButtonState<T>();
 }
 
-class _DropdownButtonFormFieldWithVariableState<T> extends FormFieldState<T> {
+class _CustomDropdownButtonState<T> extends FormFieldState<T> {
   @override
-  DropdownButtonFormFieldWithVariableIcon<T> get widget => super.widget;
+  CustomDropdownButton<T> get widget => super.widget;
 
   @override
   void didChange(T value) {
