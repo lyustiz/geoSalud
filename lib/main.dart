@@ -2,11 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'login.dart';
 import 'logingFields.dart';
 import 'VisorOS.dart';
 import 'visorFicha.dart';
 import 'user_list.dart';
+
+import 'database/database.dart';
 
 //https://flutterbyexample.com/flutter-widgets
 //https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4
@@ -29,12 +32,15 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.landscapeRight,
     ]);
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: UserList(),
+    return Provider(
+      builder: (_) => GeoDatabase(),
+      child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: UserList(),
+        ),
     );
   }
 }

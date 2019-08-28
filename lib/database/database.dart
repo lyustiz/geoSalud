@@ -15,16 +15,25 @@ class Usuarios extends Table {
 
 class GeoDatabase extends _$GeoDatabase{
   
-  GeoDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path : 'geo_database.sqlite'));
+  GeoDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path : 'geo_database.sqlite' , logStatements: true));
   
   @override
   int get schemaVersion => 1; 
 
-  Future<List<Usuario>> get allUsusarios => select(usuarios).get();
+  Future<List<Usuario>> allUsusarios() => select(usuarios).get();
 
-  /*Future<List<TodoEntry>> sortEntriesAlphabetically() {
-    return (select(todos)..orderBy([(t) => OrderingTerm(expression: t.title)])).get();
-  }*/
+  Stream<List<Usuario>> watchAllUsuario() => select(usuarios).watch();
+
+  Future insUsuario(Usuario usuario) => into(usuarios).insert(usuario);
+
+  // Updates a Task with a matching primary keyusuario
+  Future updateUsuario(Usuario usuario) => update(usuarios).replace(usuario);
+
+  Future deleteUsuario(Usuario usuario) => delete(usuarios).delete(usuario);
+
+  Future <List<Usuario>> sortEntriesAlphabetically() {
+    return (select(usuarios)..orderBy([(t) => OrderingTerm(expression: t.nombre)])).get();
+  }
 
 }
 
