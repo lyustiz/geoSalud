@@ -11,7 +11,7 @@ class Usuarios extends Table {
   IntColumn  get active   => integer()(); 
 } 
 
-@UseMoor(tables: [Usuarios])
+@UseMoor(tables: [Usuarios], daos: [UsuarioDao])
 
 class GeoDatabase extends _$GeoDatabase{
   
@@ -20,8 +20,18 @@ class GeoDatabase extends _$GeoDatabase{
   @override
   int get schemaVersion => 1; 
 
-  Future<List<Usuario>> allUsusarios() => select(usuarios).get();
+}
 
+@UseDao(tables: [Usuarios])
+
+class UsuarioDao extends DatabaseAccessor<GeoDatabase> with _$UsuarioDaoMixin {
+
+  final GeoDatabase db;
+
+  UsuarioDao(this.db) : super(db); 
+
+  Future<List<Usuario>> allUsusarios() => select(usuarios).get();
+  
   Stream<List<Usuario>> watchAllUsuario() => select(usuarios).watch();
 
   Future insUsuario(Usuario usuario) => into(usuarios).insert(usuario);
@@ -33,10 +43,9 @@ class GeoDatabase extends _$GeoDatabase{
 
   Future <List<Usuario>> sortEntriesAlphabetically() {
     return (select(usuarios)..orderBy([(t) => OrderingTerm(expression: t.nombre)])).get();
+
   }
-
 }
-
 /*
 @DataClassName('TodoEntry')
 class Todos extends Table {

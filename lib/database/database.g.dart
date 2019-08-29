@@ -244,6 +244,16 @@ abstract class _$GeoDatabase extends GeneratedDatabase {
   _$GeoDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
   $UsuariosTable _usuarios;
   $UsuariosTable get usuarios => _usuarios ??= $UsuariosTable(this);
+  UsuarioDao _usuarioDao;
+  UsuarioDao get usuarioDao => _usuarioDao ??= UsuarioDao(this as GeoDatabase);
   @override
   List<TableInfo> get allTables => [usuarios];
+}
+
+// **************************************************************************
+// DaoGenerator
+// **************************************************************************
+
+mixin _$UsuarioDaoMixin on DatabaseAccessor<GeoDatabase> {
+  $UsuariosTable get usuarios => db.usuarios;
 }

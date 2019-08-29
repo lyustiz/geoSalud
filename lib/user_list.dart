@@ -42,14 +42,14 @@ class _UserListState extends State<UserList> {
 
 //agregar un formulario para esta funcion
 addUser(context) {
-  final database = Provider.of<GeoDatabase>(context);
+  final dao = Provider.of<GeoDatabase>(context).usuarioDao;
   final usuario =
       Usuario(id: null, nombre: 'Otro Usuario', password: '123456', active: 1);
 
-  database.insUsuario(usuario);
+  dao.insUsuario(usuario);
 }
 
-ListTile _buildListItem(Usuario itemUser, GeoDatabase database) {
+ListTile _buildListItem(Usuario itemUser, UsuarioDao dao) {
   return ListTile(
       title: Row(
     children: <Widget>[
@@ -61,7 +61,7 @@ ListTile _buildListItem(Usuario itemUser, GeoDatabase database) {
           child: IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
-                database.deleteUsuario(itemUser);
+                dao.deleteUsuario(itemUser);
               },
       )),
       Expanded(
@@ -74,9 +74,9 @@ ListTile _buildListItem(Usuario itemUser, GeoDatabase database) {
 }
 
 StreamBuilder<List<Usuario>> _buildUserList(BuildContext context) {
-  final database = Provider.of<GeoDatabase>(context);
+  final dao = Provider.of<GeoDatabase>(context).usuarioDao;
   return StreamBuilder(
-    stream: database.watchAllUsuario(),
+    stream: dao.watchAllUsuario(),
     builder: (context, AsyncSnapshot<List<Usuario>> snapshot) {
       final usuarios = snapshot.data ?? List();
 
@@ -84,7 +84,7 @@ StreamBuilder<List<Usuario>> _buildUserList(BuildContext context) {
         itemCount: usuarios.length,
         itemBuilder: (_, index) {
           final itemUser = usuarios[index];
-          return _buildListItem(itemUser, database);
+          return _buildListItem(itemUser, dao);
         },
       );
     },
