@@ -38,7 +38,7 @@ class CustomDropdownButtonContained extends StatelessWidget {
       margin: (margin != null)
           ? margin
           : EdgeInsets.only(
-              bottom: Tools.getSizeByPercentage(screenSize.height, 1.5),
+              bottom: Tools.getSizeByPercentage(screenSize.height, 1.0),
             ),
       child: CustomDropdownButton(
         icon: (icon != null)
@@ -49,6 +49,7 @@ class CustomDropdownButtonContained extends StatelessWidget {
                 size: 13.0,
               ),
         decoration: InputDecoration(
+          isDense: true,
           contentPadding:
               (contentPadding != null) ? contentPadding : EdgeInsets.zero,
           alignLabelWithHint: true,
@@ -59,6 +60,7 @@ class CustomDropdownButtonContained extends StatelessWidget {
               : TextStyle(
                   fontSize: Tools.getFontSizeBySP(16.0),
                   color: Color(Tools.hexStringToHexInt('#2b2e37')),
+                  height: 2.1
                 ),
           errorStyle: (errorStyle != null)
               ? errorStyle
@@ -71,7 +73,7 @@ class CustomDropdownButtonContained extends StatelessWidget {
         onChanged: (value) => changeCallBack(value),
         validator: (value) => (validatorCallBack != null)
             ? validatorCallBack(value)
-            : Validator.isRequired(value: value, fieldName: 'rol'),
+            : Validator.isRequired(value: value, fieldName: inputLabel.toLowerCase()),
         items: items.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -81,7 +83,7 @@ class CustomDropdownButtonContained extends StatelessWidget {
               style: (textStyle != null)
                   ? textStyle
                   : TextStyle(
-                      fontSize: Tools.getFontSizeBySP(16.0),
+                      fontSize: Tools.getFontSizeBySP(16.0)
                     ),
             ),
           );

@@ -34,7 +34,7 @@ class CustomTextFormFieldContained extends StatelessWidget {
       margin: (margin != null)
           ? margin
           : EdgeInsets.only(
-              bottom: Tools.getSizeByPercentage(screenSize.height, 1.5)),
+              bottom: Tools.getSizeByPercentage(screenSize.height, 1.0)),
       child: TextFormField(
         obscureText: obscureText,
         style: (textStyle != null)

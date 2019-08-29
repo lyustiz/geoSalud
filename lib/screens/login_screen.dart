@@ -26,26 +26,30 @@ class LoginScreen extends StatelessWidget {
                   child: Text('login')),
             ),
             Expanded(
-                child: Column(
-              children: <Widget>[
-                Container(
-                  height: Tools.getSizeByPercentage(screenSize.height, 8.1),
-                  width: Tools.getSizeByPercentage(screenSize.width / 2, 47),
-                  margin: EdgeInsets.only(
-                      left: Tools.getSizeByPercentage(screenSize.width / 2, 24),
-                      top: Tools.getSizeByPercentage(screenSize.height, 20.7),
-                      right:
-                          Tools.getSizeByPercentage(screenSize.width / 2, 29)),
-                  child: LogoImage(),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    top: Tools.getSizeByPercentage(screenSize.height, 1.2),
+              child: SingleChildScrollView(
+                  child: Column(
+                children: <Widget>[
+                  Container(
+                    height: Tools.getSizeByPercentage(screenSize.height, 8.1),
+                    width: Tools.getSizeByPercentage(screenSize.width / 2, 47),
+                    margin: EdgeInsets.only(
+                        left:
+                            Tools.getSizeByPercentage(screenSize.width / 2, 24),
+                        top: Tools.getSizeByPercentage(screenSize.height, 20.7),
+                        right: Tools.getSizeByPercentage(
+                            screenSize.width / 2, 29)),
+                    child: LogoImage(),
                   ),
-                  child: LoginForm(),
-                ),
-              ],
-            ))
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: Tools.getSizeByPercentage(screenSize.height, 1.2),
+                      bottom: Tools.getSizeByPercentage(screenSize.height, 31.9)
+                    ),
+                    child: LoginForm(),
+                  ),
+                ],
+              )),
+            )
           ],
         ),
       ),
