@@ -9,7 +9,7 @@ class Usuarios extends Table {
   TextColumn get nombre   => text()();
   TextColumn get password => text()();
   IntColumn  get active   => integer()(); 
-} 
+}  
 
 @UseMoor(tables: [Usuarios], daos: [UsuarioDao])
 
