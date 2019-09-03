@@ -1,13 +1,14 @@
 import "package:flutter/material.dart";
-import "../../utils/tools.dart";
-import "../../utils/validator.dart";
+import "../../mixins/tools.dart";
+import "../../mixins/validator.dart";
 
 // Definition for [ValidatorCallBack]
 typedef ValidatorCallBack = String Function(String value);
 
 /// Widget that wraps [TextFormField] inside a container and adds some
 /// default values to reduce space when using it
-class CustomTextFormFieldContained extends StatelessWidget {
+class CustomTextFormFieldContained extends StatelessWidget
+    with Tools, Validator {
   final String inputLabel;
   final TextEditingController customTextFieldController;
   final EdgeInsets margin, contentPadding;
@@ -34,41 +35,40 @@ class CustomTextFormFieldContained extends StatelessWidget {
       margin: (margin != null)
           ? margin
           : EdgeInsets.only(
-              bottom: Tools.getSizeByPercentage(screenSize.height, 1.0)),
+              bottom: getSizeByPercentage(screenSize.height, 1.0)),
       child: TextFormField(
         obscureText: obscureText,
         style: (textStyle != null)
             ? textStyle
             : TextStyle(
-                fontSize: Tools.getFontSizeBySP(16.0),
-                color: Color(Tools.hexStringToHexInt('#2b2e37')),
+                fontSize: getFontSizeBySP(16.0),
+                color: Color(hexStringToHexInt('#2b2e37')),
               ),
         decoration: InputDecoration(
           contentPadding: (contentPadding != null)
               ? contentPadding
               : EdgeInsets.only(
-                  top: Tools.getSizeByPercentage(screenSize.height, 1.5),
-                  bottom: Tools.getSizeByPercentage(screenSize.height, 1.0),
+                  top: getSizeByPercentage(screenSize.height, 1.5),
+                  bottom: getSizeByPercentage(screenSize.height, 1.0),
                 ),
           labelText: inputLabel,
           labelStyle: (labelStyle != null)
               ? labelStyle
               : TextStyle(
-                  fontSize: Tools.getFontSizeBySP(16.0),
-                  color: Color(Tools.hexStringToHexInt('#2b2e37')),
+                  fontSize: getFontSizeBySP(16.0),
+                  color: Color(hexStringToHexInt('#2b2e37')),
                 ),
           errorStyle: (errorStyle != null)
               ? errorStyle
               : TextStyle(
-                  fontSize: Tools.getFontSizeBySP(14.0),
-                  color: Color(Tools.hexStringToHexInt('#ff746a')),
+                  fontSize: getFontSizeBySP(14.0),
+                  color: Color(hexStringToHexInt('#ff746a')),
                 ),
         ),
         controller: customTextFieldController,
         validator: (value) => (validatorCallBack != null)
             ? validatorCallBack(value)
-            : Validator.isRequired(
-                value: value, fieldName: inputLabel.toLowerCase()),
+            : isRequired(value: value, fieldName: inputLabel.toLowerCase()),
       ),
     );
   }

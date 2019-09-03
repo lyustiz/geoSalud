@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './screens/login_screen.dart';
-import 'visorFicha.dart';
 
 //https://flutterbyexample.com/flutter-widgets
 //https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4

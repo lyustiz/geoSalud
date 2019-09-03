@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "../../utils/tools.dart";
+import "../../mixins/tools.dart";
 import "../../widgets/form/custom_text_form_field_contained.dart";
 import "../../widgets/form/custom_dropdown_button_contained.dart";
 
@@ -10,7 +10,7 @@ class LoginFormFields extends StatefulWidget {
   _LoginFormFieldsState createState() => _LoginFormFieldsState();
 }
 
-class _LoginFormFieldsState extends State<LoginFormFields> {
+class _LoginFormFieldsState extends State<LoginFormFields> with Tools {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -67,11 +67,10 @@ class _LoginFormFieldsState extends State<LoginFormFields> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: ButtonTheme(
-                      minWidth:
-                          Tools.getSizeByPercentage(screenSize.width / 2, 28),
-                      height: Tools.getSizeByPercentage(screenSize.height, 6.3),
+                      minWidth: getSizeByPercentage(screenSize.width / 2, 28),
+                      height: getSizeByPercentage(screenSize.height, 6.3),
                       child: RaisedButton(
-                        color: Color(Tools.hexStringToHexInt('#0a6bdc')),
+                        color: Color(hexStringToHexInt('#0a6bdc')),
                         textColor: Colors.white,
                         onPressed: () {
                           if (_formKey.currentState.validate() &&
@@ -92,7 +91,7 @@ class _LoginFormFieldsState extends State<LoginFormFields> {
                         child: Text(
                           'Ingresar',
                           style: TextStyle(
-                              fontSize: Tools.getFontSizeBySP(18.0),
+                              fontSize: getFontSizeBySP(18.0),
                               fontWeight: FontWeight.w400),
                         ),
                       ),

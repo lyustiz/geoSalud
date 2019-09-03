@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../widgets/logo_image.dart';
 import '../screens/login/login_form.dart';
-import '../utils/tools.dart';
+import '../mixins/tools.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget with Tools {
   const LoginScreen({Key key}) : super(key: key);
 
   @override
@@ -30,21 +30,18 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                 children: <Widget>[
                   Container(
-                    height: Tools.getSizeByPercentage(screenSize.height, 8.1),
-                    width: Tools.getSizeByPercentage(screenSize.width / 2, 47),
+                    height: getSizeByPercentage(screenSize.height, 8.1),
+                    width: getSizeByPercentage(screenSize.width / 2, 47),
                     margin: EdgeInsets.only(
-                        left:
-                            Tools.getSizeByPercentage(screenSize.width / 2, 24),
-                        top: Tools.getSizeByPercentage(screenSize.height, 20.7),
-                        right: Tools.getSizeByPercentage(
-                            screenSize.width / 2, 29)),
+                        left: getSizeByPercentage(screenSize.width / 2, 24),
+                        top: getSizeByPercentage(screenSize.height, 20.7),
+                        right: getSizeByPercentage(screenSize.width / 2, 29)),
                     child: LogoImage(),
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      top: Tools.getSizeByPercentage(screenSize.height, 1.2),
-                      bottom: Tools.getSizeByPercentage(screenSize.height, 31.9)
-                    ),
+                        top: getSizeByPercentage(screenSize.height, 1.2),
+                        bottom: getSizeByPercentage(screenSize.height, 31.9)),
                     child: LoginForm(),
                   ),
                 ],
