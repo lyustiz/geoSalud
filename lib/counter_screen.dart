@@ -33,6 +33,8 @@ class _CounterScreenWithLocalStateState extends State<CounterScreenWithLocalStat
   }
 }
 
+
+//pantalla para ambos tipos de Counters
 class CounterScaffold extends StatelessWidget {
   final String title;
 

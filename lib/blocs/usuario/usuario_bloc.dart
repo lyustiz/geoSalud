@@ -1,25 +1,28 @@
-import 'package:bloc/bloc.dart';
-import 'package:bloc/bloc.dart';
+ import 'package:bloc/bloc.dart';
+ import 'usuario_event.dart';
+ import 'usuario_state.dart';
+ import 'package:moor_flutter/moor_flutter.dart';
+ import 'package:geosalud/database/database.dart';
 
-
-
+ 
 class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
-  static final UsuarioBloc _usuarioBlocSingleton = new UsuarioBloc._internal();
-  factory UsuarioBloc() {
-    return _usuarioBlocSingleton;
-  }
   
-  UsuarioState get initialState => new UnUsuarioState();
+  @override
+  UsuarioState get initialState => UsuarioInitial();
+
 
   @override
-  Stream<UsuarioState> mapEventToState(
-    UsuarioEvent event,
-  ) async* {
-    try {
-      yield await event.applyAsync(currentState: currentState, bloc: this);
-    } catch (_, stackTrace) {
-      print('$_ $stackTrace');
-      yield currentState;
+  Stream<UsuarioState> mapEventToState(UsuarioEvent event) async* {
+   
+   
+   if (event is GetUsuario) {
+
+      yield UsuarioLoading();
+        UsuarioDao dao;
+        final List<Usuario> usuarios = await dao.allUsusarios();
+      yield UsuarioLoaded(usuarios);
     }
+
+
   }
 }
