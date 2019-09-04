@@ -4,24 +4,41 @@ import 'package:geosalud/database/database.dart';
 
 @immutable
 abstract class UsuarioEvent extends Equatable {
-  //UsuarioEvent([List props = const[]]) : super(props);
+  UsuarioEvent([List props = const[]]) : super(props);
 }
 
-class GetUsuario extends UsuarioEvent {}
+class GetUsuario extends UsuarioEvent {
 
-class GetAllUsuario extends UsuarioEvent {}
+  @override
+  String toString() => 'GetUsuario';
+}
+
+class GetAllUsuario extends UsuarioEvent {
+
+  @override
+  String toString() => 'GetAllUsuario';
+}
 
 class UpdateUsuario extends UsuarioEvent {
   final Usuarios usuario;
   UpdateUsuario(this.usuario);
+
+  @override
+  String toString() => 'UpdateUsuario';
 }
 
 class InsertUsuario extends UsuarioEvent {
   final Usuarios usuario;
   InsertUsuario(this.usuario);
+
+  @override
+  String toString() => 'InsertUsuario';
 }
 
 class DeleteUsuario extends UsuarioEvent {
-  final Usuarios usuario;
-  DeleteUsuario(this.usuario);
+  final Usuario usuario;
+  DeleteUsuario(this.usuario) : super([usuario]);
+
+  @override
+  String toString() => 'DeleteUsuario';
 }

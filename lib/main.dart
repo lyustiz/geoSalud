@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geosalud/blocs/counter_bloc.dart';
+//import 'package:geosalud/blocs/counter_bloc.dart';
 import 'blocs/app_bloc_delegate.dart';
-import 'package:geosalud/home_screen.dart';
+//import 'package:geosalud/home_screen.dart';
+import 'blocs/usuarios_bloc.dart';
+import 'database/database.dart';
+import 'list_usuario.dart';
+
+
 
 void main(){
   ///delegar el comportamiento de Eventos, Transiciones y Errorres para todos los bloc
   BlocSupervisor.delegate = AppDelegate(); 
 
+
   runApp(
-   BlocProvider(
-     builder: (BuildContext context) => CounterBloc(),
-     child:  MaterialApp(
+    MaterialApp(
       //debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: HomeScreen(),
+      home: ListUsuario(),
     ),
-   )
+  
    
   );
 

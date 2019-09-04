@@ -1,25 +1,29 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:geosalud/blocs/index.dart';
+import 'package:meta/meta.dart';
+import 'usuario/usuario_event.dart';
+import 'usuario/usuario_state.dart';
+import 'package:geosalud/database/database.dart';
 
-class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
-  static final UsuariosBloc _usuariosBlocSingleton = new UsuariosBloc._internal();
-  factory UsuariosBloc() {
-    return _usuariosBlocSingleton;
-  }
-  UsuariosBloc._internal();
-  
-  UsuariosState get initialState => new UnUsuariosState();
+class UsuariosBloc extends Bloc<UsuarioEvent, UsuarioState> {
+  final GeoDatabase db;
+
+  UsuariosBloc( this.db);
 
   @override
-  Stream<UsuariosState> mapEventToState(
-    UsuariosEvent event,
-  ) async* {
-    try {
-      yield await event.applyAsync(currentState: currentState, bloc: this);
-    } catch (_, stackTrace) {
-      print('$_ $stackTrace');
-      yield currentState;
+  UsuarioState get initialState => UsuarioInitial();
+
+  @override
+  Stream<UsuarioState> mapEventToState(UsuarioEvent event) async* {
+    if (event is GetAllUsuario) {
+      try {
+        yield UsuarioLoading();
+        final usuarios = await db.usuarioDao.allUsusarios();
+        yield UsuarioLoaded(usuarios);
+      } catch (_) {
+        yield UsuarioError();
+      }
     }
+
+
   }
 }
