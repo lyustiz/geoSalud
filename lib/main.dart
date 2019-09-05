@@ -54,10 +54,9 @@ void main(){
 
 
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'list_usuario.dart';
-
-
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -65,9 +64,10 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 import 'logingFields.dart';
-import 'VisorOS.dart';
-import 'visorFicha.dart';
+//import 'VisorOS.dart';
+//import 'visorFicha.dart';
 import 'user_list.dart'; 
+import 'package:geosalud/blocs/usuario/usuario_bloc.dart';
 
 
 
@@ -97,6 +97,8 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.landscapeRight,
     ]); 
 
+    final GeoDatabase db = new GeoDatabase();
+
     return Provider(
       builder: (_) => GeoDatabase(),
       child: MaterialApp(
@@ -105,7 +107,11 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home:ListUsuario(),
+          home: BlocProvider(
+            builder: (BuildContext blocContext) => UsuarioBloc(db),
+            child: ListUsuario(),
+          )
+          
         ),
     );
   }

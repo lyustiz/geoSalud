@@ -8,6 +8,9 @@ abstract class UsuarioEvent extends Equatable {
 }
 
 class GetUsuario extends UsuarioEvent {
+  final int idUsuario;
+
+  GetUsuario(this.idUsuario) : super([idUsuario]);
 
   @override
   String toString() => 'GetUsuario';
@@ -20,15 +23,15 @@ class GetAllUsuario extends UsuarioEvent {
 }
 
 class UpdateUsuario extends UsuarioEvent {
-  final Usuarios usuario;
-  UpdateUsuario(this.usuario);
+  final Usuario usuario;
+  UpdateUsuario(this.usuario) : super([usuario]);
 
   @override
   String toString() => 'UpdateUsuario';
 }
 
 class InsertUsuario extends UsuarioEvent {
-  final Usuarios usuario;
+  final Usuario usuario;
   InsertUsuario(this.usuario);
 
   @override

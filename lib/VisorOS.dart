@@ -448,7 +448,7 @@ hexStringToHexInt(String hex) {
 
 class Celda extends StatelessWidget {
 
-  String texto;
+  final String texto;
 
   Celda({this.texto});
 

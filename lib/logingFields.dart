@@ -34,7 +34,7 @@ class FormLogin extends StatelessWidget {
   FormLogin({Key key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-  String dropdownValue = 'One';
+  final String dropdownValue = 'One';
   @override
   Widget build(BuildContext context) {
     return Padding(
