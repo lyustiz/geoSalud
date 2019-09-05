@@ -10,7 +10,7 @@ abstract class UsuarioState extends Equatable{
 class UsuarioInitial extends  UsuarioState{
 
   @override
-  String toString() => 'UsuarioInitial';
+  String toString() => 'UsuarioInitial { usuarios:  }';
 }
 
 class UsuarioLoading extends UsuarioState{

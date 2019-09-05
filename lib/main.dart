@@ -1,25 +1,26 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'package:geosalud/blocs/counter_bloc.dart';
 import 'blocs/app_bloc_delegate.dart';
 //import 'package:geosalud/home_screen.dart';
-import 'blocs/usuarios_bloc.dart';
-import 'database/database.dart';
 import 'list_usuario.dart';
+import 'user_list.dart';
 
 
 
 void main(){
   ///delegar el comportamiento de Eventos, Transiciones y Errorres para todos los bloc
-  BlocSupervisor.delegate = AppDelegate(); 
+  //BlocSupervisor.delegate = AppDelegate(); 
 
 
   runApp(
-    MaterialApp(
-      //debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: ListUsuario(),
+    Provider(
+
+      child: MaterialApp(
+        //debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: UserList(),
+      ),
     ),
   
    
@@ -28,6 +29,7 @@ void main(){
 
 }
 
+ */
 
 
 
@@ -52,12 +54,11 @@ void main(){
 
 
 
+import 'list_usuario.dart';
 
 
 
-
-
-/* import 'package:flutter/gestures.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
@@ -66,26 +67,26 @@ import 'login.dart';
 import 'logingFields.dart';
 import 'VisorOS.dart';
 import 'visorFicha.dart';
-import 'user_list.dart'; */
+import 'user_list.dart'; 
 
 
 
 
 
 
-/* import 'database/database.dart';
- */
+ import 'database/database.dart';
+ 
 //https://flutterbyexample.com/flutter-widgets
 //https://blog.usejournal.com/compile-time-dependency-injection-in-flutter-95bb190b4a71?gi=31c40fa6abd4
 //https://medium.com/flutterpub/architecting-your-flutter-project-bd04e144a8f1
 //https://www.adictosaltrabajo.com/2019/04/30/primeros-pasos-con-flutter/
 //void main() => runApp(MyApp());
-/* 
+
 void main(){
   //debugPaintSizeEnabled =true;
   runApp(MyApp());
 }
- *//* 
+ 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
@@ -104,7 +105,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: UserList(),
+          home:ListUsuario(),
         ),
     );
   }
@@ -154,4 +155,4 @@ class LoginPage extends StatelessWidget {
 }
 
 
- */
+ 
