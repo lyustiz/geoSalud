@@ -11,7 +11,7 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
 
   @override
   UsuarioState get initialState {
-
+    
     return UsuarioInitial();
   } 
 

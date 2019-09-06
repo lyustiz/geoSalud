@@ -49,10 +49,14 @@ class TableUsuario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final bloc = BlocProvider.of<UsuarioBloc>(context);
     return Container(
       child: BlocBuilder<UsuarioBloc, UsuarioState>(builder: (context, state) {
+        print(state);
         if (state is UsuarioInitial) {
-          return Center(child: Text('Sin data'));
+          bloc.dispatch(GetAllUsuario());
+          return  Center(child: CircularProgressIndicator());
         } else if (state is UsuarioLoading) {
           return Center(child: CircularProgressIndicator());
         } else {
@@ -107,24 +111,5 @@ Container listarUsuarios(context, state) {
       );
     },
   ));
-  /* 
-        return Center(
-          
-          child: ListView(
-            children: <Widget>[
-              Text('vacio'),
-              ActionsButtons(
-              iconData: Icons.add,
-              onPressed: () {
-                //counterBloc.dispatch(CounterEvent.increment);
-              },
-              backgroudColor: Colors.green,
-            ),
-
-            ],
-          ),
-        );
-
-      }
-    ) */
+  
 }

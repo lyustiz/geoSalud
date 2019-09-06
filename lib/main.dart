@@ -64,8 +64,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 import 'logingFields.dart';
-//import 'VisorOS.dart';
-//import 'visorFicha.dart';
+import 'VisorOS.dart';
+import 'visorFicha.dart';
 import 'user_list.dart'; 
 import 'package:geosalud/blocs/usuario/usuario_bloc.dart';
 
@@ -109,8 +109,14 @@ class MyApp extends StatelessWidget {
           ),
           home: BlocProvider(
             builder: (BuildContext blocContext) => UsuarioBloc(db),
-            child: ListUsuario(),
-          )
+            child: LoginPage(),
+          ),
+           routes: <String, WidgetBuilder>{
+          '/visor': (context) => VisorOS(),
+          '/login': (context) => LoginPage(),
+          '/ficha': (context) => VisorFicha(),
+          '/forgot': (context) => UserList(),
+           }
           
         ),
     );
