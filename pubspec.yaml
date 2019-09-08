@@ -9,12 +9,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+<<<<<<< HEAD
   moor_flutter: ^1.7.0   # orm sqlite
   equatable: ^0.5.1
   bloc: ^0.15.0           #state manager core
   flutter_bloc: ^0.21.0   #state manager
   #provider: ^3.0.0+1     #state manager
  
+=======
+  validate: ^1.7.0
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+>>>>>>> LoginScreen
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
