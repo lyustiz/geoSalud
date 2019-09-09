@@ -6,8 +6,9 @@
  
 class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
   final GeoDatabase db;
+  final usuarioClass;
 
-  UsuarioBloc( this.db);
+  UsuarioBloc(this.db, this.usuarioClass);
 
   @override
   UsuarioState get initialState {
@@ -34,7 +35,7 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
   @override
   Stream<UsuarioState> mapEventToState(UsuarioEvent event) async* {
    
-   final UsuarioDao dao = GeoDatabase().usuarioDao;
+   final UsuarioDao dao = this.db.usuarioDao;
 
     if (event is GetAllUsuario) {
       yield UsuarioLoading();

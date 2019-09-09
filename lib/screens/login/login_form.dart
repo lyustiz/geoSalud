@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:geosalud/minxins/tools.dart";
+import "package:geosalud/mixins/tools.dart";
 import "./login_form_fields.dart";
 
 class LoginForm extends StatelessWidget with Tools {

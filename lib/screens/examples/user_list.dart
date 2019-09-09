@@ -43,20 +43,31 @@ class _UserListState extends State<UserList> {
 //agregar un formulario para esta funcion
 addUser(context) {
   final dao = Provider.of<GeoDatabase>(context).usuarioDao;
-  final usuario =
-      Usuario(id: null, nombre: 'Otro Usuario', password: '123456', active: 1);
+  final usuario = Usuarios(
+    usuId: null,
+    usuNom:  'Luis',
+    usuNom2: 'Daniel',
+    usuApe: 'Yustiz',
+    usuApe2: 'Azuaje',
+    usuNick: 'lyustiz',
+    usuKeyPass: '123456',
+    usuHashPass: '123456',
+    usuPassAlgoritmo: 'SHA256',
+    usuFlgAct: 1,
+    usuFlgGenerico: 1,
+    statusId: 1 );
 
   dao.insUsuario(usuario);
 }
 
-ListTile _buildListItem(Usuario itemUser, UsuarioDao dao) {
+ListTile _buildListItem(Usuarios itemUser, UsuarioDao dao) {
   return ListTile(
       title: Row(
     children: <Widget>[
-      Expanded(child: Text(itemUser.nombre)),
-      Expanded(child: Text(itemUser.id.toString())),
-      Expanded(child: Text(itemUser.password)),
-      Expanded(child: Text(itemUser.active.toString())),
+      Expanded(child: Text(itemUser.usuNom)),
+      Expanded(child: Text(itemUser.usuApe.toString())),
+      Expanded(child: Text(itemUser.usuKeyPass)),
+      Expanded(child: Text(itemUser.statusId.toString())),
       Expanded(
           child: IconButton(
               icon: Icon(Icons.delete),
@@ -73,11 +84,11 @@ ListTile _buildListItem(Usuario itemUser, UsuarioDao dao) {
   ));
 }
 
-StreamBuilder<List<Usuario>> _buildUserList(BuildContext context) {
+StreamBuilder<List<Usuarios>> _buildUserList(BuildContext context) {
   final dao = Provider.of<GeoDatabase>(context).usuarioDao;
   return StreamBuilder(
     stream: dao.watchAllUsuario(),
-    builder: (context, AsyncSnapshot<List<Usuario>> snapshot) {
+    builder: (context, AsyncSnapshot<List<Usuarios>> snapshot) {
       final usuarios = snapshot.data ?? List();
 
       return ListView.builder(

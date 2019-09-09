@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:geosalud/minxins/tools.dart";
-import "package:geosalud/minxins/validator.dart";
+import "package:geosalud/mixins/tools.dart";
+import "package:geosalud/mixins/validator.dart";
 
 // Definition for [ValidatorCallBack]
 typedef ChangeCallBack = void Function(String value);

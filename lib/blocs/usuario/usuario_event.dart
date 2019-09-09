@@ -23,7 +23,7 @@ class GetAllUsuario extends UsuarioEvent {
 }
 
 class UpdateUsuario extends UsuarioEvent {
-  final Usuario usuario;
+  final Usuarios usuario;
   UpdateUsuario(this.usuario) : super([usuario]);
 
   @override
@@ -31,7 +31,7 @@ class UpdateUsuario extends UsuarioEvent {
 }
 
 class InsertUsuario extends UsuarioEvent {
-  final Usuario usuario;
+  final Usuarios usuario;
   InsertUsuario(this.usuario);
 
   @override
@@ -39,7 +39,7 @@ class InsertUsuario extends UsuarioEvent {
 }
 
 class DeleteUsuario extends UsuarioEvent {
-  final Usuario usuario;
+  final Usuarios usuario;
   DeleteUsuario(this.usuario) : super([usuario]);
 
   @override

@@ -7,254 +7,21 @@ part of 'database.dart';
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps
-class Usuario extends DataClass implements Insertable<Usuario> {
-  final int id;
-  final String nombre;
-  final String password;
-  final int active;
-  Usuario(
-      {@required this.id,
-      @required this.nombre,
-      @required this.password,
-      @required this.active});
-  factory Usuario.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
-    final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
-    final stringType = db.typeSystem.forDartType<String>();
-    return Usuario(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      nombre:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}nombre']),
-      password: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}password']),
-      active: intType.mapFromDatabaseResponse(data['${effectivePrefix}active']),
-    );
-  }
-  factory Usuario.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return Usuario(
-      id: serializer.fromJson<int>(json['id']),
-      nombre: serializer.fromJson<String>(json['nombre']),
-      password: serializer.fromJson<String>(json['password']),
-      active: serializer.fromJson<int>(json['active']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
-      'id': serializer.toJson<int>(id),
-      'nombre': serializer.toJson<String>(nombre),
-      'password': serializer.toJson<String>(password),
-      'active': serializer.toJson<int>(active),
-    };
-  }
-
-  @override
-  T createCompanion<T extends UpdateCompanion<Usuario>>(bool nullToAbsent) {
-    return UsuariosCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      nombre:
-          nombre == null && nullToAbsent ? const Value.absent() : Value(nombre),
-      password: password == null && nullToAbsent
-          ? const Value.absent()
-          : Value(password),
-      active:
-          active == null && nullToAbsent ? const Value.absent() : Value(active),
-    ) as T;
-  }
-
-  Usuario copyWith({int id, String nombre, String password, int active}) =>
-      Usuario(
-        id: id ?? this.id,
-        nombre: nombre ?? this.nombre,
-        password: password ?? this.password,
-        active: active ?? this.active,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Usuario(')
-          ..write('id: $id, ')
-          ..write('nombre: $nombre, ')
-          ..write('password: $password, ')
-          ..write('active: $active')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(nombre.hashCode, $mrjc(password.hashCode, active.hashCode))));
-  @override
-  bool operator ==(other) =>
-      identical(this, other) ||
-      (other is Usuario &&
-          other.id == id &&
-          other.nombre == nombre &&
-          other.password == password &&
-          other.active == active);
-}
-
-class UsuariosCompanion extends UpdateCompanion<Usuario> {
-  final Value<int> id;
-  final Value<String> nombre;
-  final Value<String> password;
-  final Value<int> active;
-  const UsuariosCompanion({
-    this.id = const Value.absent(),
-    this.nombre = const Value.absent(),
-    this.password = const Value.absent(),
-    this.active = const Value.absent(),
-  });
-  UsuariosCompanion copyWith(
-      {Value<int> id,
-      Value<String> nombre,
-      Value<String> password,
-      Value<int> active}) {
-    return UsuariosCompanion(
-      id: id ?? this.id,
-      nombre: nombre ?? this.nombre,
-      password: password ?? this.password,
-      active: active ?? this.active,
-    );
-  }
-}
-
-class $UsuariosTable extends Usuarios with TableInfo<$UsuariosTable, Usuario> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $UsuariosTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
-  @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn('id', $tableName, false,
-        hasAutoIncrement: true, declaredAsPrimaryKey: true);
-  }
-
-  final VerificationMeta _nombreMeta = const VerificationMeta('nombre');
-  GeneratedTextColumn _nombre;
-  @override
-  GeneratedTextColumn get nombre => _nombre ??= _constructNombre();
-  GeneratedTextColumn _constructNombre() {
-    return GeneratedTextColumn(
-      'nombre',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _passwordMeta = const VerificationMeta('password');
-  GeneratedTextColumn _password;
-  @override
-  GeneratedTextColumn get password => _password ??= _constructPassword();
-  GeneratedTextColumn _constructPassword() {
-    return GeneratedTextColumn(
-      'password',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _activeMeta = const VerificationMeta('active');
-  GeneratedIntColumn _active;
-  @override
-  GeneratedIntColumn get active => _active ??= _constructActive();
-  GeneratedIntColumn _constructActive() {
-    return GeneratedIntColumn(
-      'active',
-      $tableName,
-      false,
-    );
-  }
-
-  @override
-  List<GeneratedColumn> get $columns => [id, nombre, password, active];
-  @override
-  $UsuariosTable get asDslTable => this;
-  @override
-  String get $tableName => _alias ?? 'usuarios';
-  @override
-  final String actualTableName = 'usuarios';
-  @override
-  VerificationContext validateIntegrity(UsuariosCompanion d,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
-    }
-    if (d.nombre.present) {
-      context.handle(
-          _nombreMeta, nombre.isAcceptableValue(d.nombre.value, _nombreMeta));
-    } else if (nombre.isRequired && isInserting) {
-      context.missing(_nombreMeta);
-    }
-    if (d.password.present) {
-      context.handle(_passwordMeta,
-          password.isAcceptableValue(d.password.value, _passwordMeta));
-    } else if (password.isRequired && isInserting) {
-      context.missing(_passwordMeta);
-    }
-    if (d.active.present) {
-      context.handle(
-          _activeMeta, active.isAcceptableValue(d.active.value, _activeMeta));
-    } else if (active.isRequired && isInserting) {
-      context.missing(_activeMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Usuario map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return Usuario.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  Map<String, Variable> entityToSql(UsuariosCompanion d) {
-    final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<int, IntType>(d.id.value);
-    }
-    if (d.nombre.present) {
-      map['nombre'] = Variable<String, StringType>(d.nombre.value);
-    }
-    if (d.password.present) {
-      map['password'] = Variable<String, StringType>(d.password.value);
-    }
-    if (d.active.present) {
-      map['active'] = Variable<int, IntType>(d.active.value);
-    }
-    return map;
-  }
-
-  @override
-  $UsuariosTable createAlias(String alias) {
-    return $UsuariosTable(_db, alias);
-  }
-}
-
 class Ficha extends DataClass implements Insertable<Ficha> {
-  final int FicId;
-  final String FicNom;
-  final int FicFlagHab;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final String ficNom;
+  final int ficFlagHab;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Ficha(
-      {@required this.FicId,
-      @required this.FicNom,
-      @required this.FicFlagHab,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.ficNom,
+      @required this.ficFlagHab,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -265,14 +32,14 @@ class Ficha extends DataClass implements Insertable<Ficha> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Ficha(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      FicNom:
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      ficNom:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}fic_nom']),
-      FicFlagHab: intType
+      ficFlagHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_flag_hab']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -284,11 +51,11 @@ class Ficha extends DataClass implements Insertable<Ficha> {
   factory Ficha.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Ficha(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      FicNom: serializer.fromJson<String>(json['FicNom']),
-      FicFlagHab: serializer.fromJson<int>(json['FicFlagHab']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      ficNom: serializer.fromJson<String>(json['ficNom']),
+      ficFlagHab: serializer.fromJson<int>(json['ficFlagHab']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -298,11 +65,11 @@ class Ficha extends DataClass implements Insertable<Ficha> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'FicNom': serializer.toJson<String>(FicNom),
-      'FicFlagHab': serializer.toJson<int>(FicFlagHab),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'ficNom': serializer.toJson<String>(ficNom),
+      'ficFlagHab': serializer.toJson<int>(ficFlagHab),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -312,18 +79,18 @@ class Ficha extends DataClass implements Insertable<Ficha> {
   @override
   T createCompanion<T extends UpdateCompanion<Ficha>>(bool nullToAbsent) {
     return TableFichaCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      FicNom:
-          FicNom == null && nullToAbsent ? const Value.absent() : Value(FicNom),
-      FicFlagHab: FicFlagHab == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      ficNom:
+          ficNom == null && nullToAbsent ? const Value.absent() : Value(ficNom),
+      ficFlagHab: ficFlagHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicFlagHab),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(ficFlagHab),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -337,20 +104,20 @@ class Ficha extends DataClass implements Insertable<Ficha> {
   }
 
   Ficha copyWith(
-          {int FicId,
-          String FicNom,
-          int FicFlagHab,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          String ficNom,
+          int ficFlagHab,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Ficha(
-        FicId: FicId ?? this.FicId,
-        FicNom: FicNom ?? this.FicNom,
-        FicFlagHab: FicFlagHab ?? this.FicFlagHab,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        ficNom: ficNom ?? this.ficNom,
+        ficFlagHab: ficFlagHab ?? this.ficFlagHab,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -358,11 +125,11 @@ class Ficha extends DataClass implements Insertable<Ficha> {
   @override
   String toString() {
     return (StringBuffer('Ficha(')
-          ..write('FicId: $FicId, ')
-          ..write('FicNom: $FicNom, ')
-          ..write('FicFlagHab: $FicFlagHab, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('ficNom: $ficNom, ')
+          ..write('ficFlagHab: $ficFlagHab, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -372,65 +139,65 @@ class Ficha extends DataClass implements Insertable<Ficha> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          FicNom.hashCode,
+          ficNom.hashCode,
           $mrjc(
-              FicFlagHab.hashCode,
+              ficFlagHab.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Ficha &&
-          other.FicId == FicId &&
-          other.FicNom == FicNom &&
-          other.FicFlagHab == FicFlagHab &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.ficNom == ficNom &&
+          other.ficFlagHab == ficFlagHab &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFichaCompanion extends UpdateCompanion<Ficha> {
-  final Value<int> FicId;
-  final Value<String> FicNom;
-  final Value<int> FicFlagHab;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<String> ficNom;
+  final Value<int> ficFlagHab;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaCompanion({
-    this.FicId = const Value.absent(),
-    this.FicNom = const Value.absent(),
-    this.FicFlagHab = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.ficNom = const Value.absent(),
+    this.ficFlagHab = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaCompanion copyWith(
-      {Value<int> FicId,
-      Value<String> FicNom,
-      Value<int> FicFlagHab,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<String> ficNom,
+      Value<int> ficFlagHab,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaCompanion(
-      FicId: FicId ?? this.FicId,
-      FicNom: FicNom ?? this.FicNom,
-      FicFlagHab: FicFlagHab ?? this.FicFlagHab,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      ficNom: ficNom ?? this.ficNom,
+      ficFlagHab: ficFlagHab ?? this.ficFlagHab,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -443,19 +210,19 @@ class $TableFichaTable extends TableFicha
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _FicNomMeta = const VerificationMeta('FicNom');
-  GeneratedTextColumn _FicNom;
+  final VerificationMeta _ficNomMeta = const VerificationMeta('ficNom');
+  GeneratedTextColumn _ficNom;
   @override
-  GeneratedTextColumn get FicNom => _FicNom ??= _constructFicNom();
+  GeneratedTextColumn get ficNom => _ficNom ??= _constructFicNom();
   GeneratedTextColumn _constructFicNom() {
     return GeneratedTextColumn(
       'fic_nom',
@@ -464,10 +231,10 @@ class $TableFichaTable extends TableFicha
     );
   }
 
-  final VerificationMeta _FicFlagHabMeta = const VerificationMeta('FicFlagHab');
-  GeneratedIntColumn _FicFlagHab;
+  final VerificationMeta _ficFlagHabMeta = const VerificationMeta('ficFlagHab');
+  GeneratedIntColumn _ficFlagHab;
   @override
-  GeneratedIntColumn get FicFlagHab => _FicFlagHab ??= _constructFicFlagHab();
+  GeneratedIntColumn get ficFlagHab => _ficFlagHab ??= _constructFicFlagHab();
   GeneratedIntColumn _constructFicFlagHab() {
     return GeneratedIntColumn(
       'fic_flag_hab',
@@ -476,22 +243,22 @@ class $TableFichaTable extends TableFicha
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -532,11 +299,11 @@ class $TableFichaTable extends TableFicha
 
   @override
   List<GeneratedColumn> get $columns => [
-        FicId,
-        FicNom,
-        FicFlagHab,
-        StatusId,
-        UsuId,
+        ficId,
+        ficNom,
+        ficFlagHab,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -551,35 +318,35 @@ class $TableFichaTable extends TableFicha
   VerificationContext validateIntegrity(TableFichaCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.FicNom.present) {
+    if (d.ficNom.present) {
       context.handle(
-          _FicNomMeta, FicNom.isAcceptableValue(d.FicNom.value, _FicNomMeta));
-    } else if (FicNom.isRequired && isInserting) {
-      context.missing(_FicNomMeta);
+          _ficNomMeta, ficNom.isAcceptableValue(d.ficNom.value, _ficNomMeta));
+    } else if (ficNom.isRequired && isInserting) {
+      context.missing(_ficNomMeta);
     }
-    if (d.FicFlagHab.present) {
-      context.handle(_FicFlagHabMeta,
-          FicFlagHab.isAcceptableValue(d.FicFlagHab.value, _FicFlagHabMeta));
-    } else if (FicFlagHab.isRequired && isInserting) {
-      context.missing(_FicFlagHabMeta);
+    if (d.ficFlagHab.present) {
+      context.handle(_ficFlagHabMeta,
+          ficFlagHab.isAcceptableValue(d.ficFlagHab.value, _ficFlagHabMeta));
+    } else if (ficFlagHab.isRequired && isInserting) {
+      context.missing(_ficFlagHabMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -603,7 +370,7 @@ class $TableFichaTable extends TableFicha
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FicId};
+  Set<GeneratedColumn> get $primaryKey => {ficId};
   @override
   Ficha map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -613,20 +380,20 @@ class $TableFichaTable extends TableFicha
   @override
   Map<String, Variable> entityToSql(TableFichaCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.FicNom.present) {
-      map['fic_nom'] = Variable<String, StringType>(d.FicNom.value);
+    if (d.ficNom.present) {
+      map['fic_nom'] = Variable<String, StringType>(d.ficNom.value);
     }
-    if (d.FicFlagHab.present) {
-      map['fic_flag_hab'] = Variable<int, IntType>(d.FicFlagHab.value);
+    if (d.ficFlagHab.present) {
+      map['fic_flag_hab'] = Variable<int, IntType>(d.ficFlagHab.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -647,20 +414,20 @@ class $TableFichaTable extends TableFicha
 }
 
 class FichaVer extends DataClass implements Insertable<FichaVer> {
-  final int FicId;
-  final int FicVerId;
-  final String FicVerSts;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final int ficVerId;
+  final String ficVerSts;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FichaVer(
-      {@required this.FicId,
-      @required this.FicVerId,
-      @required this.FicVerSts,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.ficVerId,
+      @required this.ficVerSts,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -671,14 +438,14 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FichaVer(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      FicVerId:
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      ficVerId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_id']),
-      FicVerSts: stringType
+      ficVerSts: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_sts']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -690,11 +457,11 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
   factory FichaVer.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FichaVer(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      FicVerId: serializer.fromJson<int>(json['FicVerId']),
-      FicVerSts: serializer.fromJson<String>(json['FicVerSts']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      ficVerId: serializer.fromJson<int>(json['ficVerId']),
+      ficVerSts: serializer.fromJson<String>(json['ficVerSts']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -704,11 +471,11 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'FicVerId': serializer.toJson<int>(FicVerId),
-      'FicVerSts': serializer.toJson<String>(FicVerSts),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'ficVerId': serializer.toJson<int>(ficVerId),
+      'ficVerSts': serializer.toJson<String>(ficVerSts),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -718,19 +485,19 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
   @override
   T createCompanion<T extends UpdateCompanion<FichaVer>>(bool nullToAbsent) {
     return TableFichaVerCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      FicVerId: FicVerId == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      ficVerId: ficVerId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerId),
-      FicVerSts: FicVerSts == null && nullToAbsent
+          : Value(ficVerId),
+      ficVerSts: ficVerSts == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerSts),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(ficVerSts),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -744,20 +511,20 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
   }
 
   FichaVer copyWith(
-          {int FicId,
-          int FicVerId,
-          String FicVerSts,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          int ficVerId,
+          String ficVerSts,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FichaVer(
-        FicId: FicId ?? this.FicId,
-        FicVerId: FicVerId ?? this.FicVerId,
-        FicVerSts: FicVerSts ?? this.FicVerSts,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        ficVerId: ficVerId ?? this.ficVerId,
+        ficVerSts: ficVerSts ?? this.ficVerSts,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -765,11 +532,11 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
   @override
   String toString() {
     return (StringBuffer('FichaVer(')
-          ..write('FicId: $FicId, ')
-          ..write('FicVerId: $FicVerId, ')
-          ..write('FicVerSts: $FicVerSts, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('ficVerId: $ficVerId, ')
+          ..write('ficVerSts: $ficVerSts, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -779,65 +546,65 @@ class FichaVer extends DataClass implements Insertable<FichaVer> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          FicVerId.hashCode,
+          ficVerId.hashCode,
           $mrjc(
-              FicVerSts.hashCode,
+              ficVerSts.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FichaVer &&
-          other.FicId == FicId &&
-          other.FicVerId == FicVerId &&
-          other.FicVerSts == FicVerSts &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.ficVerId == ficVerId &&
+          other.ficVerSts == ficVerSts &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFichaVerCompanion extends UpdateCompanion<FichaVer> {
-  final Value<int> FicId;
-  final Value<int> FicVerId;
-  final Value<String> FicVerSts;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<int> ficVerId;
+  final Value<String> ficVerSts;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaVerCompanion({
-    this.FicId = const Value.absent(),
-    this.FicVerId = const Value.absent(),
-    this.FicVerSts = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.ficVerId = const Value.absent(),
+    this.ficVerSts = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaVerCompanion copyWith(
-      {Value<int> FicId,
-      Value<int> FicVerId,
-      Value<String> FicVerSts,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<int> ficVerId,
+      Value<String> ficVerSts,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaVerCompanion(
-      FicId: FicId ?? this.FicId,
-      FicVerId: FicVerId ?? this.FicVerId,
-      FicVerSts: FicVerSts ?? this.FicVerSts,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      ficVerId: ficVerId ?? this.ficVerId,
+      ficVerSts: ficVerSts ?? this.ficVerSts,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -850,28 +617,28 @@ class $TableFichaVerTable extends TableFichaVer
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaVerTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _FicVerIdMeta = const VerificationMeta('FicVerId');
-  GeneratedIntColumn _FicVerId;
+  final VerificationMeta _ficVerIdMeta = const VerificationMeta('ficVerId');
+  GeneratedIntColumn _ficVerId;
   @override
-  GeneratedIntColumn get FicVerId => _FicVerId ??= _constructFicVerId();
+  GeneratedIntColumn get ficVerId => _ficVerId ??= _constructFicVerId();
   GeneratedIntColumn _constructFicVerId() {
     return GeneratedIntColumn('fic_ver_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _FicVerStsMeta = const VerificationMeta('FicVerSts');
-  GeneratedTextColumn _FicVerSts;
+  final VerificationMeta _ficVerStsMeta = const VerificationMeta('ficVerSts');
+  GeneratedTextColumn _ficVerSts;
   @override
-  GeneratedTextColumn get FicVerSts => _FicVerSts ??= _constructFicVerSts();
+  GeneratedTextColumn get ficVerSts => _ficVerSts ??= _constructFicVerSts();
   GeneratedTextColumn _constructFicVerSts() {
     return GeneratedTextColumn(
       'fic_ver_sts',
@@ -880,22 +647,22 @@ class $TableFichaVerTable extends TableFichaVer
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -936,11 +703,11 @@ class $TableFichaVerTable extends TableFichaVer
 
   @override
   List<GeneratedColumn> get $columns => [
-        FicId,
-        FicVerId,
-        FicVerSts,
-        StatusId,
-        UsuId,
+        ficId,
+        ficVerId,
+        ficVerSts,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -955,35 +722,35 @@ class $TableFichaVerTable extends TableFichaVer
   VerificationContext validateIntegrity(TableFichaVerCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.FicVerId.present) {
-      context.handle(_FicVerIdMeta,
-          FicVerId.isAcceptableValue(d.FicVerId.value, _FicVerIdMeta));
-    } else if (FicVerId.isRequired && isInserting) {
-      context.missing(_FicVerIdMeta);
+    if (d.ficVerId.present) {
+      context.handle(_ficVerIdMeta,
+          ficVerId.isAcceptableValue(d.ficVerId.value, _ficVerIdMeta));
+    } else if (ficVerId.isRequired && isInserting) {
+      context.missing(_ficVerIdMeta);
     }
-    if (d.FicVerSts.present) {
-      context.handle(_FicVerStsMeta,
-          FicVerSts.isAcceptableValue(d.FicVerSts.value, _FicVerStsMeta));
-    } else if (FicVerSts.isRequired && isInserting) {
-      context.missing(_FicVerStsMeta);
+    if (d.ficVerSts.present) {
+      context.handle(_ficVerStsMeta,
+          ficVerSts.isAcceptableValue(d.ficVerSts.value, _ficVerStsMeta));
+    } else if (ficVerSts.isRequired && isInserting) {
+      context.missing(_ficVerStsMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -1007,7 +774,7 @@ class $TableFichaVerTable extends TableFichaVer
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FicVerId};
+  Set<GeneratedColumn> get $primaryKey => {ficVerId};
   @override
   FichaVer map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -1017,20 +784,20 @@ class $TableFichaVerTable extends TableFichaVer
   @override
   Map<String, Variable> entityToSql(TableFichaVerCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.FicVerId.present) {
-      map['fic_ver_id'] = Variable<int, IntType>(d.FicVerId.value);
+    if (d.ficVerId.present) {
+      map['fic_ver_id'] = Variable<int, IntType>(d.ficVerId.value);
     }
-    if (d.FicVerSts.present) {
-      map['fic_ver_sts'] = Variable<String, StringType>(d.FicVerSts.value);
+    if (d.ficVerSts.present) {
+      map['fic_ver_sts'] = Variable<String, StringType>(d.ficVerSts.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -1051,26 +818,26 @@ class $TableFichaVerTable extends TableFichaVer
 }
 
 class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
-  final int FicId;
-  final int FicVerId;
-  final int FicVerItemsId;
-  final String FicVerItemsNom;
-  final int FicVerItemsOrd;
-  final int FicVerItemsFlgEvolu;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final int ficVerId;
+  final int ficVerItemsId;
+  final String ficVerItemsNom;
+  final int ficVerItemsOrd;
+  final int ficVerItemsFlgEvolu;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FichaVerItems(
-      {@required this.FicId,
-      @required this.FicVerId,
-      @required this.FicVerItemsId,
-      @required this.FicVerItemsNom,
-      @required this.FicVerItemsOrd,
-      @required this.FicVerItemsFlgEvolu,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.ficVerId,
+      @required this.ficVerItemsId,
+      @required this.ficVerItemsNom,
+      @required this.ficVerItemsOrd,
+      @required this.ficVerItemsFlgEvolu,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -1082,20 +849,20 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FichaVerItems(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      FicVerId:
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      ficVerId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_id']),
-      FicVerItemsId: intType
+      ficVerItemsId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_items_id']),
-      FicVerItemsNom: stringType
+      ficVerItemsNom: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_items_nom']),
-      FicVerItemsOrd: intType
+      ficVerItemsOrd: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_items_ord']),
-      FicVerItemsFlgEvolu: intType.mapFromDatabaseResponse(
+      ficVerItemsFlgEvolu: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}fic_ver_items_flg_evolu']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -1107,15 +874,15 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   factory FichaVerItems.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FichaVerItems(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      FicVerId: serializer.fromJson<int>(json['FicVerId']),
-      FicVerItemsId: serializer.fromJson<int>(json['FicVerItemsId']),
-      FicVerItemsNom: serializer.fromJson<String>(json['FicVerItemsNom']),
-      FicVerItemsOrd: serializer.fromJson<int>(json['FicVerItemsOrd']),
-      FicVerItemsFlgEvolu:
-          serializer.fromJson<int>(json['FicVerItemsFlgEvolu']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      ficVerId: serializer.fromJson<int>(json['ficVerId']),
+      ficVerItemsId: serializer.fromJson<int>(json['ficVerItemsId']),
+      ficVerItemsNom: serializer.fromJson<String>(json['ficVerItemsNom']),
+      ficVerItemsOrd: serializer.fromJson<int>(json['ficVerItemsOrd']),
+      ficVerItemsFlgEvolu:
+          serializer.fromJson<int>(json['ficVerItemsFlgEvolu']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -1125,14 +892,14 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'FicVerId': serializer.toJson<int>(FicVerId),
-      'FicVerItemsId': serializer.toJson<int>(FicVerItemsId),
-      'FicVerItemsNom': serializer.toJson<String>(FicVerItemsNom),
-      'FicVerItemsOrd': serializer.toJson<int>(FicVerItemsOrd),
-      'FicVerItemsFlgEvolu': serializer.toJson<int>(FicVerItemsFlgEvolu),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'ficVerId': serializer.toJson<int>(ficVerId),
+      'ficVerItemsId': serializer.toJson<int>(ficVerItemsId),
+      'ficVerItemsNom': serializer.toJson<String>(ficVerItemsNom),
+      'ficVerItemsOrd': serializer.toJson<int>(ficVerItemsOrd),
+      'ficVerItemsFlgEvolu': serializer.toJson<int>(ficVerItemsFlgEvolu),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -1143,28 +910,28 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   T createCompanion<T extends UpdateCompanion<FichaVerItems>>(
       bool nullToAbsent) {
     return TableFichaVerItemsCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      FicVerId: FicVerId == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      ficVerId: ficVerId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerId),
-      FicVerItemsId: FicVerItemsId == null && nullToAbsent
+          : Value(ficVerId),
+      ficVerItemsId: ficVerItemsId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsId),
-      FicVerItemsNom: FicVerItemsNom == null && nullToAbsent
+          : Value(ficVerItemsId),
+      ficVerItemsNom: ficVerItemsNom == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsNom),
-      FicVerItemsOrd: FicVerItemsOrd == null && nullToAbsent
+          : Value(ficVerItemsNom),
+      ficVerItemsOrd: ficVerItemsOrd == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsOrd),
-      FicVerItemsFlgEvolu: FicVerItemsFlgEvolu == null && nullToAbsent
+          : Value(ficVerItemsOrd),
+      ficVerItemsFlgEvolu: ficVerItemsFlgEvolu == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsFlgEvolu),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(ficVerItemsFlgEvolu),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -1178,26 +945,26 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   }
 
   FichaVerItems copyWith(
-          {int FicId,
-          int FicVerId,
-          int FicVerItemsId,
-          String FicVerItemsNom,
-          int FicVerItemsOrd,
-          int FicVerItemsFlgEvolu,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          int ficVerId,
+          int ficVerItemsId,
+          String ficVerItemsNom,
+          int ficVerItemsOrd,
+          int ficVerItemsFlgEvolu,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FichaVerItems(
-        FicId: FicId ?? this.FicId,
-        FicVerId: FicVerId ?? this.FicVerId,
-        FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-        FicVerItemsNom: FicVerItemsNom ?? this.FicVerItemsNom,
-        FicVerItemsOrd: FicVerItemsOrd ?? this.FicVerItemsOrd,
-        FicVerItemsFlgEvolu: FicVerItemsFlgEvolu ?? this.FicVerItemsFlgEvolu,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        ficVerId: ficVerId ?? this.ficVerId,
+        ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+        ficVerItemsNom: ficVerItemsNom ?? this.ficVerItemsNom,
+        ficVerItemsOrd: ficVerItemsOrd ?? this.ficVerItemsOrd,
+        ficVerItemsFlgEvolu: ficVerItemsFlgEvolu ?? this.ficVerItemsFlgEvolu,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -1205,14 +972,14 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   @override
   String toString() {
     return (StringBuffer('FichaVerItems(')
-          ..write('FicId: $FicId, ')
-          ..write('FicVerId: $FicVerId, ')
-          ..write('FicVerItemsId: $FicVerItemsId, ')
-          ..write('FicVerItemsNom: $FicVerItemsNom, ')
-          ..write('FicVerItemsOrd: $FicVerItemsOrd, ')
-          ..write('FicVerItemsFlgEvolu: $FicVerItemsFlgEvolu, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('ficVerId: $ficVerId, ')
+          ..write('ficVerItemsId: $ficVerItemsId, ')
+          ..write('ficVerItemsNom: $ficVerItemsNom, ')
+          ..write('ficVerItemsOrd: $ficVerItemsOrd, ')
+          ..write('ficVerItemsFlgEvolu: $ficVerItemsFlgEvolu, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -1222,21 +989,21 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          FicVerId.hashCode,
+          ficVerId.hashCode,
           $mrjc(
-              FicVerItemsId.hashCode,
+              ficVerItemsId.hashCode,
               $mrjc(
-                  FicVerItemsNom.hashCode,
+                  ficVerItemsNom.hashCode,
                   $mrjc(
-                      FicVerItemsOrd.hashCode,
+                      ficVerItemsOrd.hashCode,
                       $mrjc(
-                          FicVerItemsFlgEvolu.hashCode,
+                          ficVerItemsFlgEvolu.hashCode,
                           $mrjc(
-                              StatusId.hashCode,
+                              statusId.hashCode,
                               $mrjc(
-                                  UsuId.hashCode,
+                                  usuId.hashCode,
                                   $mrjc(
                                       createdAt.hashCode,
                                       $mrjc(updatedAt.hashCode,
@@ -1245,65 +1012,65 @@ class FichaVerItems extends DataClass implements Insertable<FichaVerItems> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FichaVerItems &&
-          other.FicId == FicId &&
-          other.FicVerId == FicVerId &&
-          other.FicVerItemsId == FicVerItemsId &&
-          other.FicVerItemsNom == FicVerItemsNom &&
-          other.FicVerItemsOrd == FicVerItemsOrd &&
-          other.FicVerItemsFlgEvolu == FicVerItemsFlgEvolu &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.ficVerId == ficVerId &&
+          other.ficVerItemsId == ficVerItemsId &&
+          other.ficVerItemsNom == ficVerItemsNom &&
+          other.ficVerItemsOrd == ficVerItemsOrd &&
+          other.ficVerItemsFlgEvolu == ficVerItemsFlgEvolu &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFichaVerItemsCompanion extends UpdateCompanion<FichaVerItems> {
-  final Value<int> FicId;
-  final Value<int> FicVerId;
-  final Value<int> FicVerItemsId;
-  final Value<String> FicVerItemsNom;
-  final Value<int> FicVerItemsOrd;
-  final Value<int> FicVerItemsFlgEvolu;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<int> ficVerId;
+  final Value<int> ficVerItemsId;
+  final Value<String> ficVerItemsNom;
+  final Value<int> ficVerItemsOrd;
+  final Value<int> ficVerItemsFlgEvolu;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaVerItemsCompanion({
-    this.FicId = const Value.absent(),
-    this.FicVerId = const Value.absent(),
-    this.FicVerItemsId = const Value.absent(),
-    this.FicVerItemsNom = const Value.absent(),
-    this.FicVerItemsOrd = const Value.absent(),
-    this.FicVerItemsFlgEvolu = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.ficVerId = const Value.absent(),
+    this.ficVerItemsId = const Value.absent(),
+    this.ficVerItemsNom = const Value.absent(),
+    this.ficVerItemsOrd = const Value.absent(),
+    this.ficVerItemsFlgEvolu = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaVerItemsCompanion copyWith(
-      {Value<int> FicId,
-      Value<int> FicVerId,
-      Value<int> FicVerItemsId,
-      Value<String> FicVerItemsNom,
-      Value<int> FicVerItemsOrd,
-      Value<int> FicVerItemsFlgEvolu,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<int> ficVerId,
+      Value<int> ficVerItemsId,
+      Value<String> ficVerItemsNom,
+      Value<int> ficVerItemsOrd,
+      Value<int> ficVerItemsFlgEvolu,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaVerItemsCompanion(
-      FicId: FicId ?? this.FicId,
-      FicVerId: FicVerId ?? this.FicVerId,
-      FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-      FicVerItemsNom: FicVerItemsNom ?? this.FicVerItemsNom,
-      FicVerItemsOrd: FicVerItemsOrd ?? this.FicVerItemsOrd,
-      FicVerItemsFlgEvolu: FicVerItemsFlgEvolu ?? this.FicVerItemsFlgEvolu,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      ficVerId: ficVerId ?? this.ficVerId,
+      ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+      ficVerItemsNom: ficVerItemsNom ?? this.ficVerItemsNom,
+      ficVerItemsOrd: ficVerItemsOrd ?? this.ficVerItemsOrd,
+      ficVerItemsFlgEvolu: ficVerItemsFlgEvolu ?? this.ficVerItemsFlgEvolu,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -1316,41 +1083,41 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaVerItemsTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _FicVerIdMeta = const VerificationMeta('FicVerId');
-  GeneratedIntColumn _FicVerId;
+  final VerificationMeta _ficVerIdMeta = const VerificationMeta('ficVerId');
+  GeneratedIntColumn _ficVerId;
   @override
-  GeneratedIntColumn get FicVerId => _FicVerId ??= _constructFicVerId();
+  GeneratedIntColumn get ficVerId => _ficVerId ??= _constructFicVerId();
   GeneratedIntColumn _constructFicVerId() {
     return GeneratedIntColumn('fic_ver_id', $tableName, false,
-        $customConstraints: 'REFERENCES FichaVer(FicVerId)');
+        $customConstraints: 'REFERENCES FichaVer(ficVerId)');
   }
 
-  final VerificationMeta _FicVerItemsIdMeta =
-      const VerificationMeta('FicVerItemsId');
-  GeneratedIntColumn _FicVerItemsId;
+  final VerificationMeta _ficVerItemsIdMeta =
+      const VerificationMeta('ficVerItemsId');
+  GeneratedIntColumn _ficVerItemsId;
   @override
-  GeneratedIntColumn get FicVerItemsId =>
-      _FicVerItemsId ??= _constructFicVerItemsId();
+  GeneratedIntColumn get ficVerItemsId =>
+      _ficVerItemsId ??= _constructFicVerItemsId();
   GeneratedIntColumn _constructFicVerItemsId() {
     return GeneratedIntColumn('fic_ver_items_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _FicVerItemsNomMeta =
-      const VerificationMeta('FicVerItemsNom');
-  GeneratedTextColumn _FicVerItemsNom;
+  final VerificationMeta _ficVerItemsNomMeta =
+      const VerificationMeta('ficVerItemsNom');
+  GeneratedTextColumn _ficVerItemsNom;
   @override
-  GeneratedTextColumn get FicVerItemsNom =>
-      _FicVerItemsNom ??= _constructFicVerItemsNom();
+  GeneratedTextColumn get ficVerItemsNom =>
+      _ficVerItemsNom ??= _constructFicVerItemsNom();
   GeneratedTextColumn _constructFicVerItemsNom() {
     return GeneratedTextColumn(
       'fic_ver_items_nom',
@@ -1359,12 +1126,12 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
     );
   }
 
-  final VerificationMeta _FicVerItemsOrdMeta =
-      const VerificationMeta('FicVerItemsOrd');
-  GeneratedIntColumn _FicVerItemsOrd;
+  final VerificationMeta _ficVerItemsOrdMeta =
+      const VerificationMeta('ficVerItemsOrd');
+  GeneratedIntColumn _ficVerItemsOrd;
   @override
-  GeneratedIntColumn get FicVerItemsOrd =>
-      _FicVerItemsOrd ??= _constructFicVerItemsOrd();
+  GeneratedIntColumn get ficVerItemsOrd =>
+      _ficVerItemsOrd ??= _constructFicVerItemsOrd();
   GeneratedIntColumn _constructFicVerItemsOrd() {
     return GeneratedIntColumn(
       'fic_ver_items_ord',
@@ -1373,12 +1140,12 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
     );
   }
 
-  final VerificationMeta _FicVerItemsFlgEvoluMeta =
-      const VerificationMeta('FicVerItemsFlgEvolu');
-  GeneratedIntColumn _FicVerItemsFlgEvolu;
+  final VerificationMeta _ficVerItemsFlgEvoluMeta =
+      const VerificationMeta('ficVerItemsFlgEvolu');
+  GeneratedIntColumn _ficVerItemsFlgEvolu;
   @override
-  GeneratedIntColumn get FicVerItemsFlgEvolu =>
-      _FicVerItemsFlgEvolu ??= _constructFicVerItemsFlgEvolu();
+  GeneratedIntColumn get ficVerItemsFlgEvolu =>
+      _ficVerItemsFlgEvolu ??= _constructFicVerItemsFlgEvolu();
   GeneratedIntColumn _constructFicVerItemsFlgEvolu() {
     return GeneratedIntColumn(
       'fic_ver_items_flg_evolu',
@@ -1387,22 +1154,22 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -1443,14 +1210,14 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
 
   @override
   List<GeneratedColumn> get $columns => [
-        FicId,
-        FicVerId,
-        FicVerItemsId,
-        FicVerItemsNom,
-        FicVerItemsOrd,
-        FicVerItemsFlgEvolu,
-        StatusId,
-        UsuId,
+        ficId,
+        ficVerId,
+        ficVerItemsId,
+        ficVerItemsNom,
+        ficVerItemsOrd,
+        ficVerItemsFlgEvolu,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -1465,61 +1232,61 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
   VerificationContext validateIntegrity(TableFichaVerItemsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.FicVerId.present) {
-      context.handle(_FicVerIdMeta,
-          FicVerId.isAcceptableValue(d.FicVerId.value, _FicVerIdMeta));
-    } else if (FicVerId.isRequired && isInserting) {
-      context.missing(_FicVerIdMeta);
+    if (d.ficVerId.present) {
+      context.handle(_ficVerIdMeta,
+          ficVerId.isAcceptableValue(d.ficVerId.value, _ficVerIdMeta));
+    } else if (ficVerId.isRequired && isInserting) {
+      context.missing(_ficVerIdMeta);
     }
-    if (d.FicVerItemsId.present) {
+    if (d.ficVerItemsId.present) {
       context.handle(
-          _FicVerItemsIdMeta,
-          FicVerItemsId.isAcceptableValue(
-              d.FicVerItemsId.value, _FicVerItemsIdMeta));
-    } else if (FicVerItemsId.isRequired && isInserting) {
-      context.missing(_FicVerItemsIdMeta);
+          _ficVerItemsIdMeta,
+          ficVerItemsId.isAcceptableValue(
+              d.ficVerItemsId.value, _ficVerItemsIdMeta));
+    } else if (ficVerItemsId.isRequired && isInserting) {
+      context.missing(_ficVerItemsIdMeta);
     }
-    if (d.FicVerItemsNom.present) {
+    if (d.ficVerItemsNom.present) {
       context.handle(
-          _FicVerItemsNomMeta,
-          FicVerItemsNom.isAcceptableValue(
-              d.FicVerItemsNom.value, _FicVerItemsNomMeta));
-    } else if (FicVerItemsNom.isRequired && isInserting) {
-      context.missing(_FicVerItemsNomMeta);
+          _ficVerItemsNomMeta,
+          ficVerItemsNom.isAcceptableValue(
+              d.ficVerItemsNom.value, _ficVerItemsNomMeta));
+    } else if (ficVerItemsNom.isRequired && isInserting) {
+      context.missing(_ficVerItemsNomMeta);
     }
-    if (d.FicVerItemsOrd.present) {
+    if (d.ficVerItemsOrd.present) {
       context.handle(
-          _FicVerItemsOrdMeta,
-          FicVerItemsOrd.isAcceptableValue(
-              d.FicVerItemsOrd.value, _FicVerItemsOrdMeta));
-    } else if (FicVerItemsOrd.isRequired && isInserting) {
-      context.missing(_FicVerItemsOrdMeta);
+          _ficVerItemsOrdMeta,
+          ficVerItemsOrd.isAcceptableValue(
+              d.ficVerItemsOrd.value, _ficVerItemsOrdMeta));
+    } else if (ficVerItemsOrd.isRequired && isInserting) {
+      context.missing(_ficVerItemsOrdMeta);
     }
-    if (d.FicVerItemsFlgEvolu.present) {
+    if (d.ficVerItemsFlgEvolu.present) {
       context.handle(
-          _FicVerItemsFlgEvoluMeta,
-          FicVerItemsFlgEvolu.isAcceptableValue(
-              d.FicVerItemsFlgEvolu.value, _FicVerItemsFlgEvoluMeta));
-    } else if (FicVerItemsFlgEvolu.isRequired && isInserting) {
-      context.missing(_FicVerItemsFlgEvoluMeta);
+          _ficVerItemsFlgEvoluMeta,
+          ficVerItemsFlgEvolu.isAcceptableValue(
+              d.ficVerItemsFlgEvolu.value, _ficVerItemsFlgEvoluMeta));
+    } else if (ficVerItemsFlgEvolu.isRequired && isInserting) {
+      context.missing(_ficVerItemsFlgEvoluMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -1543,7 +1310,7 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FicVerItemsId};
+  Set<GeneratedColumn> get $primaryKey => {ficVerItemsId};
   @override
   FichaVerItems map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -1553,31 +1320,31 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
   @override
   Map<String, Variable> entityToSql(TableFichaVerItemsCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.FicVerId.present) {
-      map['fic_ver_id'] = Variable<int, IntType>(d.FicVerId.value);
+    if (d.ficVerId.present) {
+      map['fic_ver_id'] = Variable<int, IntType>(d.ficVerId.value);
     }
-    if (d.FicVerItemsId.present) {
-      map['fic_ver_items_id'] = Variable<int, IntType>(d.FicVerItemsId.value);
+    if (d.ficVerItemsId.present) {
+      map['fic_ver_items_id'] = Variable<int, IntType>(d.ficVerItemsId.value);
     }
-    if (d.FicVerItemsNom.present) {
+    if (d.ficVerItemsNom.present) {
       map['fic_ver_items_nom'] =
-          Variable<String, StringType>(d.FicVerItemsNom.value);
+          Variable<String, StringType>(d.ficVerItemsNom.value);
     }
-    if (d.FicVerItemsOrd.present) {
-      map['fic_ver_items_ord'] = Variable<int, IntType>(d.FicVerItemsOrd.value);
+    if (d.ficVerItemsOrd.present) {
+      map['fic_ver_items_ord'] = Variable<int, IntType>(d.ficVerItemsOrd.value);
     }
-    if (d.FicVerItemsFlgEvolu.present) {
+    if (d.ficVerItemsFlgEvolu.present) {
       map['fic_ver_items_flg_evolu'] =
-          Variable<int, IntType>(d.FicVerItemsFlgEvolu.value);
+          Variable<int, IntType>(d.ficVerItemsFlgEvolu.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -1598,40 +1365,40 @@ class $TableFichaVerItemsTable extends TableFichaVerItems
 }
 
 class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
-  final int PregFrmDinaId;
-  final String PregFrmDinaDesc;
-  final String PregFrmDinaTitulo;
-  final int PregFrmDinaTipPreg;
-  final int PregFrmDinaDefaNomTabDinId;
-  final int PregFrmDinaValMin;
-  final int PregFrmDinaValMax;
-  final String PregFrmDinaTipDefa;
-  final String PregFrmDinaValDefa;
-  final String PregFrmDinaDefaValMemo;
-  final int PregFrmDinaDefaTabDinValId;
-  final String PregFrmDinaSufijo;
-  final String PregFrmDinaHelp;
-  final int StatusId;
-  final int UsuId;
+  final int pregFrmDinaId;
+  final String pregFrmDinaDesc;
+  final String pregFrmDinaTitulo;
+  final int pregFrmDinaTipPreg;
+  final int pregFrmDinaDefaNomTabDinId;
+  final int pregFrmDinaValMin;
+  final int pregFrmDinaValMax;
+  final String pregFrmDinaTipDefa;
+  final String pregFrmDinaValDefa;
+  final String pregFrmDinaDefaValMemo;
+  final int pregFrmDinaDefaTabDinValId;
+  final String pregFrmDinaSufijo;
+  final String pregFrmDinaHelp;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   PregFrmDina(
-      {@required this.PregFrmDinaId,
-      @required this.PregFrmDinaDesc,
-      @required this.PregFrmDinaTitulo,
-      @required this.PregFrmDinaTipPreg,
-      @required this.PregFrmDinaDefaNomTabDinId,
-      @required this.PregFrmDinaValMin,
-      @required this.PregFrmDinaValMax,
-      @required this.PregFrmDinaTipDefa,
-      @required this.PregFrmDinaValDefa,
-      @required this.PregFrmDinaDefaValMemo,
-      @required this.PregFrmDinaDefaTabDinValId,
-      @required this.PregFrmDinaSufijo,
-      @required this.PregFrmDinaHelp,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.pregFrmDinaId,
+      @required this.pregFrmDinaDesc,
+      @required this.pregFrmDinaTitulo,
+      @required this.pregFrmDinaTipPreg,
+      @required this.pregFrmDinaDefaNomTabDinId,
+      @required this.pregFrmDinaValMin,
+      @required this.pregFrmDinaValMax,
+      @required this.pregFrmDinaTipDefa,
+      @required this.pregFrmDinaValDefa,
+      @required this.pregFrmDinaDefaValMemo,
+      @required this.pregFrmDinaDefaTabDinValId,
+      @required this.pregFrmDinaSufijo,
+      @required this.pregFrmDinaHelp,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -1642,35 +1409,35 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return PregFrmDina(
-      PregFrmDinaId: intType
+      pregFrmDinaId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}preg_frm_dina_id']),
-      PregFrmDinaDesc: stringType.mapFromDatabaseResponse(
+      pregFrmDinaDesc: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_desc']),
-      PregFrmDinaTitulo: stringType.mapFromDatabaseResponse(
+      pregFrmDinaTitulo: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_titulo']),
-      PregFrmDinaTipPreg: intType.mapFromDatabaseResponse(
+      pregFrmDinaTipPreg: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_tip_preg']),
-      PregFrmDinaDefaNomTabDinId: intType.mapFromDatabaseResponse(
+      pregFrmDinaDefaNomTabDinId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_defa_nom_tab_din_id']),
-      PregFrmDinaValMin: intType.mapFromDatabaseResponse(
+      pregFrmDinaValMin: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_val_min']),
-      PregFrmDinaValMax: intType.mapFromDatabaseResponse(
+      pregFrmDinaValMax: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_val_max']),
-      PregFrmDinaTipDefa: stringType.mapFromDatabaseResponse(
+      pregFrmDinaTipDefa: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_tip_defa']),
-      PregFrmDinaValDefa: stringType.mapFromDatabaseResponse(
+      pregFrmDinaValDefa: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_val_defa']),
-      PregFrmDinaDefaValMemo: stringType.mapFromDatabaseResponse(
+      pregFrmDinaDefaValMemo: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_defa_val_memo']),
-      PregFrmDinaDefaTabDinValId: intType.mapFromDatabaseResponse(
+      pregFrmDinaDefaTabDinValId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_defa_tab_din_val_id']),
-      PregFrmDinaSufijo: stringType.mapFromDatabaseResponse(
+      pregFrmDinaSufijo: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_sufijo']),
-      PregFrmDinaHelp: stringType.mapFromDatabaseResponse(
+      pregFrmDinaHelp: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}preg_frm_dina_help']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -1682,26 +1449,26 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   factory PregFrmDina.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return PregFrmDina(
-      PregFrmDinaId: serializer.fromJson<int>(json['PregFrmDinaId']),
-      PregFrmDinaDesc: serializer.fromJson<String>(json['PregFrmDinaDesc']),
-      PregFrmDinaTitulo: serializer.fromJson<String>(json['PregFrmDinaTitulo']),
-      PregFrmDinaTipPreg: serializer.fromJson<int>(json['PregFrmDinaTipPreg']),
-      PregFrmDinaDefaNomTabDinId:
-          serializer.fromJson<int>(json['PregFrmDinaDefaNomTabDinId']),
-      PregFrmDinaValMin: serializer.fromJson<int>(json['PregFrmDinaValMin']),
-      PregFrmDinaValMax: serializer.fromJson<int>(json['PregFrmDinaValMax']),
-      PregFrmDinaTipDefa:
-          serializer.fromJson<String>(json['PregFrmDinaTipDefa']),
-      PregFrmDinaValDefa:
-          serializer.fromJson<String>(json['PregFrmDinaValDefa']),
-      PregFrmDinaDefaValMemo:
-          serializer.fromJson<String>(json['PregFrmDinaDefaValMemo']),
-      PregFrmDinaDefaTabDinValId:
-          serializer.fromJson<int>(json['PregFrmDinaDefaTabDinValId']),
-      PregFrmDinaSufijo: serializer.fromJson<String>(json['PregFrmDinaSufijo']),
-      PregFrmDinaHelp: serializer.fromJson<String>(json['PregFrmDinaHelp']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      pregFrmDinaId: serializer.fromJson<int>(json['pregFrmDinaId']),
+      pregFrmDinaDesc: serializer.fromJson<String>(json['pregFrmDinaDesc']),
+      pregFrmDinaTitulo: serializer.fromJson<String>(json['pregFrmDinaTitulo']),
+      pregFrmDinaTipPreg: serializer.fromJson<int>(json['pregFrmDinaTipPreg']),
+      pregFrmDinaDefaNomTabDinId:
+          serializer.fromJson<int>(json['pregFrmDinaDefaNomTabDinId']),
+      pregFrmDinaValMin: serializer.fromJson<int>(json['pregFrmDinaValMin']),
+      pregFrmDinaValMax: serializer.fromJson<int>(json['pregFrmDinaValMax']),
+      pregFrmDinaTipDefa:
+          serializer.fromJson<String>(json['pregFrmDinaTipDefa']),
+      pregFrmDinaValDefa:
+          serializer.fromJson<String>(json['pregFrmDinaValDefa']),
+      pregFrmDinaDefaValMemo:
+          serializer.fromJson<String>(json['pregFrmDinaDefaValMemo']),
+      pregFrmDinaDefaTabDinValId:
+          serializer.fromJson<int>(json['pregFrmDinaDefaTabDinValId']),
+      pregFrmDinaSufijo: serializer.fromJson<String>(json['pregFrmDinaSufijo']),
+      pregFrmDinaHelp: serializer.fromJson<String>(json['pregFrmDinaHelp']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -1711,24 +1478,24 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'PregFrmDinaId': serializer.toJson<int>(PregFrmDinaId),
-      'PregFrmDinaDesc': serializer.toJson<String>(PregFrmDinaDesc),
-      'PregFrmDinaTitulo': serializer.toJson<String>(PregFrmDinaTitulo),
-      'PregFrmDinaTipPreg': serializer.toJson<int>(PregFrmDinaTipPreg),
-      'PregFrmDinaDefaNomTabDinId':
-          serializer.toJson<int>(PregFrmDinaDefaNomTabDinId),
-      'PregFrmDinaValMin': serializer.toJson<int>(PregFrmDinaValMin),
-      'PregFrmDinaValMax': serializer.toJson<int>(PregFrmDinaValMax),
-      'PregFrmDinaTipDefa': serializer.toJson<String>(PregFrmDinaTipDefa),
-      'PregFrmDinaValDefa': serializer.toJson<String>(PregFrmDinaValDefa),
-      'PregFrmDinaDefaValMemo':
-          serializer.toJson<String>(PregFrmDinaDefaValMemo),
-      'PregFrmDinaDefaTabDinValId':
-          serializer.toJson<int>(PregFrmDinaDefaTabDinValId),
-      'PregFrmDinaSufijo': serializer.toJson<String>(PregFrmDinaSufijo),
-      'PregFrmDinaHelp': serializer.toJson<String>(PregFrmDinaHelp),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'pregFrmDinaId': serializer.toJson<int>(pregFrmDinaId),
+      'pregFrmDinaDesc': serializer.toJson<String>(pregFrmDinaDesc),
+      'pregFrmDinaTitulo': serializer.toJson<String>(pregFrmDinaTitulo),
+      'pregFrmDinaTipPreg': serializer.toJson<int>(pregFrmDinaTipPreg),
+      'pregFrmDinaDefaNomTabDinId':
+          serializer.toJson<int>(pregFrmDinaDefaNomTabDinId),
+      'pregFrmDinaValMin': serializer.toJson<int>(pregFrmDinaValMin),
+      'pregFrmDinaValMax': serializer.toJson<int>(pregFrmDinaValMax),
+      'pregFrmDinaTipDefa': serializer.toJson<String>(pregFrmDinaTipDefa),
+      'pregFrmDinaValDefa': serializer.toJson<String>(pregFrmDinaValDefa),
+      'pregFrmDinaDefaValMemo':
+          serializer.toJson<String>(pregFrmDinaDefaValMemo),
+      'pregFrmDinaDefaTabDinValId':
+          serializer.toJson<int>(pregFrmDinaDefaTabDinValId),
+      'pregFrmDinaSufijo': serializer.toJson<String>(pregFrmDinaSufijo),
+      'pregFrmDinaHelp': serializer.toJson<String>(pregFrmDinaHelp),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -1738,52 +1505,52 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   @override
   T createCompanion<T extends UpdateCompanion<PregFrmDina>>(bool nullToAbsent) {
     return TablePregFrmDinaCompanion(
-      PregFrmDinaId: PregFrmDinaId == null && nullToAbsent
+      pregFrmDinaId: pregFrmDinaId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaId),
-      PregFrmDinaDesc: PregFrmDinaDesc == null && nullToAbsent
+          : Value(pregFrmDinaId),
+      pregFrmDinaDesc: pregFrmDinaDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaDesc),
-      PregFrmDinaTitulo: PregFrmDinaTitulo == null && nullToAbsent
+          : Value(pregFrmDinaDesc),
+      pregFrmDinaTitulo: pregFrmDinaTitulo == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaTitulo),
-      PregFrmDinaTipPreg: PregFrmDinaTipPreg == null && nullToAbsent
+          : Value(pregFrmDinaTitulo),
+      pregFrmDinaTipPreg: pregFrmDinaTipPreg == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaTipPreg),
-      PregFrmDinaDefaNomTabDinId:
-          PregFrmDinaDefaNomTabDinId == null && nullToAbsent
+          : Value(pregFrmDinaTipPreg),
+      pregFrmDinaDefaNomTabDinId:
+          pregFrmDinaDefaNomTabDinId == null && nullToAbsent
               ? const Value.absent()
-              : Value(PregFrmDinaDefaNomTabDinId),
-      PregFrmDinaValMin: PregFrmDinaValMin == null && nullToAbsent
+              : Value(pregFrmDinaDefaNomTabDinId),
+      pregFrmDinaValMin: pregFrmDinaValMin == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaValMin),
-      PregFrmDinaValMax: PregFrmDinaValMax == null && nullToAbsent
+          : Value(pregFrmDinaValMin),
+      pregFrmDinaValMax: pregFrmDinaValMax == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaValMax),
-      PregFrmDinaTipDefa: PregFrmDinaTipDefa == null && nullToAbsent
+          : Value(pregFrmDinaValMax),
+      pregFrmDinaTipDefa: pregFrmDinaTipDefa == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaTipDefa),
-      PregFrmDinaValDefa: PregFrmDinaValDefa == null && nullToAbsent
+          : Value(pregFrmDinaTipDefa),
+      pregFrmDinaValDefa: pregFrmDinaValDefa == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaValDefa),
-      PregFrmDinaDefaValMemo: PregFrmDinaDefaValMemo == null && nullToAbsent
+          : Value(pregFrmDinaValDefa),
+      pregFrmDinaDefaValMemo: pregFrmDinaDefaValMemo == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaDefaValMemo),
-      PregFrmDinaDefaTabDinValId:
-          PregFrmDinaDefaTabDinValId == null && nullToAbsent
+          : Value(pregFrmDinaDefaValMemo),
+      pregFrmDinaDefaTabDinValId:
+          pregFrmDinaDefaTabDinValId == null && nullToAbsent
               ? const Value.absent()
-              : Value(PregFrmDinaDefaTabDinValId),
-      PregFrmDinaSufijo: PregFrmDinaSufijo == null && nullToAbsent
+              : Value(pregFrmDinaDefaTabDinValId),
+      pregFrmDinaSufijo: pregFrmDinaSufijo == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaSufijo),
-      PregFrmDinaHelp: PregFrmDinaHelp == null && nullToAbsent
+          : Value(pregFrmDinaSufijo),
+      pregFrmDinaHelp: pregFrmDinaHelp == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaHelp),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(pregFrmDinaHelp),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -1797,43 +1564,43 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   }
 
   PregFrmDina copyWith(
-          {int PregFrmDinaId,
-          String PregFrmDinaDesc,
-          String PregFrmDinaTitulo,
-          int PregFrmDinaTipPreg,
-          int PregFrmDinaDefaNomTabDinId,
-          int PregFrmDinaValMin,
-          int PregFrmDinaValMax,
-          String PregFrmDinaTipDefa,
-          String PregFrmDinaValDefa,
-          String PregFrmDinaDefaValMemo,
-          int PregFrmDinaDefaTabDinValId,
-          String PregFrmDinaSufijo,
-          String PregFrmDinaHelp,
-          int StatusId,
-          int UsuId,
+          {int pregFrmDinaId,
+          String pregFrmDinaDesc,
+          String pregFrmDinaTitulo,
+          int pregFrmDinaTipPreg,
+          int pregFrmDinaDefaNomTabDinId,
+          int pregFrmDinaValMin,
+          int pregFrmDinaValMax,
+          String pregFrmDinaTipDefa,
+          String pregFrmDinaValDefa,
+          String pregFrmDinaDefaValMemo,
+          int pregFrmDinaDefaTabDinValId,
+          String pregFrmDinaSufijo,
+          String pregFrmDinaHelp,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       PregFrmDina(
-        PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-        PregFrmDinaDesc: PregFrmDinaDesc ?? this.PregFrmDinaDesc,
-        PregFrmDinaTitulo: PregFrmDinaTitulo ?? this.PregFrmDinaTitulo,
-        PregFrmDinaTipPreg: PregFrmDinaTipPreg ?? this.PregFrmDinaTipPreg,
-        PregFrmDinaDefaNomTabDinId:
-            PregFrmDinaDefaNomTabDinId ?? this.PregFrmDinaDefaNomTabDinId,
-        PregFrmDinaValMin: PregFrmDinaValMin ?? this.PregFrmDinaValMin,
-        PregFrmDinaValMax: PregFrmDinaValMax ?? this.PregFrmDinaValMax,
-        PregFrmDinaTipDefa: PregFrmDinaTipDefa ?? this.PregFrmDinaTipDefa,
-        PregFrmDinaValDefa: PregFrmDinaValDefa ?? this.PregFrmDinaValDefa,
-        PregFrmDinaDefaValMemo:
-            PregFrmDinaDefaValMemo ?? this.PregFrmDinaDefaValMemo,
-        PregFrmDinaDefaTabDinValId:
-            PregFrmDinaDefaTabDinValId ?? this.PregFrmDinaDefaTabDinValId,
-        PregFrmDinaSufijo: PregFrmDinaSufijo ?? this.PregFrmDinaSufijo,
-        PregFrmDinaHelp: PregFrmDinaHelp ?? this.PregFrmDinaHelp,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+        pregFrmDinaDesc: pregFrmDinaDesc ?? this.pregFrmDinaDesc,
+        pregFrmDinaTitulo: pregFrmDinaTitulo ?? this.pregFrmDinaTitulo,
+        pregFrmDinaTipPreg: pregFrmDinaTipPreg ?? this.pregFrmDinaTipPreg,
+        pregFrmDinaDefaNomTabDinId:
+            pregFrmDinaDefaNomTabDinId ?? this.pregFrmDinaDefaNomTabDinId,
+        pregFrmDinaValMin: pregFrmDinaValMin ?? this.pregFrmDinaValMin,
+        pregFrmDinaValMax: pregFrmDinaValMax ?? this.pregFrmDinaValMax,
+        pregFrmDinaTipDefa: pregFrmDinaTipDefa ?? this.pregFrmDinaTipDefa,
+        pregFrmDinaValDefa: pregFrmDinaValDefa ?? this.pregFrmDinaValDefa,
+        pregFrmDinaDefaValMemo:
+            pregFrmDinaDefaValMemo ?? this.pregFrmDinaDefaValMemo,
+        pregFrmDinaDefaTabDinValId:
+            pregFrmDinaDefaTabDinValId ?? this.pregFrmDinaDefaTabDinValId,
+        pregFrmDinaSufijo: pregFrmDinaSufijo ?? this.pregFrmDinaSufijo,
+        pregFrmDinaHelp: pregFrmDinaHelp ?? this.pregFrmDinaHelp,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -1841,21 +1608,21 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   @override
   String toString() {
     return (StringBuffer('PregFrmDina(')
-          ..write('PregFrmDinaId: $PregFrmDinaId, ')
-          ..write('PregFrmDinaDesc: $PregFrmDinaDesc, ')
-          ..write('PregFrmDinaTitulo: $PregFrmDinaTitulo, ')
-          ..write('PregFrmDinaTipPreg: $PregFrmDinaTipPreg, ')
-          ..write('PregFrmDinaDefaNomTabDinId: $PregFrmDinaDefaNomTabDinId, ')
-          ..write('PregFrmDinaValMin: $PregFrmDinaValMin, ')
-          ..write('PregFrmDinaValMax: $PregFrmDinaValMax, ')
-          ..write('PregFrmDinaTipDefa: $PregFrmDinaTipDefa, ')
-          ..write('PregFrmDinaValDefa: $PregFrmDinaValDefa, ')
-          ..write('PregFrmDinaDefaValMemo: $PregFrmDinaDefaValMemo, ')
-          ..write('PregFrmDinaDefaTabDinValId: $PregFrmDinaDefaTabDinValId, ')
-          ..write('PregFrmDinaSufijo: $PregFrmDinaSufijo, ')
-          ..write('PregFrmDinaHelp: $PregFrmDinaHelp, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('pregFrmDinaId: $pregFrmDinaId, ')
+          ..write('pregFrmDinaDesc: $pregFrmDinaDesc, ')
+          ..write('pregFrmDinaTitulo: $pregFrmDinaTitulo, ')
+          ..write('pregFrmDinaTipPreg: $pregFrmDinaTipPreg, ')
+          ..write('pregFrmDinaDefaNomTabDinId: $pregFrmDinaDefaNomTabDinId, ')
+          ..write('pregFrmDinaValMin: $pregFrmDinaValMin, ')
+          ..write('pregFrmDinaValMax: $pregFrmDinaValMax, ')
+          ..write('pregFrmDinaTipDefa: $pregFrmDinaTipDefa, ')
+          ..write('pregFrmDinaValDefa: $pregFrmDinaValDefa, ')
+          ..write('pregFrmDinaDefaValMemo: $pregFrmDinaDefaValMemo, ')
+          ..write('pregFrmDinaDefaTabDinValId: $pregFrmDinaDefaTabDinValId, ')
+          ..write('pregFrmDinaSufijo: $pregFrmDinaSufijo, ')
+          ..write('pregFrmDinaHelp: $pregFrmDinaHelp, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -1865,36 +1632,36 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      PregFrmDinaId.hashCode,
+      pregFrmDinaId.hashCode,
       $mrjc(
-          PregFrmDinaDesc.hashCode,
+          pregFrmDinaDesc.hashCode,
           $mrjc(
-              PregFrmDinaTitulo.hashCode,
+              pregFrmDinaTitulo.hashCode,
               $mrjc(
-                  PregFrmDinaTipPreg.hashCode,
+                  pregFrmDinaTipPreg.hashCode,
                   $mrjc(
-                      PregFrmDinaDefaNomTabDinId.hashCode,
+                      pregFrmDinaDefaNomTabDinId.hashCode,
                       $mrjc(
-                          PregFrmDinaValMin.hashCode,
+                          pregFrmDinaValMin.hashCode,
                           $mrjc(
-                              PregFrmDinaValMax.hashCode,
+                              pregFrmDinaValMax.hashCode,
                               $mrjc(
-                                  PregFrmDinaTipDefa.hashCode,
+                                  pregFrmDinaTipDefa.hashCode,
                                   $mrjc(
-                                      PregFrmDinaValDefa.hashCode,
+                                      pregFrmDinaValDefa.hashCode,
                                       $mrjc(
-                                          PregFrmDinaDefaValMemo.hashCode,
+                                          pregFrmDinaDefaValMemo.hashCode,
                                           $mrjc(
-                                              PregFrmDinaDefaTabDinValId
+                                              pregFrmDinaDefaTabDinValId
                                                   .hashCode,
                                               $mrjc(
-                                                  PregFrmDinaSufijo.hashCode,
+                                                  pregFrmDinaSufijo.hashCode,
                                                   $mrjc(
-                                                      PregFrmDinaHelp.hashCode,
+                                                      pregFrmDinaHelp.hashCode,
                                                       $mrjc(
-                                                          StatusId.hashCode,
+                                                          statusId.hashCode,
                                                           $mrjc(
-                                                              UsuId.hashCode,
+                                                              usuId.hashCode,
                                                               $mrjc(
                                                                   createdAt
                                                                       .hashCode,
@@ -1907,103 +1674,103 @@ class PregFrmDina extends DataClass implements Insertable<PregFrmDina> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is PregFrmDina &&
-          other.PregFrmDinaId == PregFrmDinaId &&
-          other.PregFrmDinaDesc == PregFrmDinaDesc &&
-          other.PregFrmDinaTitulo == PregFrmDinaTitulo &&
-          other.PregFrmDinaTipPreg == PregFrmDinaTipPreg &&
-          other.PregFrmDinaDefaNomTabDinId == PregFrmDinaDefaNomTabDinId &&
-          other.PregFrmDinaValMin == PregFrmDinaValMin &&
-          other.PregFrmDinaValMax == PregFrmDinaValMax &&
-          other.PregFrmDinaTipDefa == PregFrmDinaTipDefa &&
-          other.PregFrmDinaValDefa == PregFrmDinaValDefa &&
-          other.PregFrmDinaDefaValMemo == PregFrmDinaDefaValMemo &&
-          other.PregFrmDinaDefaTabDinValId == PregFrmDinaDefaTabDinValId &&
-          other.PregFrmDinaSufijo == PregFrmDinaSufijo &&
-          other.PregFrmDinaHelp == PregFrmDinaHelp &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.pregFrmDinaId == pregFrmDinaId &&
+          other.pregFrmDinaDesc == pregFrmDinaDesc &&
+          other.pregFrmDinaTitulo == pregFrmDinaTitulo &&
+          other.pregFrmDinaTipPreg == pregFrmDinaTipPreg &&
+          other.pregFrmDinaDefaNomTabDinId == pregFrmDinaDefaNomTabDinId &&
+          other.pregFrmDinaValMin == pregFrmDinaValMin &&
+          other.pregFrmDinaValMax == pregFrmDinaValMax &&
+          other.pregFrmDinaTipDefa == pregFrmDinaTipDefa &&
+          other.pregFrmDinaValDefa == pregFrmDinaValDefa &&
+          other.pregFrmDinaDefaValMemo == pregFrmDinaDefaValMemo &&
+          other.pregFrmDinaDefaTabDinValId == pregFrmDinaDefaTabDinValId &&
+          other.pregFrmDinaSufijo == pregFrmDinaSufijo &&
+          other.pregFrmDinaHelp == pregFrmDinaHelp &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TablePregFrmDinaCompanion extends UpdateCompanion<PregFrmDina> {
-  final Value<int> PregFrmDinaId;
-  final Value<String> PregFrmDinaDesc;
-  final Value<String> PregFrmDinaTitulo;
-  final Value<int> PregFrmDinaTipPreg;
-  final Value<int> PregFrmDinaDefaNomTabDinId;
-  final Value<int> PregFrmDinaValMin;
-  final Value<int> PregFrmDinaValMax;
-  final Value<String> PregFrmDinaTipDefa;
-  final Value<String> PregFrmDinaValDefa;
-  final Value<String> PregFrmDinaDefaValMemo;
-  final Value<int> PregFrmDinaDefaTabDinValId;
-  final Value<String> PregFrmDinaSufijo;
-  final Value<String> PregFrmDinaHelp;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> pregFrmDinaId;
+  final Value<String> pregFrmDinaDesc;
+  final Value<String> pregFrmDinaTitulo;
+  final Value<int> pregFrmDinaTipPreg;
+  final Value<int> pregFrmDinaDefaNomTabDinId;
+  final Value<int> pregFrmDinaValMin;
+  final Value<int> pregFrmDinaValMax;
+  final Value<String> pregFrmDinaTipDefa;
+  final Value<String> pregFrmDinaValDefa;
+  final Value<String> pregFrmDinaDefaValMemo;
+  final Value<int> pregFrmDinaDefaTabDinValId;
+  final Value<String> pregFrmDinaSufijo;
+  final Value<String> pregFrmDinaHelp;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TablePregFrmDinaCompanion({
-    this.PregFrmDinaId = const Value.absent(),
-    this.PregFrmDinaDesc = const Value.absent(),
-    this.PregFrmDinaTitulo = const Value.absent(),
-    this.PregFrmDinaTipPreg = const Value.absent(),
-    this.PregFrmDinaDefaNomTabDinId = const Value.absent(),
-    this.PregFrmDinaValMin = const Value.absent(),
-    this.PregFrmDinaValMax = const Value.absent(),
-    this.PregFrmDinaTipDefa = const Value.absent(),
-    this.PregFrmDinaValDefa = const Value.absent(),
-    this.PregFrmDinaDefaValMemo = const Value.absent(),
-    this.PregFrmDinaDefaTabDinValId = const Value.absent(),
-    this.PregFrmDinaSufijo = const Value.absent(),
-    this.PregFrmDinaHelp = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.pregFrmDinaId = const Value.absent(),
+    this.pregFrmDinaDesc = const Value.absent(),
+    this.pregFrmDinaTitulo = const Value.absent(),
+    this.pregFrmDinaTipPreg = const Value.absent(),
+    this.pregFrmDinaDefaNomTabDinId = const Value.absent(),
+    this.pregFrmDinaValMin = const Value.absent(),
+    this.pregFrmDinaValMax = const Value.absent(),
+    this.pregFrmDinaTipDefa = const Value.absent(),
+    this.pregFrmDinaValDefa = const Value.absent(),
+    this.pregFrmDinaDefaValMemo = const Value.absent(),
+    this.pregFrmDinaDefaTabDinValId = const Value.absent(),
+    this.pregFrmDinaSufijo = const Value.absent(),
+    this.pregFrmDinaHelp = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TablePregFrmDinaCompanion copyWith(
-      {Value<int> PregFrmDinaId,
-      Value<String> PregFrmDinaDesc,
-      Value<String> PregFrmDinaTitulo,
-      Value<int> PregFrmDinaTipPreg,
-      Value<int> PregFrmDinaDefaNomTabDinId,
-      Value<int> PregFrmDinaValMin,
-      Value<int> PregFrmDinaValMax,
-      Value<String> PregFrmDinaTipDefa,
-      Value<String> PregFrmDinaValDefa,
-      Value<String> PregFrmDinaDefaValMemo,
-      Value<int> PregFrmDinaDefaTabDinValId,
-      Value<String> PregFrmDinaSufijo,
-      Value<String> PregFrmDinaHelp,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> pregFrmDinaId,
+      Value<String> pregFrmDinaDesc,
+      Value<String> pregFrmDinaTitulo,
+      Value<int> pregFrmDinaTipPreg,
+      Value<int> pregFrmDinaDefaNomTabDinId,
+      Value<int> pregFrmDinaValMin,
+      Value<int> pregFrmDinaValMax,
+      Value<String> pregFrmDinaTipDefa,
+      Value<String> pregFrmDinaValDefa,
+      Value<String> pregFrmDinaDefaValMemo,
+      Value<int> pregFrmDinaDefaTabDinValId,
+      Value<String> pregFrmDinaSufijo,
+      Value<String> pregFrmDinaHelp,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TablePregFrmDinaCompanion(
-      PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-      PregFrmDinaDesc: PregFrmDinaDesc ?? this.PregFrmDinaDesc,
-      PregFrmDinaTitulo: PregFrmDinaTitulo ?? this.PregFrmDinaTitulo,
-      PregFrmDinaTipPreg: PregFrmDinaTipPreg ?? this.PregFrmDinaTipPreg,
-      PregFrmDinaDefaNomTabDinId:
-          PregFrmDinaDefaNomTabDinId ?? this.PregFrmDinaDefaNomTabDinId,
-      PregFrmDinaValMin: PregFrmDinaValMin ?? this.PregFrmDinaValMin,
-      PregFrmDinaValMax: PregFrmDinaValMax ?? this.PregFrmDinaValMax,
-      PregFrmDinaTipDefa: PregFrmDinaTipDefa ?? this.PregFrmDinaTipDefa,
-      PregFrmDinaValDefa: PregFrmDinaValDefa ?? this.PregFrmDinaValDefa,
-      PregFrmDinaDefaValMemo:
-          PregFrmDinaDefaValMemo ?? this.PregFrmDinaDefaValMemo,
-      PregFrmDinaDefaTabDinValId:
-          PregFrmDinaDefaTabDinValId ?? this.PregFrmDinaDefaTabDinValId,
-      PregFrmDinaSufijo: PregFrmDinaSufijo ?? this.PregFrmDinaSufijo,
-      PregFrmDinaHelp: PregFrmDinaHelp ?? this.PregFrmDinaHelp,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+      pregFrmDinaDesc: pregFrmDinaDesc ?? this.pregFrmDinaDesc,
+      pregFrmDinaTitulo: pregFrmDinaTitulo ?? this.pregFrmDinaTitulo,
+      pregFrmDinaTipPreg: pregFrmDinaTipPreg ?? this.pregFrmDinaTipPreg,
+      pregFrmDinaDefaNomTabDinId:
+          pregFrmDinaDefaNomTabDinId ?? this.pregFrmDinaDefaNomTabDinId,
+      pregFrmDinaValMin: pregFrmDinaValMin ?? this.pregFrmDinaValMin,
+      pregFrmDinaValMax: pregFrmDinaValMax ?? this.pregFrmDinaValMax,
+      pregFrmDinaTipDefa: pregFrmDinaTipDefa ?? this.pregFrmDinaTipDefa,
+      pregFrmDinaValDefa: pregFrmDinaValDefa ?? this.pregFrmDinaValDefa,
+      pregFrmDinaDefaValMemo:
+          pregFrmDinaDefaValMemo ?? this.pregFrmDinaDefaValMemo,
+      pregFrmDinaDefaTabDinValId:
+          pregFrmDinaDefaTabDinValId ?? this.pregFrmDinaDefaTabDinValId,
+      pregFrmDinaSufijo: pregFrmDinaSufijo ?? this.pregFrmDinaSufijo,
+      pregFrmDinaHelp: pregFrmDinaHelp ?? this.pregFrmDinaHelp,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -2016,23 +1783,23 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
   final GeneratedDatabase _db;
   final String _alias;
   $TablePregFrmDinaTable(this._db, [this._alias]);
-  final VerificationMeta _PregFrmDinaIdMeta =
-      const VerificationMeta('PregFrmDinaId');
-  GeneratedIntColumn _PregFrmDinaId;
+  final VerificationMeta _pregFrmDinaIdMeta =
+      const VerificationMeta('pregFrmDinaId');
+  GeneratedIntColumn _pregFrmDinaId;
   @override
-  GeneratedIntColumn get PregFrmDinaId =>
-      _PregFrmDinaId ??= _constructPregFrmDinaId();
+  GeneratedIntColumn get pregFrmDinaId =>
+      _pregFrmDinaId ??= _constructPregFrmDinaId();
   GeneratedIntColumn _constructPregFrmDinaId() {
     return GeneratedIntColumn('preg_frm_dina_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _PregFrmDinaDescMeta =
-      const VerificationMeta('PregFrmDinaDesc');
-  GeneratedTextColumn _PregFrmDinaDesc;
+  final VerificationMeta _pregFrmDinaDescMeta =
+      const VerificationMeta('pregFrmDinaDesc');
+  GeneratedTextColumn _pregFrmDinaDesc;
   @override
-  GeneratedTextColumn get PregFrmDinaDesc =>
-      _PregFrmDinaDesc ??= _constructPregFrmDinaDesc();
+  GeneratedTextColumn get pregFrmDinaDesc =>
+      _pregFrmDinaDesc ??= _constructPregFrmDinaDesc();
   GeneratedTextColumn _constructPregFrmDinaDesc() {
     return GeneratedTextColumn(
       'preg_frm_dina_desc',
@@ -2041,12 +1808,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaTituloMeta =
-      const VerificationMeta('PregFrmDinaTitulo');
-  GeneratedTextColumn _PregFrmDinaTitulo;
+  final VerificationMeta _pregFrmDinaTituloMeta =
+      const VerificationMeta('pregFrmDinaTitulo');
+  GeneratedTextColumn _pregFrmDinaTitulo;
   @override
-  GeneratedTextColumn get PregFrmDinaTitulo =>
-      _PregFrmDinaTitulo ??= _constructPregFrmDinaTitulo();
+  GeneratedTextColumn get pregFrmDinaTitulo =>
+      _pregFrmDinaTitulo ??= _constructPregFrmDinaTitulo();
   GeneratedTextColumn _constructPregFrmDinaTitulo() {
     return GeneratedTextColumn(
       'preg_frm_dina_titulo',
@@ -2055,12 +1822,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaTipPregMeta =
-      const VerificationMeta('PregFrmDinaTipPreg');
-  GeneratedIntColumn _PregFrmDinaTipPreg;
+  final VerificationMeta _pregFrmDinaTipPregMeta =
+      const VerificationMeta('pregFrmDinaTipPreg');
+  GeneratedIntColumn _pregFrmDinaTipPreg;
   @override
-  GeneratedIntColumn get PregFrmDinaTipPreg =>
-      _PregFrmDinaTipPreg ??= _constructPregFrmDinaTipPreg();
+  GeneratedIntColumn get pregFrmDinaTipPreg =>
+      _pregFrmDinaTipPreg ??= _constructPregFrmDinaTipPreg();
   GeneratedIntColumn _constructPregFrmDinaTipPreg() {
     return GeneratedIntColumn(
       'preg_frm_dina_tip_preg',
@@ -2069,12 +1836,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaDefaNomTabDinIdMeta =
-      const VerificationMeta('PregFrmDinaDefaNomTabDinId');
-  GeneratedIntColumn _PregFrmDinaDefaNomTabDinId;
+  final VerificationMeta _pregFrmDinaDefaNomTabDinIdMeta =
+      const VerificationMeta('pregFrmDinaDefaNomTabDinId');
+  GeneratedIntColumn _pregFrmDinaDefaNomTabDinId;
   @override
-  GeneratedIntColumn get PregFrmDinaDefaNomTabDinId =>
-      _PregFrmDinaDefaNomTabDinId ??= _constructPregFrmDinaDefaNomTabDinId();
+  GeneratedIntColumn get pregFrmDinaDefaNomTabDinId =>
+      _pregFrmDinaDefaNomTabDinId ??= _constructPregFrmDinaDefaNomTabDinId();
   GeneratedIntColumn _constructPregFrmDinaDefaNomTabDinId() {
     return GeneratedIntColumn(
       'preg_frm_dina_defa_nom_tab_din_id',
@@ -2083,12 +1850,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaValMinMeta =
-      const VerificationMeta('PregFrmDinaValMin');
-  GeneratedIntColumn _PregFrmDinaValMin;
+  final VerificationMeta _pregFrmDinaValMinMeta =
+      const VerificationMeta('pregFrmDinaValMin');
+  GeneratedIntColumn _pregFrmDinaValMin;
   @override
-  GeneratedIntColumn get PregFrmDinaValMin =>
-      _PregFrmDinaValMin ??= _constructPregFrmDinaValMin();
+  GeneratedIntColumn get pregFrmDinaValMin =>
+      _pregFrmDinaValMin ??= _constructPregFrmDinaValMin();
   GeneratedIntColumn _constructPregFrmDinaValMin() {
     return GeneratedIntColumn(
       'preg_frm_dina_val_min',
@@ -2097,12 +1864,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaValMaxMeta =
-      const VerificationMeta('PregFrmDinaValMax');
-  GeneratedIntColumn _PregFrmDinaValMax;
+  final VerificationMeta _pregFrmDinaValMaxMeta =
+      const VerificationMeta('pregFrmDinaValMax');
+  GeneratedIntColumn _pregFrmDinaValMax;
   @override
-  GeneratedIntColumn get PregFrmDinaValMax =>
-      _PregFrmDinaValMax ??= _constructPregFrmDinaValMax();
+  GeneratedIntColumn get pregFrmDinaValMax =>
+      _pregFrmDinaValMax ??= _constructPregFrmDinaValMax();
   GeneratedIntColumn _constructPregFrmDinaValMax() {
     return GeneratedIntColumn(
       'preg_frm_dina_val_max',
@@ -2111,12 +1878,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaTipDefaMeta =
-      const VerificationMeta('PregFrmDinaTipDefa');
-  GeneratedTextColumn _PregFrmDinaTipDefa;
+  final VerificationMeta _pregFrmDinaTipDefaMeta =
+      const VerificationMeta('pregFrmDinaTipDefa');
+  GeneratedTextColumn _pregFrmDinaTipDefa;
   @override
-  GeneratedTextColumn get PregFrmDinaTipDefa =>
-      _PregFrmDinaTipDefa ??= _constructPregFrmDinaTipDefa();
+  GeneratedTextColumn get pregFrmDinaTipDefa =>
+      _pregFrmDinaTipDefa ??= _constructPregFrmDinaTipDefa();
   GeneratedTextColumn _constructPregFrmDinaTipDefa() {
     return GeneratedTextColumn(
       'preg_frm_dina_tip_defa',
@@ -2125,12 +1892,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaValDefaMeta =
-      const VerificationMeta('PregFrmDinaValDefa');
-  GeneratedTextColumn _PregFrmDinaValDefa;
+  final VerificationMeta _pregFrmDinaValDefaMeta =
+      const VerificationMeta('pregFrmDinaValDefa');
+  GeneratedTextColumn _pregFrmDinaValDefa;
   @override
-  GeneratedTextColumn get PregFrmDinaValDefa =>
-      _PregFrmDinaValDefa ??= _constructPregFrmDinaValDefa();
+  GeneratedTextColumn get pregFrmDinaValDefa =>
+      _pregFrmDinaValDefa ??= _constructPregFrmDinaValDefa();
   GeneratedTextColumn _constructPregFrmDinaValDefa() {
     return GeneratedTextColumn(
       'preg_frm_dina_val_defa',
@@ -2139,12 +1906,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaDefaValMemoMeta =
-      const VerificationMeta('PregFrmDinaDefaValMemo');
-  GeneratedTextColumn _PregFrmDinaDefaValMemo;
+  final VerificationMeta _pregFrmDinaDefaValMemoMeta =
+      const VerificationMeta('pregFrmDinaDefaValMemo');
+  GeneratedTextColumn _pregFrmDinaDefaValMemo;
   @override
-  GeneratedTextColumn get PregFrmDinaDefaValMemo =>
-      _PregFrmDinaDefaValMemo ??= _constructPregFrmDinaDefaValMemo();
+  GeneratedTextColumn get pregFrmDinaDefaValMemo =>
+      _pregFrmDinaDefaValMemo ??= _constructPregFrmDinaDefaValMemo();
   GeneratedTextColumn _constructPregFrmDinaDefaValMemo() {
     return GeneratedTextColumn(
       'preg_frm_dina_defa_val_memo',
@@ -2153,12 +1920,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaDefaTabDinValIdMeta =
-      const VerificationMeta('PregFrmDinaDefaTabDinValId');
-  GeneratedIntColumn _PregFrmDinaDefaTabDinValId;
+  final VerificationMeta _pregFrmDinaDefaTabDinValIdMeta =
+      const VerificationMeta('pregFrmDinaDefaTabDinValId');
+  GeneratedIntColumn _pregFrmDinaDefaTabDinValId;
   @override
-  GeneratedIntColumn get PregFrmDinaDefaTabDinValId =>
-      _PregFrmDinaDefaTabDinValId ??= _constructPregFrmDinaDefaTabDinValId();
+  GeneratedIntColumn get pregFrmDinaDefaTabDinValId =>
+      _pregFrmDinaDefaTabDinValId ??= _constructPregFrmDinaDefaTabDinValId();
   GeneratedIntColumn _constructPregFrmDinaDefaTabDinValId() {
     return GeneratedIntColumn(
       'preg_frm_dina_defa_tab_din_val_id',
@@ -2167,12 +1934,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaSufijoMeta =
-      const VerificationMeta('PregFrmDinaSufijo');
-  GeneratedTextColumn _PregFrmDinaSufijo;
+  final VerificationMeta _pregFrmDinaSufijoMeta =
+      const VerificationMeta('pregFrmDinaSufijo');
+  GeneratedTextColumn _pregFrmDinaSufijo;
   @override
-  GeneratedTextColumn get PregFrmDinaSufijo =>
-      _PregFrmDinaSufijo ??= _constructPregFrmDinaSufijo();
+  GeneratedTextColumn get pregFrmDinaSufijo =>
+      _pregFrmDinaSufijo ??= _constructPregFrmDinaSufijo();
   GeneratedTextColumn _constructPregFrmDinaSufijo() {
     return GeneratedTextColumn(
       'preg_frm_dina_sufijo',
@@ -2181,12 +1948,12 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _PregFrmDinaHelpMeta =
-      const VerificationMeta('PregFrmDinaHelp');
-  GeneratedTextColumn _PregFrmDinaHelp;
+  final VerificationMeta _pregFrmDinaHelpMeta =
+      const VerificationMeta('pregFrmDinaHelp');
+  GeneratedTextColumn _pregFrmDinaHelp;
   @override
-  GeneratedTextColumn get PregFrmDinaHelp =>
-      _PregFrmDinaHelp ??= _constructPregFrmDinaHelp();
+  GeneratedTextColumn get pregFrmDinaHelp =>
+      _pregFrmDinaHelp ??= _constructPregFrmDinaHelp();
   GeneratedTextColumn _constructPregFrmDinaHelp() {
     return GeneratedTextColumn(
       'preg_frm_dina_help',
@@ -2195,22 +1962,22 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -2251,21 +2018,21 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
 
   @override
   List<GeneratedColumn> get $columns => [
-        PregFrmDinaId,
-        PregFrmDinaDesc,
-        PregFrmDinaTitulo,
-        PregFrmDinaTipPreg,
-        PregFrmDinaDefaNomTabDinId,
-        PregFrmDinaValMin,
-        PregFrmDinaValMax,
-        PregFrmDinaTipDefa,
-        PregFrmDinaValDefa,
-        PregFrmDinaDefaValMemo,
-        PregFrmDinaDefaTabDinValId,
-        PregFrmDinaSufijo,
-        PregFrmDinaHelp,
-        StatusId,
-        UsuId,
+        pregFrmDinaId,
+        pregFrmDinaDesc,
+        pregFrmDinaTitulo,
+        pregFrmDinaTipPreg,
+        pregFrmDinaDefaNomTabDinId,
+        pregFrmDinaValMin,
+        pregFrmDinaValMax,
+        pregFrmDinaTipDefa,
+        pregFrmDinaValDefa,
+        pregFrmDinaDefaValMemo,
+        pregFrmDinaDefaTabDinValId,
+        pregFrmDinaSufijo,
+        pregFrmDinaHelp,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -2280,123 +2047,123 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
   VerificationContext validateIntegrity(TablePregFrmDinaCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.PregFrmDinaId.present) {
+    if (d.pregFrmDinaId.present) {
       context.handle(
-          _PregFrmDinaIdMeta,
-          PregFrmDinaId.isAcceptableValue(
-              d.PregFrmDinaId.value, _PregFrmDinaIdMeta));
-    } else if (PregFrmDinaId.isRequired && isInserting) {
-      context.missing(_PregFrmDinaIdMeta);
+          _pregFrmDinaIdMeta,
+          pregFrmDinaId.isAcceptableValue(
+              d.pregFrmDinaId.value, _pregFrmDinaIdMeta));
+    } else if (pregFrmDinaId.isRequired && isInserting) {
+      context.missing(_pregFrmDinaIdMeta);
     }
-    if (d.PregFrmDinaDesc.present) {
+    if (d.pregFrmDinaDesc.present) {
       context.handle(
-          _PregFrmDinaDescMeta,
-          PregFrmDinaDesc.isAcceptableValue(
-              d.PregFrmDinaDesc.value, _PregFrmDinaDescMeta));
-    } else if (PregFrmDinaDesc.isRequired && isInserting) {
-      context.missing(_PregFrmDinaDescMeta);
+          _pregFrmDinaDescMeta,
+          pregFrmDinaDesc.isAcceptableValue(
+              d.pregFrmDinaDesc.value, _pregFrmDinaDescMeta));
+    } else if (pregFrmDinaDesc.isRequired && isInserting) {
+      context.missing(_pregFrmDinaDescMeta);
     }
-    if (d.PregFrmDinaTitulo.present) {
+    if (d.pregFrmDinaTitulo.present) {
       context.handle(
-          _PregFrmDinaTituloMeta,
-          PregFrmDinaTitulo.isAcceptableValue(
-              d.PregFrmDinaTitulo.value, _PregFrmDinaTituloMeta));
-    } else if (PregFrmDinaTitulo.isRequired && isInserting) {
-      context.missing(_PregFrmDinaTituloMeta);
+          _pregFrmDinaTituloMeta,
+          pregFrmDinaTitulo.isAcceptableValue(
+              d.pregFrmDinaTitulo.value, _pregFrmDinaTituloMeta));
+    } else if (pregFrmDinaTitulo.isRequired && isInserting) {
+      context.missing(_pregFrmDinaTituloMeta);
     }
-    if (d.PregFrmDinaTipPreg.present) {
+    if (d.pregFrmDinaTipPreg.present) {
       context.handle(
-          _PregFrmDinaTipPregMeta,
-          PregFrmDinaTipPreg.isAcceptableValue(
-              d.PregFrmDinaTipPreg.value, _PregFrmDinaTipPregMeta));
-    } else if (PregFrmDinaTipPreg.isRequired && isInserting) {
-      context.missing(_PregFrmDinaTipPregMeta);
+          _pregFrmDinaTipPregMeta,
+          pregFrmDinaTipPreg.isAcceptableValue(
+              d.pregFrmDinaTipPreg.value, _pregFrmDinaTipPregMeta));
+    } else if (pregFrmDinaTipPreg.isRequired && isInserting) {
+      context.missing(_pregFrmDinaTipPregMeta);
     }
-    if (d.PregFrmDinaDefaNomTabDinId.present) {
+    if (d.pregFrmDinaDefaNomTabDinId.present) {
       context.handle(
-          _PregFrmDinaDefaNomTabDinIdMeta,
-          PregFrmDinaDefaNomTabDinId.isAcceptableValue(
-              d.PregFrmDinaDefaNomTabDinId.value,
-              _PregFrmDinaDefaNomTabDinIdMeta));
-    } else if (PregFrmDinaDefaNomTabDinId.isRequired && isInserting) {
-      context.missing(_PregFrmDinaDefaNomTabDinIdMeta);
+          _pregFrmDinaDefaNomTabDinIdMeta,
+          pregFrmDinaDefaNomTabDinId.isAcceptableValue(
+              d.pregFrmDinaDefaNomTabDinId.value,
+              _pregFrmDinaDefaNomTabDinIdMeta));
+    } else if (pregFrmDinaDefaNomTabDinId.isRequired && isInserting) {
+      context.missing(_pregFrmDinaDefaNomTabDinIdMeta);
     }
-    if (d.PregFrmDinaValMin.present) {
+    if (d.pregFrmDinaValMin.present) {
       context.handle(
-          _PregFrmDinaValMinMeta,
-          PregFrmDinaValMin.isAcceptableValue(
-              d.PregFrmDinaValMin.value, _PregFrmDinaValMinMeta));
-    } else if (PregFrmDinaValMin.isRequired && isInserting) {
-      context.missing(_PregFrmDinaValMinMeta);
+          _pregFrmDinaValMinMeta,
+          pregFrmDinaValMin.isAcceptableValue(
+              d.pregFrmDinaValMin.value, _pregFrmDinaValMinMeta));
+    } else if (pregFrmDinaValMin.isRequired && isInserting) {
+      context.missing(_pregFrmDinaValMinMeta);
     }
-    if (d.PregFrmDinaValMax.present) {
+    if (d.pregFrmDinaValMax.present) {
       context.handle(
-          _PregFrmDinaValMaxMeta,
-          PregFrmDinaValMax.isAcceptableValue(
-              d.PregFrmDinaValMax.value, _PregFrmDinaValMaxMeta));
-    } else if (PregFrmDinaValMax.isRequired && isInserting) {
-      context.missing(_PregFrmDinaValMaxMeta);
+          _pregFrmDinaValMaxMeta,
+          pregFrmDinaValMax.isAcceptableValue(
+              d.pregFrmDinaValMax.value, _pregFrmDinaValMaxMeta));
+    } else if (pregFrmDinaValMax.isRequired && isInserting) {
+      context.missing(_pregFrmDinaValMaxMeta);
     }
-    if (d.PregFrmDinaTipDefa.present) {
+    if (d.pregFrmDinaTipDefa.present) {
       context.handle(
-          _PregFrmDinaTipDefaMeta,
-          PregFrmDinaTipDefa.isAcceptableValue(
-              d.PregFrmDinaTipDefa.value, _PregFrmDinaTipDefaMeta));
-    } else if (PregFrmDinaTipDefa.isRequired && isInserting) {
-      context.missing(_PregFrmDinaTipDefaMeta);
+          _pregFrmDinaTipDefaMeta,
+          pregFrmDinaTipDefa.isAcceptableValue(
+              d.pregFrmDinaTipDefa.value, _pregFrmDinaTipDefaMeta));
+    } else if (pregFrmDinaTipDefa.isRequired && isInserting) {
+      context.missing(_pregFrmDinaTipDefaMeta);
     }
-    if (d.PregFrmDinaValDefa.present) {
+    if (d.pregFrmDinaValDefa.present) {
       context.handle(
-          _PregFrmDinaValDefaMeta,
-          PregFrmDinaValDefa.isAcceptableValue(
-              d.PregFrmDinaValDefa.value, _PregFrmDinaValDefaMeta));
-    } else if (PregFrmDinaValDefa.isRequired && isInserting) {
-      context.missing(_PregFrmDinaValDefaMeta);
+          _pregFrmDinaValDefaMeta,
+          pregFrmDinaValDefa.isAcceptableValue(
+              d.pregFrmDinaValDefa.value, _pregFrmDinaValDefaMeta));
+    } else if (pregFrmDinaValDefa.isRequired && isInserting) {
+      context.missing(_pregFrmDinaValDefaMeta);
     }
-    if (d.PregFrmDinaDefaValMemo.present) {
+    if (d.pregFrmDinaDefaValMemo.present) {
       context.handle(
-          _PregFrmDinaDefaValMemoMeta,
-          PregFrmDinaDefaValMemo.isAcceptableValue(
-              d.PregFrmDinaDefaValMemo.value, _PregFrmDinaDefaValMemoMeta));
-    } else if (PregFrmDinaDefaValMemo.isRequired && isInserting) {
-      context.missing(_PregFrmDinaDefaValMemoMeta);
+          _pregFrmDinaDefaValMemoMeta,
+          pregFrmDinaDefaValMemo.isAcceptableValue(
+              d.pregFrmDinaDefaValMemo.value, _pregFrmDinaDefaValMemoMeta));
+    } else if (pregFrmDinaDefaValMemo.isRequired && isInserting) {
+      context.missing(_pregFrmDinaDefaValMemoMeta);
     }
-    if (d.PregFrmDinaDefaTabDinValId.present) {
+    if (d.pregFrmDinaDefaTabDinValId.present) {
       context.handle(
-          _PregFrmDinaDefaTabDinValIdMeta,
-          PregFrmDinaDefaTabDinValId.isAcceptableValue(
-              d.PregFrmDinaDefaTabDinValId.value,
-              _PregFrmDinaDefaTabDinValIdMeta));
-    } else if (PregFrmDinaDefaTabDinValId.isRequired && isInserting) {
-      context.missing(_PregFrmDinaDefaTabDinValIdMeta);
+          _pregFrmDinaDefaTabDinValIdMeta,
+          pregFrmDinaDefaTabDinValId.isAcceptableValue(
+              d.pregFrmDinaDefaTabDinValId.value,
+              _pregFrmDinaDefaTabDinValIdMeta));
+    } else if (pregFrmDinaDefaTabDinValId.isRequired && isInserting) {
+      context.missing(_pregFrmDinaDefaTabDinValIdMeta);
     }
-    if (d.PregFrmDinaSufijo.present) {
+    if (d.pregFrmDinaSufijo.present) {
       context.handle(
-          _PregFrmDinaSufijoMeta,
-          PregFrmDinaSufijo.isAcceptableValue(
-              d.PregFrmDinaSufijo.value, _PregFrmDinaSufijoMeta));
-    } else if (PregFrmDinaSufijo.isRequired && isInserting) {
-      context.missing(_PregFrmDinaSufijoMeta);
+          _pregFrmDinaSufijoMeta,
+          pregFrmDinaSufijo.isAcceptableValue(
+              d.pregFrmDinaSufijo.value, _pregFrmDinaSufijoMeta));
+    } else if (pregFrmDinaSufijo.isRequired && isInserting) {
+      context.missing(_pregFrmDinaSufijoMeta);
     }
-    if (d.PregFrmDinaHelp.present) {
+    if (d.pregFrmDinaHelp.present) {
       context.handle(
-          _PregFrmDinaHelpMeta,
-          PregFrmDinaHelp.isAcceptableValue(
-              d.PregFrmDinaHelp.value, _PregFrmDinaHelpMeta));
-    } else if (PregFrmDinaHelp.isRequired && isInserting) {
-      context.missing(_PregFrmDinaHelpMeta);
+          _pregFrmDinaHelpMeta,
+          pregFrmDinaHelp.isAcceptableValue(
+              d.pregFrmDinaHelp.value, _pregFrmDinaHelpMeta));
+    } else if (pregFrmDinaHelp.isRequired && isInserting) {
+      context.missing(_pregFrmDinaHelpMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -2420,7 +2187,7 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {PregFrmDinaId};
+  Set<GeneratedColumn> get $primaryKey => {pregFrmDinaId};
   @override
   PregFrmDina map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -2430,62 +2197,62 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
   @override
   Map<String, Variable> entityToSql(TablePregFrmDinaCompanion d) {
     final map = <String, Variable>{};
-    if (d.PregFrmDinaId.present) {
-      map['preg_frm_dina_id'] = Variable<int, IntType>(d.PregFrmDinaId.value);
+    if (d.pregFrmDinaId.present) {
+      map['preg_frm_dina_id'] = Variable<int, IntType>(d.pregFrmDinaId.value);
     }
-    if (d.PregFrmDinaDesc.present) {
+    if (d.pregFrmDinaDesc.present) {
       map['preg_frm_dina_desc'] =
-          Variable<String, StringType>(d.PregFrmDinaDesc.value);
+          Variable<String, StringType>(d.pregFrmDinaDesc.value);
     }
-    if (d.PregFrmDinaTitulo.present) {
+    if (d.pregFrmDinaTitulo.present) {
       map['preg_frm_dina_titulo'] =
-          Variable<String, StringType>(d.PregFrmDinaTitulo.value);
+          Variable<String, StringType>(d.pregFrmDinaTitulo.value);
     }
-    if (d.PregFrmDinaTipPreg.present) {
+    if (d.pregFrmDinaTipPreg.present) {
       map['preg_frm_dina_tip_preg'] =
-          Variable<int, IntType>(d.PregFrmDinaTipPreg.value);
+          Variable<int, IntType>(d.pregFrmDinaTipPreg.value);
     }
-    if (d.PregFrmDinaDefaNomTabDinId.present) {
+    if (d.pregFrmDinaDefaNomTabDinId.present) {
       map['preg_frm_dina_defa_nom_tab_din_id'] =
-          Variable<int, IntType>(d.PregFrmDinaDefaNomTabDinId.value);
+          Variable<int, IntType>(d.pregFrmDinaDefaNomTabDinId.value);
     }
-    if (d.PregFrmDinaValMin.present) {
+    if (d.pregFrmDinaValMin.present) {
       map['preg_frm_dina_val_min'] =
-          Variable<int, IntType>(d.PregFrmDinaValMin.value);
+          Variable<int, IntType>(d.pregFrmDinaValMin.value);
     }
-    if (d.PregFrmDinaValMax.present) {
+    if (d.pregFrmDinaValMax.present) {
       map['preg_frm_dina_val_max'] =
-          Variable<int, IntType>(d.PregFrmDinaValMax.value);
+          Variable<int, IntType>(d.pregFrmDinaValMax.value);
     }
-    if (d.PregFrmDinaTipDefa.present) {
+    if (d.pregFrmDinaTipDefa.present) {
       map['preg_frm_dina_tip_defa'] =
-          Variable<String, StringType>(d.PregFrmDinaTipDefa.value);
+          Variable<String, StringType>(d.pregFrmDinaTipDefa.value);
     }
-    if (d.PregFrmDinaValDefa.present) {
+    if (d.pregFrmDinaValDefa.present) {
       map['preg_frm_dina_val_defa'] =
-          Variable<String, StringType>(d.PregFrmDinaValDefa.value);
+          Variable<String, StringType>(d.pregFrmDinaValDefa.value);
     }
-    if (d.PregFrmDinaDefaValMemo.present) {
+    if (d.pregFrmDinaDefaValMemo.present) {
       map['preg_frm_dina_defa_val_memo'] =
-          Variable<String, StringType>(d.PregFrmDinaDefaValMemo.value);
+          Variable<String, StringType>(d.pregFrmDinaDefaValMemo.value);
     }
-    if (d.PregFrmDinaDefaTabDinValId.present) {
+    if (d.pregFrmDinaDefaTabDinValId.present) {
       map['preg_frm_dina_defa_tab_din_val_id'] =
-          Variable<int, IntType>(d.PregFrmDinaDefaTabDinValId.value);
+          Variable<int, IntType>(d.pregFrmDinaDefaTabDinValId.value);
     }
-    if (d.PregFrmDinaSufijo.present) {
+    if (d.pregFrmDinaSufijo.present) {
       map['preg_frm_dina_sufijo'] =
-          Variable<String, StringType>(d.PregFrmDinaSufijo.value);
+          Variable<String, StringType>(d.pregFrmDinaSufijo.value);
     }
-    if (d.PregFrmDinaHelp.present) {
+    if (d.pregFrmDinaHelp.present) {
       map['preg_frm_dina_help'] =
-          Variable<String, StringType>(d.PregFrmDinaHelp.value);
+          Variable<String, StringType>(d.pregFrmDinaHelp.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -2506,40 +2273,40 @@ class $TablePregFrmDinaTable extends TablePregFrmDina
 }
 
 class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
-  final int FicId;
-  final int FicVerId;
-  final int FicVerItemsId;
-  final int PregFrmDinaId;
-  final int PregFrmDinaOrd;
-  final int FichaVerPregFlgObli;
-  final int FichaVerCondPregFrmDinaId;
-  final String FichaVerPregSex;
-  final String FichaVerPregFlgSexObl;
-  final int FichaVerPregEdadMin;
-  final int FichaVerPregEdadMax;
-  final String FichaVerPregEdadEd;
-  final int FichaVerPregFlgEdadObl;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final int ficVerId;
+  final int ficVerItemsId;
+  final int pregFrmDinaId;
+  final int pregFrmDinaOrd;
+  final int fichaVerPregFlgObli;
+  final int fichaVerCondPregFrmDinaId;
+  final String fichaVerPregSex;
+  final String fichaVerPregFlgSexObl;
+  final int fichaVerPregEdadMin;
+  final int fichaVerPregEdadMax;
+  final String fichaVerPregEdadEd;
+  final int fichaVerPregFlgEdadObl;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FichaVerPreg(
-      {@required this.FicId,
-      @required this.FicVerId,
-      @required this.FicVerItemsId,
-      @required this.PregFrmDinaId,
-      @required this.PregFrmDinaOrd,
-      @required this.FichaVerPregFlgObli,
-      @required this.FichaVerCondPregFrmDinaId,
-      @required this.FichaVerPregSex,
-      @required this.FichaVerPregFlgSexObl,
-      @required this.FichaVerPregEdadMin,
-      @required this.FichaVerPregEdadMax,
-      @required this.FichaVerPregEdadEd,
-      @required this.FichaVerPregFlgEdadObl,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.ficVerId,
+      @required this.ficVerItemsId,
+      @required this.pregFrmDinaId,
+      @required this.pregFrmDinaOrd,
+      @required this.fichaVerPregFlgObli,
+      @required this.fichaVerCondPregFrmDinaId,
+      @required this.fichaVerPregSex,
+      @required this.fichaVerPregFlgSexObl,
+      @required this.fichaVerPregEdadMin,
+      @required this.fichaVerPregEdadMax,
+      @required this.fichaVerPregEdadEd,
+      @required this.fichaVerPregFlgEdadObl,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -2550,34 +2317,34 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FichaVerPreg(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      FicVerId:
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      ficVerId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_id']),
-      FicVerItemsId: intType
+      ficVerItemsId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_items_id']),
-      PregFrmDinaId: intType
+      pregFrmDinaId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}preg_frm_dina_id']),
-      PregFrmDinaOrd: intType
+      pregFrmDinaOrd: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}preg_frm_dina_ord']),
-      FichaVerPregFlgObli: intType.mapFromDatabaseResponse(
+      fichaVerPregFlgObli: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_flg_obli']),
-      FichaVerCondPregFrmDinaId: intType.mapFromDatabaseResponse(
+      fichaVerCondPregFrmDinaId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_cond_preg_frm_dina_id']),
-      FichaVerPregSex: stringType.mapFromDatabaseResponse(
+      fichaVerPregSex: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_sex']),
-      FichaVerPregFlgSexObl: stringType.mapFromDatabaseResponse(
+      fichaVerPregFlgSexObl: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_flg_sex_obl']),
-      FichaVerPregEdadMin: intType.mapFromDatabaseResponse(
+      fichaVerPregEdadMin: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_edad_min']),
-      FichaVerPregEdadMax: intType.mapFromDatabaseResponse(
+      fichaVerPregEdadMax: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_edad_max']),
-      FichaVerPregEdadEd: stringType.mapFromDatabaseResponse(
+      fichaVerPregEdadEd: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_edad_ed']),
-      FichaVerPregFlgEdadObl: intType.mapFromDatabaseResponse(
+      fichaVerPregFlgEdadObl: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_preg_flg_edad_obl']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -2589,28 +2356,28 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   factory FichaVerPreg.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FichaVerPreg(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      FicVerId: serializer.fromJson<int>(json['FicVerId']),
-      FicVerItemsId: serializer.fromJson<int>(json['FicVerItemsId']),
-      PregFrmDinaId: serializer.fromJson<int>(json['PregFrmDinaId']),
-      PregFrmDinaOrd: serializer.fromJson<int>(json['PregFrmDinaOrd']),
-      FichaVerPregFlgObli:
-          serializer.fromJson<int>(json['FichaVerPregFlgObli']),
-      FichaVerCondPregFrmDinaId:
-          serializer.fromJson<int>(json['FichaVerCondPregFrmDinaId']),
-      FichaVerPregSex: serializer.fromJson<String>(json['FichaVerPregSex']),
-      FichaVerPregFlgSexObl:
-          serializer.fromJson<String>(json['FichaVerPregFlgSexObl']),
-      FichaVerPregEdadMin:
-          serializer.fromJson<int>(json['FichaVerPregEdadMin']),
-      FichaVerPregEdadMax:
-          serializer.fromJson<int>(json['FichaVerPregEdadMax']),
-      FichaVerPregEdadEd:
-          serializer.fromJson<String>(json['FichaVerPregEdadEd']),
-      FichaVerPregFlgEdadObl:
-          serializer.fromJson<int>(json['FichaVerPregFlgEdadObl']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      ficVerId: serializer.fromJson<int>(json['ficVerId']),
+      ficVerItemsId: serializer.fromJson<int>(json['ficVerItemsId']),
+      pregFrmDinaId: serializer.fromJson<int>(json['pregFrmDinaId']),
+      pregFrmDinaOrd: serializer.fromJson<int>(json['pregFrmDinaOrd']),
+      fichaVerPregFlgObli:
+          serializer.fromJson<int>(json['fichaVerPregFlgObli']),
+      fichaVerCondPregFrmDinaId:
+          serializer.fromJson<int>(json['fichaVerCondPregFrmDinaId']),
+      fichaVerPregSex: serializer.fromJson<String>(json['fichaVerPregSex']),
+      fichaVerPregFlgSexObl:
+          serializer.fromJson<String>(json['fichaVerPregFlgSexObl']),
+      fichaVerPregEdadMin:
+          serializer.fromJson<int>(json['fichaVerPregEdadMin']),
+      fichaVerPregEdadMax:
+          serializer.fromJson<int>(json['fichaVerPregEdadMax']),
+      fichaVerPregEdadEd:
+          serializer.fromJson<String>(json['fichaVerPregEdadEd']),
+      fichaVerPregFlgEdadObl:
+          serializer.fromJson<int>(json['fichaVerPregFlgEdadObl']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -2620,22 +2387,22 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'FicVerId': serializer.toJson<int>(FicVerId),
-      'FicVerItemsId': serializer.toJson<int>(FicVerItemsId),
-      'PregFrmDinaId': serializer.toJson<int>(PregFrmDinaId),
-      'PregFrmDinaOrd': serializer.toJson<int>(PregFrmDinaOrd),
-      'FichaVerPregFlgObli': serializer.toJson<int>(FichaVerPregFlgObli),
-      'FichaVerCondPregFrmDinaId':
-          serializer.toJson<int>(FichaVerCondPregFrmDinaId),
-      'FichaVerPregSex': serializer.toJson<String>(FichaVerPregSex),
-      'FichaVerPregFlgSexObl': serializer.toJson<String>(FichaVerPregFlgSexObl),
-      'FichaVerPregEdadMin': serializer.toJson<int>(FichaVerPregEdadMin),
-      'FichaVerPregEdadMax': serializer.toJson<int>(FichaVerPregEdadMax),
-      'FichaVerPregEdadEd': serializer.toJson<String>(FichaVerPregEdadEd),
-      'FichaVerPregFlgEdadObl': serializer.toJson<int>(FichaVerPregFlgEdadObl),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'ficVerId': serializer.toJson<int>(ficVerId),
+      'ficVerItemsId': serializer.toJson<int>(ficVerItemsId),
+      'pregFrmDinaId': serializer.toJson<int>(pregFrmDinaId),
+      'pregFrmDinaOrd': serializer.toJson<int>(pregFrmDinaOrd),
+      'fichaVerPregFlgObli': serializer.toJson<int>(fichaVerPregFlgObli),
+      'fichaVerCondPregFrmDinaId':
+          serializer.toJson<int>(fichaVerCondPregFrmDinaId),
+      'fichaVerPregSex': serializer.toJson<String>(fichaVerPregSex),
+      'fichaVerPregFlgSexObl': serializer.toJson<String>(fichaVerPregFlgSexObl),
+      'fichaVerPregEdadMin': serializer.toJson<int>(fichaVerPregEdadMin),
+      'fichaVerPregEdadMax': serializer.toJson<int>(fichaVerPregEdadMax),
+      'fichaVerPregEdadEd': serializer.toJson<String>(fichaVerPregEdadEd),
+      'fichaVerPregFlgEdadObl': serializer.toJson<int>(fichaVerPregFlgEdadObl),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -2646,50 +2413,50 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   T createCompanion<T extends UpdateCompanion<FichaVerPreg>>(
       bool nullToAbsent) {
     return TableFichaVerPregCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      FicVerId: FicVerId == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      ficVerId: ficVerId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerId),
-      FicVerItemsId: FicVerItemsId == null && nullToAbsent
+          : Value(ficVerId),
+      ficVerItemsId: ficVerItemsId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsId),
-      PregFrmDinaId: PregFrmDinaId == null && nullToAbsent
+          : Value(ficVerItemsId),
+      pregFrmDinaId: pregFrmDinaId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaId),
-      PregFrmDinaOrd: PregFrmDinaOrd == null && nullToAbsent
+          : Value(pregFrmDinaId),
+      pregFrmDinaOrd: pregFrmDinaOrd == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaOrd),
-      FichaVerPregFlgObli: FichaVerPregFlgObli == null && nullToAbsent
+          : Value(pregFrmDinaOrd),
+      fichaVerPregFlgObli: fichaVerPregFlgObli == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregFlgObli),
-      FichaVerCondPregFrmDinaId:
-          FichaVerCondPregFrmDinaId == null && nullToAbsent
+          : Value(fichaVerPregFlgObli),
+      fichaVerCondPregFrmDinaId:
+          fichaVerCondPregFrmDinaId == null && nullToAbsent
               ? const Value.absent()
-              : Value(FichaVerCondPregFrmDinaId),
-      FichaVerPregSex: FichaVerPregSex == null && nullToAbsent
+              : Value(fichaVerCondPregFrmDinaId),
+      fichaVerPregSex: fichaVerPregSex == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregSex),
-      FichaVerPregFlgSexObl: FichaVerPregFlgSexObl == null && nullToAbsent
+          : Value(fichaVerPregSex),
+      fichaVerPregFlgSexObl: fichaVerPregFlgSexObl == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregFlgSexObl),
-      FichaVerPregEdadMin: FichaVerPregEdadMin == null && nullToAbsent
+          : Value(fichaVerPregFlgSexObl),
+      fichaVerPregEdadMin: fichaVerPregEdadMin == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregEdadMin),
-      FichaVerPregEdadMax: FichaVerPregEdadMax == null && nullToAbsent
+          : Value(fichaVerPregEdadMin),
+      fichaVerPregEdadMax: fichaVerPregEdadMax == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregEdadMax),
-      FichaVerPregEdadEd: FichaVerPregEdadEd == null && nullToAbsent
+          : Value(fichaVerPregEdadMax),
+      fichaVerPregEdadEd: fichaVerPregEdadEd == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregEdadEd),
-      FichaVerPregFlgEdadObl: FichaVerPregFlgEdadObl == null && nullToAbsent
+          : Value(fichaVerPregEdadEd),
+      fichaVerPregFlgEdadObl: fichaVerPregFlgEdadObl == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerPregFlgEdadObl),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(fichaVerPregFlgEdadObl),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -2703,43 +2470,43 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   }
 
   FichaVerPreg copyWith(
-          {int FicId,
-          int FicVerId,
-          int FicVerItemsId,
-          int PregFrmDinaId,
-          int PregFrmDinaOrd,
-          int FichaVerPregFlgObli,
-          int FichaVerCondPregFrmDinaId,
-          String FichaVerPregSex,
-          String FichaVerPregFlgSexObl,
-          int FichaVerPregEdadMin,
-          int FichaVerPregEdadMax,
-          String FichaVerPregEdadEd,
-          int FichaVerPregFlgEdadObl,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          int ficVerId,
+          int ficVerItemsId,
+          int pregFrmDinaId,
+          int pregFrmDinaOrd,
+          int fichaVerPregFlgObli,
+          int fichaVerCondPregFrmDinaId,
+          String fichaVerPregSex,
+          String fichaVerPregFlgSexObl,
+          int fichaVerPregEdadMin,
+          int fichaVerPregEdadMax,
+          String fichaVerPregEdadEd,
+          int fichaVerPregFlgEdadObl,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FichaVerPreg(
-        FicId: FicId ?? this.FicId,
-        FicVerId: FicVerId ?? this.FicVerId,
-        FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-        PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-        PregFrmDinaOrd: PregFrmDinaOrd ?? this.PregFrmDinaOrd,
-        FichaVerPregFlgObli: FichaVerPregFlgObli ?? this.FichaVerPregFlgObli,
-        FichaVerCondPregFrmDinaId:
-            FichaVerCondPregFrmDinaId ?? this.FichaVerCondPregFrmDinaId,
-        FichaVerPregSex: FichaVerPregSex ?? this.FichaVerPregSex,
-        FichaVerPregFlgSexObl:
-            FichaVerPregFlgSexObl ?? this.FichaVerPregFlgSexObl,
-        FichaVerPregEdadMin: FichaVerPregEdadMin ?? this.FichaVerPregEdadMin,
-        FichaVerPregEdadMax: FichaVerPregEdadMax ?? this.FichaVerPregEdadMax,
-        FichaVerPregEdadEd: FichaVerPregEdadEd ?? this.FichaVerPregEdadEd,
-        FichaVerPregFlgEdadObl:
-            FichaVerPregFlgEdadObl ?? this.FichaVerPregFlgEdadObl,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        ficVerId: ficVerId ?? this.ficVerId,
+        ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+        pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+        pregFrmDinaOrd: pregFrmDinaOrd ?? this.pregFrmDinaOrd,
+        fichaVerPregFlgObli: fichaVerPregFlgObli ?? this.fichaVerPregFlgObli,
+        fichaVerCondPregFrmDinaId:
+            fichaVerCondPregFrmDinaId ?? this.fichaVerCondPregFrmDinaId,
+        fichaVerPregSex: fichaVerPregSex ?? this.fichaVerPregSex,
+        fichaVerPregFlgSexObl:
+            fichaVerPregFlgSexObl ?? this.fichaVerPregFlgSexObl,
+        fichaVerPregEdadMin: fichaVerPregEdadMin ?? this.fichaVerPregEdadMin,
+        fichaVerPregEdadMax: fichaVerPregEdadMax ?? this.fichaVerPregEdadMax,
+        fichaVerPregEdadEd: fichaVerPregEdadEd ?? this.fichaVerPregEdadEd,
+        fichaVerPregFlgEdadObl:
+            fichaVerPregFlgEdadObl ?? this.fichaVerPregFlgEdadObl,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -2747,21 +2514,21 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   @override
   String toString() {
     return (StringBuffer('FichaVerPreg(')
-          ..write('FicId: $FicId, ')
-          ..write('FicVerId: $FicVerId, ')
-          ..write('FicVerItemsId: $FicVerItemsId, ')
-          ..write('PregFrmDinaId: $PregFrmDinaId, ')
-          ..write('PregFrmDinaOrd: $PregFrmDinaOrd, ')
-          ..write('FichaVerPregFlgObli: $FichaVerPregFlgObli, ')
-          ..write('FichaVerCondPregFrmDinaId: $FichaVerCondPregFrmDinaId, ')
-          ..write('FichaVerPregSex: $FichaVerPregSex, ')
-          ..write('FichaVerPregFlgSexObl: $FichaVerPregFlgSexObl, ')
-          ..write('FichaVerPregEdadMin: $FichaVerPregEdadMin, ')
-          ..write('FichaVerPregEdadMax: $FichaVerPregEdadMax, ')
-          ..write('FichaVerPregEdadEd: $FichaVerPregEdadEd, ')
-          ..write('FichaVerPregFlgEdadObl: $FichaVerPregFlgEdadObl, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('ficVerId: $ficVerId, ')
+          ..write('ficVerItemsId: $ficVerItemsId, ')
+          ..write('pregFrmDinaId: $pregFrmDinaId, ')
+          ..write('pregFrmDinaOrd: $pregFrmDinaOrd, ')
+          ..write('fichaVerPregFlgObli: $fichaVerPregFlgObli, ')
+          ..write('fichaVerCondPregFrmDinaId: $fichaVerCondPregFrmDinaId, ')
+          ..write('fichaVerPregSex: $fichaVerPregSex, ')
+          ..write('fichaVerPregFlgSexObl: $fichaVerPregFlgSexObl, ')
+          ..write('fichaVerPregEdadMin: $fichaVerPregEdadMin, ')
+          ..write('fichaVerPregEdadMax: $fichaVerPregEdadMax, ')
+          ..write('fichaVerPregEdadEd: $fichaVerPregEdadEd, ')
+          ..write('fichaVerPregFlgEdadObl: $fichaVerPregFlgEdadObl, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -2771,36 +2538,36 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          FicVerId.hashCode,
+          ficVerId.hashCode,
           $mrjc(
-              FicVerItemsId.hashCode,
+              ficVerItemsId.hashCode,
               $mrjc(
-                  PregFrmDinaId.hashCode,
+                  pregFrmDinaId.hashCode,
                   $mrjc(
-                      PregFrmDinaOrd.hashCode,
+                      pregFrmDinaOrd.hashCode,
                       $mrjc(
-                          FichaVerPregFlgObli.hashCode,
+                          fichaVerPregFlgObli.hashCode,
                           $mrjc(
-                              FichaVerCondPregFrmDinaId.hashCode,
+                              fichaVerCondPregFrmDinaId.hashCode,
                               $mrjc(
-                                  FichaVerPregSex.hashCode,
+                                  fichaVerPregSex.hashCode,
                                   $mrjc(
-                                      FichaVerPregFlgSexObl.hashCode,
+                                      fichaVerPregFlgSexObl.hashCode,
                                       $mrjc(
-                                          FichaVerPregEdadMin.hashCode,
+                                          fichaVerPregEdadMin.hashCode,
                                           $mrjc(
-                                              FichaVerPregEdadMax.hashCode,
+                                              fichaVerPregEdadMax.hashCode,
                                               $mrjc(
-                                                  FichaVerPregEdadEd.hashCode,
+                                                  fichaVerPregEdadEd.hashCode,
                                                   $mrjc(
-                                                      FichaVerPregFlgEdadObl
+                                                      fichaVerPregFlgEdadObl
                                                           .hashCode,
                                                       $mrjc(
-                                                          StatusId.hashCode,
+                                                          statusId.hashCode,
                                                           $mrjc(
-                                                              UsuId.hashCode,
+                                                              usuId.hashCode,
                                                               $mrjc(
                                                                   createdAt
                                                                       .hashCode,
@@ -2813,103 +2580,103 @@ class FichaVerPreg extends DataClass implements Insertable<FichaVerPreg> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FichaVerPreg &&
-          other.FicId == FicId &&
-          other.FicVerId == FicVerId &&
-          other.FicVerItemsId == FicVerItemsId &&
-          other.PregFrmDinaId == PregFrmDinaId &&
-          other.PregFrmDinaOrd == PregFrmDinaOrd &&
-          other.FichaVerPregFlgObli == FichaVerPregFlgObli &&
-          other.FichaVerCondPregFrmDinaId == FichaVerCondPregFrmDinaId &&
-          other.FichaVerPregSex == FichaVerPregSex &&
-          other.FichaVerPregFlgSexObl == FichaVerPregFlgSexObl &&
-          other.FichaVerPregEdadMin == FichaVerPregEdadMin &&
-          other.FichaVerPregEdadMax == FichaVerPregEdadMax &&
-          other.FichaVerPregEdadEd == FichaVerPregEdadEd &&
-          other.FichaVerPregFlgEdadObl == FichaVerPregFlgEdadObl &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.ficVerId == ficVerId &&
+          other.ficVerItemsId == ficVerItemsId &&
+          other.pregFrmDinaId == pregFrmDinaId &&
+          other.pregFrmDinaOrd == pregFrmDinaOrd &&
+          other.fichaVerPregFlgObli == fichaVerPregFlgObli &&
+          other.fichaVerCondPregFrmDinaId == fichaVerCondPregFrmDinaId &&
+          other.fichaVerPregSex == fichaVerPregSex &&
+          other.fichaVerPregFlgSexObl == fichaVerPregFlgSexObl &&
+          other.fichaVerPregEdadMin == fichaVerPregEdadMin &&
+          other.fichaVerPregEdadMax == fichaVerPregEdadMax &&
+          other.fichaVerPregEdadEd == fichaVerPregEdadEd &&
+          other.fichaVerPregFlgEdadObl == fichaVerPregFlgEdadObl &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFichaVerPregCompanion extends UpdateCompanion<FichaVerPreg> {
-  final Value<int> FicId;
-  final Value<int> FicVerId;
-  final Value<int> FicVerItemsId;
-  final Value<int> PregFrmDinaId;
-  final Value<int> PregFrmDinaOrd;
-  final Value<int> FichaVerPregFlgObli;
-  final Value<int> FichaVerCondPregFrmDinaId;
-  final Value<String> FichaVerPregSex;
-  final Value<String> FichaVerPregFlgSexObl;
-  final Value<int> FichaVerPregEdadMin;
-  final Value<int> FichaVerPregEdadMax;
-  final Value<String> FichaVerPregEdadEd;
-  final Value<int> FichaVerPregFlgEdadObl;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<int> ficVerId;
+  final Value<int> ficVerItemsId;
+  final Value<int> pregFrmDinaId;
+  final Value<int> pregFrmDinaOrd;
+  final Value<int> fichaVerPregFlgObli;
+  final Value<int> fichaVerCondPregFrmDinaId;
+  final Value<String> fichaVerPregSex;
+  final Value<String> fichaVerPregFlgSexObl;
+  final Value<int> fichaVerPregEdadMin;
+  final Value<int> fichaVerPregEdadMax;
+  final Value<String> fichaVerPregEdadEd;
+  final Value<int> fichaVerPregFlgEdadObl;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaVerPregCompanion({
-    this.FicId = const Value.absent(),
-    this.FicVerId = const Value.absent(),
-    this.FicVerItemsId = const Value.absent(),
-    this.PregFrmDinaId = const Value.absent(),
-    this.PregFrmDinaOrd = const Value.absent(),
-    this.FichaVerPregFlgObli = const Value.absent(),
-    this.FichaVerCondPregFrmDinaId = const Value.absent(),
-    this.FichaVerPregSex = const Value.absent(),
-    this.FichaVerPregFlgSexObl = const Value.absent(),
-    this.FichaVerPregEdadMin = const Value.absent(),
-    this.FichaVerPregEdadMax = const Value.absent(),
-    this.FichaVerPregEdadEd = const Value.absent(),
-    this.FichaVerPregFlgEdadObl = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.ficVerId = const Value.absent(),
+    this.ficVerItemsId = const Value.absent(),
+    this.pregFrmDinaId = const Value.absent(),
+    this.pregFrmDinaOrd = const Value.absent(),
+    this.fichaVerPregFlgObli = const Value.absent(),
+    this.fichaVerCondPregFrmDinaId = const Value.absent(),
+    this.fichaVerPregSex = const Value.absent(),
+    this.fichaVerPregFlgSexObl = const Value.absent(),
+    this.fichaVerPregEdadMin = const Value.absent(),
+    this.fichaVerPregEdadMax = const Value.absent(),
+    this.fichaVerPregEdadEd = const Value.absent(),
+    this.fichaVerPregFlgEdadObl = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaVerPregCompanion copyWith(
-      {Value<int> FicId,
-      Value<int> FicVerId,
-      Value<int> FicVerItemsId,
-      Value<int> PregFrmDinaId,
-      Value<int> PregFrmDinaOrd,
-      Value<int> FichaVerPregFlgObli,
-      Value<int> FichaVerCondPregFrmDinaId,
-      Value<String> FichaVerPregSex,
-      Value<String> FichaVerPregFlgSexObl,
-      Value<int> FichaVerPregEdadMin,
-      Value<int> FichaVerPregEdadMax,
-      Value<String> FichaVerPregEdadEd,
-      Value<int> FichaVerPregFlgEdadObl,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<int> ficVerId,
+      Value<int> ficVerItemsId,
+      Value<int> pregFrmDinaId,
+      Value<int> pregFrmDinaOrd,
+      Value<int> fichaVerPregFlgObli,
+      Value<int> fichaVerCondPregFrmDinaId,
+      Value<String> fichaVerPregSex,
+      Value<String> fichaVerPregFlgSexObl,
+      Value<int> fichaVerPregEdadMin,
+      Value<int> fichaVerPregEdadMax,
+      Value<String> fichaVerPregEdadEd,
+      Value<int> fichaVerPregFlgEdadObl,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaVerPregCompanion(
-      FicId: FicId ?? this.FicId,
-      FicVerId: FicVerId ?? this.FicVerId,
-      FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-      PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-      PregFrmDinaOrd: PregFrmDinaOrd ?? this.PregFrmDinaOrd,
-      FichaVerPregFlgObli: FichaVerPregFlgObli ?? this.FichaVerPregFlgObli,
-      FichaVerCondPregFrmDinaId:
-          FichaVerCondPregFrmDinaId ?? this.FichaVerCondPregFrmDinaId,
-      FichaVerPregSex: FichaVerPregSex ?? this.FichaVerPregSex,
-      FichaVerPregFlgSexObl:
-          FichaVerPregFlgSexObl ?? this.FichaVerPregFlgSexObl,
-      FichaVerPregEdadMin: FichaVerPregEdadMin ?? this.FichaVerPregEdadMin,
-      FichaVerPregEdadMax: FichaVerPregEdadMax ?? this.FichaVerPregEdadMax,
-      FichaVerPregEdadEd: FichaVerPregEdadEd ?? this.FichaVerPregEdadEd,
-      FichaVerPregFlgEdadObl:
-          FichaVerPregFlgEdadObl ?? this.FichaVerPregFlgEdadObl,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      ficVerId: ficVerId ?? this.ficVerId,
+      ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+      pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+      pregFrmDinaOrd: pregFrmDinaOrd ?? this.pregFrmDinaOrd,
+      fichaVerPregFlgObli: fichaVerPregFlgObli ?? this.fichaVerPregFlgObli,
+      fichaVerCondPregFrmDinaId:
+          fichaVerCondPregFrmDinaId ?? this.fichaVerCondPregFrmDinaId,
+      fichaVerPregSex: fichaVerPregSex ?? this.fichaVerPregSex,
+      fichaVerPregFlgSexObl:
+          fichaVerPregFlgSexObl ?? this.fichaVerPregFlgSexObl,
+      fichaVerPregEdadMin: fichaVerPregEdadMin ?? this.fichaVerPregEdadMin,
+      fichaVerPregEdadMax: fichaVerPregEdadMax ?? this.fichaVerPregEdadMax,
+      fichaVerPregEdadEd: fichaVerPregEdadEd ?? this.fichaVerPregEdadEd,
+      fichaVerPregFlgEdadObl:
+          fichaVerPregFlgEdadObl ?? this.fichaVerPregFlgEdadObl,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -2922,52 +2689,52 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaVerPregTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _FicVerIdMeta = const VerificationMeta('FicVerId');
-  GeneratedIntColumn _FicVerId;
+  final VerificationMeta _ficVerIdMeta = const VerificationMeta('ficVerId');
+  GeneratedIntColumn _ficVerId;
   @override
-  GeneratedIntColumn get FicVerId => _FicVerId ??= _constructFicVerId();
+  GeneratedIntColumn get ficVerId => _ficVerId ??= _constructFicVerId();
   GeneratedIntColumn _constructFicVerId() {
     return GeneratedIntColumn('fic_ver_id', $tableName, false,
-        $customConstraints: 'REFERENCES FichaVer(FicVerId)');
+        $customConstraints: 'REFERENCES FichaVer(ficVerId)');
   }
 
-  final VerificationMeta _FicVerItemsIdMeta =
-      const VerificationMeta('FicVerItemsId');
-  GeneratedIntColumn _FicVerItemsId;
+  final VerificationMeta _ficVerItemsIdMeta =
+      const VerificationMeta('ficVerItemsId');
+  GeneratedIntColumn _ficVerItemsId;
   @override
-  GeneratedIntColumn get FicVerItemsId =>
-      _FicVerItemsId ??= _constructFicVerItemsId();
+  GeneratedIntColumn get ficVerItemsId =>
+      _ficVerItemsId ??= _constructFicVerItemsId();
   GeneratedIntColumn _constructFicVerItemsId() {
     return GeneratedIntColumn('fic_ver_items_id', $tableName, false,
-        $customConstraints: 'REFERENCES FichaVerItems(FicVerItemsId)');
+        $customConstraints: 'REFERENCES FichaVerItems(ficVerItemsId)');
   }
 
-  final VerificationMeta _PregFrmDinaIdMeta =
-      const VerificationMeta('PregFrmDinaId');
-  GeneratedIntColumn _PregFrmDinaId;
+  final VerificationMeta _pregFrmDinaIdMeta =
+      const VerificationMeta('pregFrmDinaId');
+  GeneratedIntColumn _pregFrmDinaId;
   @override
-  GeneratedIntColumn get PregFrmDinaId =>
-      _PregFrmDinaId ??= _constructPregFrmDinaId();
+  GeneratedIntColumn get pregFrmDinaId =>
+      _pregFrmDinaId ??= _constructPregFrmDinaId();
   GeneratedIntColumn _constructPregFrmDinaId() {
     return GeneratedIntColumn('preg_frm_dina_id', $tableName, false,
-        $customConstraints: 'REFERENCES PregFrmDina(PregFrmDinaId)');
+        $customConstraints: 'REFERENCES PregFrmDina(pregFrmDinaId)');
   }
 
-  final VerificationMeta _PregFrmDinaOrdMeta =
-      const VerificationMeta('PregFrmDinaOrd');
-  GeneratedIntColumn _PregFrmDinaOrd;
+  final VerificationMeta _pregFrmDinaOrdMeta =
+      const VerificationMeta('pregFrmDinaOrd');
+  GeneratedIntColumn _pregFrmDinaOrd;
   @override
-  GeneratedIntColumn get PregFrmDinaOrd =>
-      _PregFrmDinaOrd ??= _constructPregFrmDinaOrd();
+  GeneratedIntColumn get pregFrmDinaOrd =>
+      _pregFrmDinaOrd ??= _constructPregFrmDinaOrd();
   GeneratedIntColumn _constructPregFrmDinaOrd() {
     return GeneratedIntColumn(
       'preg_frm_dina_ord',
@@ -2976,12 +2743,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregFlgObliMeta =
-      const VerificationMeta('FichaVerPregFlgObli');
-  GeneratedIntColumn _FichaVerPregFlgObli;
+  final VerificationMeta _fichaVerPregFlgObliMeta =
+      const VerificationMeta('fichaVerPregFlgObli');
+  GeneratedIntColumn _fichaVerPregFlgObli;
   @override
-  GeneratedIntColumn get FichaVerPregFlgObli =>
-      _FichaVerPregFlgObli ??= _constructFichaVerPregFlgObli();
+  GeneratedIntColumn get fichaVerPregFlgObli =>
+      _fichaVerPregFlgObli ??= _constructFichaVerPregFlgObli();
   GeneratedIntColumn _constructFichaVerPregFlgObli() {
     return GeneratedIntColumn(
       'ficha_ver_preg_flg_obli',
@@ -2990,12 +2757,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerCondPregFrmDinaIdMeta =
-      const VerificationMeta('FichaVerCondPregFrmDinaId');
-  GeneratedIntColumn _FichaVerCondPregFrmDinaId;
+  final VerificationMeta _fichaVerCondPregFrmDinaIdMeta =
+      const VerificationMeta('fichaVerCondPregFrmDinaId');
+  GeneratedIntColumn _fichaVerCondPregFrmDinaId;
   @override
-  GeneratedIntColumn get FichaVerCondPregFrmDinaId =>
-      _FichaVerCondPregFrmDinaId ??= _constructFichaVerCondPregFrmDinaId();
+  GeneratedIntColumn get fichaVerCondPregFrmDinaId =>
+      _fichaVerCondPregFrmDinaId ??= _constructFichaVerCondPregFrmDinaId();
   GeneratedIntColumn _constructFichaVerCondPregFrmDinaId() {
     return GeneratedIntColumn(
       'ficha_ver_cond_preg_frm_dina_id',
@@ -3004,12 +2771,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregSexMeta =
-      const VerificationMeta('FichaVerPregSex');
-  GeneratedTextColumn _FichaVerPregSex;
+  final VerificationMeta _fichaVerPregSexMeta =
+      const VerificationMeta('fichaVerPregSex');
+  GeneratedTextColumn _fichaVerPregSex;
   @override
-  GeneratedTextColumn get FichaVerPregSex =>
-      _FichaVerPregSex ??= _constructFichaVerPregSex();
+  GeneratedTextColumn get fichaVerPregSex =>
+      _fichaVerPregSex ??= _constructFichaVerPregSex();
   GeneratedTextColumn _constructFichaVerPregSex() {
     return GeneratedTextColumn(
       'ficha_ver_preg_sex',
@@ -3018,12 +2785,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregFlgSexOblMeta =
-      const VerificationMeta('FichaVerPregFlgSexObl');
-  GeneratedTextColumn _FichaVerPregFlgSexObl;
+  final VerificationMeta _fichaVerPregFlgSexOblMeta =
+      const VerificationMeta('fichaVerPregFlgSexObl');
+  GeneratedTextColumn _fichaVerPregFlgSexObl;
   @override
-  GeneratedTextColumn get FichaVerPregFlgSexObl =>
-      _FichaVerPregFlgSexObl ??= _constructFichaVerPregFlgSexObl();
+  GeneratedTextColumn get fichaVerPregFlgSexObl =>
+      _fichaVerPregFlgSexObl ??= _constructFichaVerPregFlgSexObl();
   GeneratedTextColumn _constructFichaVerPregFlgSexObl() {
     return GeneratedTextColumn(
       'ficha_ver_preg_flg_sex_obl',
@@ -3032,12 +2799,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregEdadMinMeta =
-      const VerificationMeta('FichaVerPregEdadMin');
-  GeneratedIntColumn _FichaVerPregEdadMin;
+  final VerificationMeta _fichaVerPregEdadMinMeta =
+      const VerificationMeta('fichaVerPregEdadMin');
+  GeneratedIntColumn _fichaVerPregEdadMin;
   @override
-  GeneratedIntColumn get FichaVerPregEdadMin =>
-      _FichaVerPregEdadMin ??= _constructFichaVerPregEdadMin();
+  GeneratedIntColumn get fichaVerPregEdadMin =>
+      _fichaVerPregEdadMin ??= _constructFichaVerPregEdadMin();
   GeneratedIntColumn _constructFichaVerPregEdadMin() {
     return GeneratedIntColumn(
       'ficha_ver_preg_edad_min',
@@ -3046,12 +2813,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregEdadMaxMeta =
-      const VerificationMeta('FichaVerPregEdadMax');
-  GeneratedIntColumn _FichaVerPregEdadMax;
+  final VerificationMeta _fichaVerPregEdadMaxMeta =
+      const VerificationMeta('fichaVerPregEdadMax');
+  GeneratedIntColumn _fichaVerPregEdadMax;
   @override
-  GeneratedIntColumn get FichaVerPregEdadMax =>
-      _FichaVerPregEdadMax ??= _constructFichaVerPregEdadMax();
+  GeneratedIntColumn get fichaVerPregEdadMax =>
+      _fichaVerPregEdadMax ??= _constructFichaVerPregEdadMax();
   GeneratedIntColumn _constructFichaVerPregEdadMax() {
     return GeneratedIntColumn(
       'ficha_ver_preg_edad_max',
@@ -3060,12 +2827,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregEdadEdMeta =
-      const VerificationMeta('FichaVerPregEdadEd');
-  GeneratedTextColumn _FichaVerPregEdadEd;
+  final VerificationMeta _fichaVerPregEdadEdMeta =
+      const VerificationMeta('fichaVerPregEdadEd');
+  GeneratedTextColumn _fichaVerPregEdadEd;
   @override
-  GeneratedTextColumn get FichaVerPregEdadEd =>
-      _FichaVerPregEdadEd ??= _constructFichaVerPregEdadEd();
+  GeneratedTextColumn get fichaVerPregEdadEd =>
+      _fichaVerPregEdadEd ??= _constructFichaVerPregEdadEd();
   GeneratedTextColumn _constructFichaVerPregEdadEd() {
     return GeneratedTextColumn(
       'ficha_ver_preg_edad_ed',
@@ -3074,12 +2841,12 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _FichaVerPregFlgEdadOblMeta =
-      const VerificationMeta('FichaVerPregFlgEdadObl');
-  GeneratedIntColumn _FichaVerPregFlgEdadObl;
+  final VerificationMeta _fichaVerPregFlgEdadOblMeta =
+      const VerificationMeta('fichaVerPregFlgEdadObl');
+  GeneratedIntColumn _fichaVerPregFlgEdadObl;
   @override
-  GeneratedIntColumn get FichaVerPregFlgEdadObl =>
-      _FichaVerPregFlgEdadObl ??= _constructFichaVerPregFlgEdadObl();
+  GeneratedIntColumn get fichaVerPregFlgEdadObl =>
+      _fichaVerPregFlgEdadObl ??= _constructFichaVerPregFlgEdadObl();
   GeneratedIntColumn _constructFichaVerPregFlgEdadObl() {
     return GeneratedIntColumn(
       'ficha_ver_preg_flg_edad_obl',
@@ -3088,22 +2855,22 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -3144,21 +2911,21 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
 
   @override
   List<GeneratedColumn> get $columns => [
-        FicId,
-        FicVerId,
-        FicVerItemsId,
-        PregFrmDinaId,
-        PregFrmDinaOrd,
-        FichaVerPregFlgObli,
-        FichaVerCondPregFrmDinaId,
-        FichaVerPregSex,
-        FichaVerPregFlgSexObl,
-        FichaVerPregEdadMin,
-        FichaVerPregEdadMax,
-        FichaVerPregEdadEd,
-        FichaVerPregFlgEdadObl,
-        StatusId,
-        UsuId,
+        ficId,
+        ficVerId,
+        ficVerItemsId,
+        pregFrmDinaId,
+        pregFrmDinaOrd,
+        fichaVerPregFlgObli,
+        fichaVerCondPregFrmDinaId,
+        fichaVerPregSex,
+        fichaVerPregFlgSexObl,
+        fichaVerPregEdadMin,
+        fichaVerPregEdadMax,
+        fichaVerPregEdadEd,
+        fichaVerPregFlgEdadObl,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -3173,118 +2940,118 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
   VerificationContext validateIntegrity(TableFichaVerPregCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.FicVerId.present) {
-      context.handle(_FicVerIdMeta,
-          FicVerId.isAcceptableValue(d.FicVerId.value, _FicVerIdMeta));
-    } else if (FicVerId.isRequired && isInserting) {
-      context.missing(_FicVerIdMeta);
+    if (d.ficVerId.present) {
+      context.handle(_ficVerIdMeta,
+          ficVerId.isAcceptableValue(d.ficVerId.value, _ficVerIdMeta));
+    } else if (ficVerId.isRequired && isInserting) {
+      context.missing(_ficVerIdMeta);
     }
-    if (d.FicVerItemsId.present) {
+    if (d.ficVerItemsId.present) {
       context.handle(
-          _FicVerItemsIdMeta,
-          FicVerItemsId.isAcceptableValue(
-              d.FicVerItemsId.value, _FicVerItemsIdMeta));
-    } else if (FicVerItemsId.isRequired && isInserting) {
-      context.missing(_FicVerItemsIdMeta);
+          _ficVerItemsIdMeta,
+          ficVerItemsId.isAcceptableValue(
+              d.ficVerItemsId.value, _ficVerItemsIdMeta));
+    } else if (ficVerItemsId.isRequired && isInserting) {
+      context.missing(_ficVerItemsIdMeta);
     }
-    if (d.PregFrmDinaId.present) {
+    if (d.pregFrmDinaId.present) {
       context.handle(
-          _PregFrmDinaIdMeta,
-          PregFrmDinaId.isAcceptableValue(
-              d.PregFrmDinaId.value, _PregFrmDinaIdMeta));
-    } else if (PregFrmDinaId.isRequired && isInserting) {
-      context.missing(_PregFrmDinaIdMeta);
+          _pregFrmDinaIdMeta,
+          pregFrmDinaId.isAcceptableValue(
+              d.pregFrmDinaId.value, _pregFrmDinaIdMeta));
+    } else if (pregFrmDinaId.isRequired && isInserting) {
+      context.missing(_pregFrmDinaIdMeta);
     }
-    if (d.PregFrmDinaOrd.present) {
+    if (d.pregFrmDinaOrd.present) {
       context.handle(
-          _PregFrmDinaOrdMeta,
-          PregFrmDinaOrd.isAcceptableValue(
-              d.PregFrmDinaOrd.value, _PregFrmDinaOrdMeta));
-    } else if (PregFrmDinaOrd.isRequired && isInserting) {
-      context.missing(_PregFrmDinaOrdMeta);
+          _pregFrmDinaOrdMeta,
+          pregFrmDinaOrd.isAcceptableValue(
+              d.pregFrmDinaOrd.value, _pregFrmDinaOrdMeta));
+    } else if (pregFrmDinaOrd.isRequired && isInserting) {
+      context.missing(_pregFrmDinaOrdMeta);
     }
-    if (d.FichaVerPregFlgObli.present) {
+    if (d.fichaVerPregFlgObli.present) {
       context.handle(
-          _FichaVerPregFlgObliMeta,
-          FichaVerPregFlgObli.isAcceptableValue(
-              d.FichaVerPregFlgObli.value, _FichaVerPregFlgObliMeta));
-    } else if (FichaVerPregFlgObli.isRequired && isInserting) {
-      context.missing(_FichaVerPregFlgObliMeta);
+          _fichaVerPregFlgObliMeta,
+          fichaVerPregFlgObli.isAcceptableValue(
+              d.fichaVerPregFlgObli.value, _fichaVerPregFlgObliMeta));
+    } else if (fichaVerPregFlgObli.isRequired && isInserting) {
+      context.missing(_fichaVerPregFlgObliMeta);
     }
-    if (d.FichaVerCondPregFrmDinaId.present) {
+    if (d.fichaVerCondPregFrmDinaId.present) {
       context.handle(
-          _FichaVerCondPregFrmDinaIdMeta,
-          FichaVerCondPregFrmDinaId.isAcceptableValue(
-              d.FichaVerCondPregFrmDinaId.value,
-              _FichaVerCondPregFrmDinaIdMeta));
-    } else if (FichaVerCondPregFrmDinaId.isRequired && isInserting) {
-      context.missing(_FichaVerCondPregFrmDinaIdMeta);
+          _fichaVerCondPregFrmDinaIdMeta,
+          fichaVerCondPregFrmDinaId.isAcceptableValue(
+              d.fichaVerCondPregFrmDinaId.value,
+              _fichaVerCondPregFrmDinaIdMeta));
+    } else if (fichaVerCondPregFrmDinaId.isRequired && isInserting) {
+      context.missing(_fichaVerCondPregFrmDinaIdMeta);
     }
-    if (d.FichaVerPregSex.present) {
+    if (d.fichaVerPregSex.present) {
       context.handle(
-          _FichaVerPregSexMeta,
-          FichaVerPregSex.isAcceptableValue(
-              d.FichaVerPregSex.value, _FichaVerPregSexMeta));
-    } else if (FichaVerPregSex.isRequired && isInserting) {
-      context.missing(_FichaVerPregSexMeta);
+          _fichaVerPregSexMeta,
+          fichaVerPregSex.isAcceptableValue(
+              d.fichaVerPregSex.value, _fichaVerPregSexMeta));
+    } else if (fichaVerPregSex.isRequired && isInserting) {
+      context.missing(_fichaVerPregSexMeta);
     }
-    if (d.FichaVerPregFlgSexObl.present) {
+    if (d.fichaVerPregFlgSexObl.present) {
       context.handle(
-          _FichaVerPregFlgSexOblMeta,
-          FichaVerPregFlgSexObl.isAcceptableValue(
-              d.FichaVerPregFlgSexObl.value, _FichaVerPregFlgSexOblMeta));
-    } else if (FichaVerPregFlgSexObl.isRequired && isInserting) {
-      context.missing(_FichaVerPregFlgSexOblMeta);
+          _fichaVerPregFlgSexOblMeta,
+          fichaVerPregFlgSexObl.isAcceptableValue(
+              d.fichaVerPregFlgSexObl.value, _fichaVerPregFlgSexOblMeta));
+    } else if (fichaVerPregFlgSexObl.isRequired && isInserting) {
+      context.missing(_fichaVerPregFlgSexOblMeta);
     }
-    if (d.FichaVerPregEdadMin.present) {
+    if (d.fichaVerPregEdadMin.present) {
       context.handle(
-          _FichaVerPregEdadMinMeta,
-          FichaVerPregEdadMin.isAcceptableValue(
-              d.FichaVerPregEdadMin.value, _FichaVerPregEdadMinMeta));
-    } else if (FichaVerPregEdadMin.isRequired && isInserting) {
-      context.missing(_FichaVerPregEdadMinMeta);
+          _fichaVerPregEdadMinMeta,
+          fichaVerPregEdadMin.isAcceptableValue(
+              d.fichaVerPregEdadMin.value, _fichaVerPregEdadMinMeta));
+    } else if (fichaVerPregEdadMin.isRequired && isInserting) {
+      context.missing(_fichaVerPregEdadMinMeta);
     }
-    if (d.FichaVerPregEdadMax.present) {
+    if (d.fichaVerPregEdadMax.present) {
       context.handle(
-          _FichaVerPregEdadMaxMeta,
-          FichaVerPregEdadMax.isAcceptableValue(
-              d.FichaVerPregEdadMax.value, _FichaVerPregEdadMaxMeta));
-    } else if (FichaVerPregEdadMax.isRequired && isInserting) {
-      context.missing(_FichaVerPregEdadMaxMeta);
+          _fichaVerPregEdadMaxMeta,
+          fichaVerPregEdadMax.isAcceptableValue(
+              d.fichaVerPregEdadMax.value, _fichaVerPregEdadMaxMeta));
+    } else if (fichaVerPregEdadMax.isRequired && isInserting) {
+      context.missing(_fichaVerPregEdadMaxMeta);
     }
-    if (d.FichaVerPregEdadEd.present) {
+    if (d.fichaVerPregEdadEd.present) {
       context.handle(
-          _FichaVerPregEdadEdMeta,
-          FichaVerPregEdadEd.isAcceptableValue(
-              d.FichaVerPregEdadEd.value, _FichaVerPregEdadEdMeta));
-    } else if (FichaVerPregEdadEd.isRequired && isInserting) {
-      context.missing(_FichaVerPregEdadEdMeta);
+          _fichaVerPregEdadEdMeta,
+          fichaVerPregEdadEd.isAcceptableValue(
+              d.fichaVerPregEdadEd.value, _fichaVerPregEdadEdMeta));
+    } else if (fichaVerPregEdadEd.isRequired && isInserting) {
+      context.missing(_fichaVerPregEdadEdMeta);
     }
-    if (d.FichaVerPregFlgEdadObl.present) {
+    if (d.fichaVerPregFlgEdadObl.present) {
       context.handle(
-          _FichaVerPregFlgEdadOblMeta,
-          FichaVerPregFlgEdadObl.isAcceptableValue(
-              d.FichaVerPregFlgEdadObl.value, _FichaVerPregFlgEdadOblMeta));
-    } else if (FichaVerPregFlgEdadObl.isRequired && isInserting) {
-      context.missing(_FichaVerPregFlgEdadOblMeta);
+          _fichaVerPregFlgEdadOblMeta,
+          fichaVerPregFlgEdadObl.isAcceptableValue(
+              d.fichaVerPregFlgEdadObl.value, _fichaVerPregFlgEdadOblMeta));
+    } else if (fichaVerPregFlgEdadObl.isRequired && isInserting) {
+      context.missing(_fichaVerPregFlgEdadOblMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -3318,58 +3085,58 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
   @override
   Map<String, Variable> entityToSql(TableFichaVerPregCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.FicVerId.present) {
-      map['fic_ver_id'] = Variable<int, IntType>(d.FicVerId.value);
+    if (d.ficVerId.present) {
+      map['fic_ver_id'] = Variable<int, IntType>(d.ficVerId.value);
     }
-    if (d.FicVerItemsId.present) {
-      map['fic_ver_items_id'] = Variable<int, IntType>(d.FicVerItemsId.value);
+    if (d.ficVerItemsId.present) {
+      map['fic_ver_items_id'] = Variable<int, IntType>(d.ficVerItemsId.value);
     }
-    if (d.PregFrmDinaId.present) {
-      map['preg_frm_dina_id'] = Variable<int, IntType>(d.PregFrmDinaId.value);
+    if (d.pregFrmDinaId.present) {
+      map['preg_frm_dina_id'] = Variable<int, IntType>(d.pregFrmDinaId.value);
     }
-    if (d.PregFrmDinaOrd.present) {
-      map['preg_frm_dina_ord'] = Variable<int, IntType>(d.PregFrmDinaOrd.value);
+    if (d.pregFrmDinaOrd.present) {
+      map['preg_frm_dina_ord'] = Variable<int, IntType>(d.pregFrmDinaOrd.value);
     }
-    if (d.FichaVerPregFlgObli.present) {
+    if (d.fichaVerPregFlgObli.present) {
       map['ficha_ver_preg_flg_obli'] =
-          Variable<int, IntType>(d.FichaVerPregFlgObli.value);
+          Variable<int, IntType>(d.fichaVerPregFlgObli.value);
     }
-    if (d.FichaVerCondPregFrmDinaId.present) {
+    if (d.fichaVerCondPregFrmDinaId.present) {
       map['ficha_ver_cond_preg_frm_dina_id'] =
-          Variable<int, IntType>(d.FichaVerCondPregFrmDinaId.value);
+          Variable<int, IntType>(d.fichaVerCondPregFrmDinaId.value);
     }
-    if (d.FichaVerPregSex.present) {
+    if (d.fichaVerPregSex.present) {
       map['ficha_ver_preg_sex'] =
-          Variable<String, StringType>(d.FichaVerPregSex.value);
+          Variable<String, StringType>(d.fichaVerPregSex.value);
     }
-    if (d.FichaVerPregFlgSexObl.present) {
+    if (d.fichaVerPregFlgSexObl.present) {
       map['ficha_ver_preg_flg_sex_obl'] =
-          Variable<String, StringType>(d.FichaVerPregFlgSexObl.value);
+          Variable<String, StringType>(d.fichaVerPregFlgSexObl.value);
     }
-    if (d.FichaVerPregEdadMin.present) {
+    if (d.fichaVerPregEdadMin.present) {
       map['ficha_ver_preg_edad_min'] =
-          Variable<int, IntType>(d.FichaVerPregEdadMin.value);
+          Variable<int, IntType>(d.fichaVerPregEdadMin.value);
     }
-    if (d.FichaVerPregEdadMax.present) {
+    if (d.fichaVerPregEdadMax.present) {
       map['ficha_ver_preg_edad_max'] =
-          Variable<int, IntType>(d.FichaVerPregEdadMax.value);
+          Variable<int, IntType>(d.fichaVerPregEdadMax.value);
     }
-    if (d.FichaVerPregEdadEd.present) {
+    if (d.fichaVerPregEdadEd.present) {
       map['ficha_ver_preg_edad_ed'] =
-          Variable<String, StringType>(d.FichaVerPregEdadEd.value);
+          Variable<String, StringType>(d.fichaVerPregEdadEd.value);
     }
-    if (d.FichaVerPregFlgEdadObl.present) {
+    if (d.fichaVerPregFlgEdadObl.present) {
       map['ficha_ver_preg_flg_edad_obl'] =
-          Variable<int, IntType>(d.FichaVerPregFlgEdadObl.value);
+          Variable<int, IntType>(d.fichaVerPregFlgEdadObl.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -3391,26 +3158,26 @@ class $TableFichaVerPregTable extends TableFichaVerPreg
 
 class FichaVerItemsPregTabDin extends DataClass
     implements Insertable<FichaVerItemsPregTabDin> {
-  final int FicId;
-  final int FicVerId;
-  final int FicVerItemsId;
-  final int PregFrmDinaId;
-  final int FichaVerTabDinId;
-  final int FichaVerTabDinValId;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final int ficVerId;
+  final int ficVerItemsId;
+  final int pregFrmDinaId;
+  final int fichaVerTabDinId;
+  final int fichaVerTabDinValId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FichaVerItemsPregTabDin(
-      {@required this.FicId,
-      @required this.FicVerId,
-      @required this.FicVerItemsId,
-      @required this.PregFrmDinaId,
-      @required this.FichaVerTabDinId,
-      @required this.FichaVerTabDinValId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.ficVerId,
+      @required this.ficVerItemsId,
+      @required this.pregFrmDinaId,
+      @required this.fichaVerTabDinId,
+      @required this.fichaVerTabDinValId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -3421,20 +3188,20 @@ class FichaVerItemsPregTabDin extends DataClass
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FichaVerItemsPregTabDin(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      FicVerId:
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      ficVerId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_id']),
-      FicVerItemsId: intType
+      ficVerItemsId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}fic_ver_items_id']),
-      PregFrmDinaId: intType
+      pregFrmDinaId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}preg_frm_dina_id']),
-      FichaVerTabDinId: intType.mapFromDatabaseResponse(
+      fichaVerTabDinId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_tab_din_id']),
-      FichaVerTabDinValId: intType.mapFromDatabaseResponse(
+      fichaVerTabDinValId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ficha_ver_tab_din_val_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -3446,15 +3213,15 @@ class FichaVerItemsPregTabDin extends DataClass
   factory FichaVerItemsPregTabDin.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FichaVerItemsPregTabDin(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      FicVerId: serializer.fromJson<int>(json['FicVerId']),
-      FicVerItemsId: serializer.fromJson<int>(json['FicVerItemsId']),
-      PregFrmDinaId: serializer.fromJson<int>(json['PregFrmDinaId']),
-      FichaVerTabDinId: serializer.fromJson<int>(json['FichaVerTabDinId']),
-      FichaVerTabDinValId:
-          serializer.fromJson<int>(json['FichaVerTabDinValId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      ficVerId: serializer.fromJson<int>(json['ficVerId']),
+      ficVerItemsId: serializer.fromJson<int>(json['ficVerItemsId']),
+      pregFrmDinaId: serializer.fromJson<int>(json['pregFrmDinaId']),
+      fichaVerTabDinId: serializer.fromJson<int>(json['fichaVerTabDinId']),
+      fichaVerTabDinValId:
+          serializer.fromJson<int>(json['fichaVerTabDinValId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -3464,14 +3231,14 @@ class FichaVerItemsPregTabDin extends DataClass
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'FicVerId': serializer.toJson<int>(FicVerId),
-      'FicVerItemsId': serializer.toJson<int>(FicVerItemsId),
-      'PregFrmDinaId': serializer.toJson<int>(PregFrmDinaId),
-      'FichaVerTabDinId': serializer.toJson<int>(FichaVerTabDinId),
-      'FichaVerTabDinValId': serializer.toJson<int>(FichaVerTabDinValId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'ficVerId': serializer.toJson<int>(ficVerId),
+      'ficVerItemsId': serializer.toJson<int>(ficVerItemsId),
+      'pregFrmDinaId': serializer.toJson<int>(pregFrmDinaId),
+      'fichaVerTabDinId': serializer.toJson<int>(fichaVerTabDinId),
+      'fichaVerTabDinValId': serializer.toJson<int>(fichaVerTabDinValId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -3482,28 +3249,28 @@ class FichaVerItemsPregTabDin extends DataClass
   T createCompanion<T extends UpdateCompanion<FichaVerItemsPregTabDin>>(
       bool nullToAbsent) {
     return TableFichaVerItemsPregTabDinCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      FicVerId: FicVerId == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      ficVerId: ficVerId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerId),
-      FicVerItemsId: FicVerItemsId == null && nullToAbsent
+          : Value(ficVerId),
+      ficVerItemsId: ficVerItemsId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FicVerItemsId),
-      PregFrmDinaId: PregFrmDinaId == null && nullToAbsent
+          : Value(ficVerItemsId),
+      pregFrmDinaId: pregFrmDinaId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PregFrmDinaId),
-      FichaVerTabDinId: FichaVerTabDinId == null && nullToAbsent
+          : Value(pregFrmDinaId),
+      fichaVerTabDinId: fichaVerTabDinId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerTabDinId),
-      FichaVerTabDinValId: FichaVerTabDinValId == null && nullToAbsent
+          : Value(fichaVerTabDinId),
+      fichaVerTabDinValId: fichaVerTabDinValId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FichaVerTabDinValId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(fichaVerTabDinValId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -3517,26 +3284,26 @@ class FichaVerItemsPregTabDin extends DataClass
   }
 
   FichaVerItemsPregTabDin copyWith(
-          {int FicId,
-          int FicVerId,
-          int FicVerItemsId,
-          int PregFrmDinaId,
-          int FichaVerTabDinId,
-          int FichaVerTabDinValId,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          int ficVerId,
+          int ficVerItemsId,
+          int pregFrmDinaId,
+          int fichaVerTabDinId,
+          int fichaVerTabDinValId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FichaVerItemsPregTabDin(
-        FicId: FicId ?? this.FicId,
-        FicVerId: FicVerId ?? this.FicVerId,
-        FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-        PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-        FichaVerTabDinId: FichaVerTabDinId ?? this.FichaVerTabDinId,
-        FichaVerTabDinValId: FichaVerTabDinValId ?? this.FichaVerTabDinValId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        ficVerId: ficVerId ?? this.ficVerId,
+        ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+        pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+        fichaVerTabDinId: fichaVerTabDinId ?? this.fichaVerTabDinId,
+        fichaVerTabDinValId: fichaVerTabDinValId ?? this.fichaVerTabDinValId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -3544,14 +3311,14 @@ class FichaVerItemsPregTabDin extends DataClass
   @override
   String toString() {
     return (StringBuffer('FichaVerItemsPregTabDin(')
-          ..write('FicId: $FicId, ')
-          ..write('FicVerId: $FicVerId, ')
-          ..write('FicVerItemsId: $FicVerItemsId, ')
-          ..write('PregFrmDinaId: $PregFrmDinaId, ')
-          ..write('FichaVerTabDinId: $FichaVerTabDinId, ')
-          ..write('FichaVerTabDinValId: $FichaVerTabDinValId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('ficVerId: $ficVerId, ')
+          ..write('ficVerItemsId: $ficVerItemsId, ')
+          ..write('pregFrmDinaId: $pregFrmDinaId, ')
+          ..write('fichaVerTabDinId: $fichaVerTabDinId, ')
+          ..write('fichaVerTabDinValId: $fichaVerTabDinValId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -3561,21 +3328,21 @@ class FichaVerItemsPregTabDin extends DataClass
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          FicVerId.hashCode,
+          ficVerId.hashCode,
           $mrjc(
-              FicVerItemsId.hashCode,
+              ficVerItemsId.hashCode,
               $mrjc(
-                  PregFrmDinaId.hashCode,
+                  pregFrmDinaId.hashCode,
                   $mrjc(
-                      FichaVerTabDinId.hashCode,
+                      fichaVerTabDinId.hashCode,
                       $mrjc(
-                          FichaVerTabDinValId.hashCode,
+                          fichaVerTabDinValId.hashCode,
                           $mrjc(
-                              StatusId.hashCode,
+                              statusId.hashCode,
                               $mrjc(
-                                  UsuId.hashCode,
+                                  usuId.hashCode,
                                   $mrjc(
                                       createdAt.hashCode,
                                       $mrjc(updatedAt.hashCode,
@@ -3584,14 +3351,14 @@ class FichaVerItemsPregTabDin extends DataClass
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FichaVerItemsPregTabDin &&
-          other.FicId == FicId &&
-          other.FicVerId == FicVerId &&
-          other.FicVerItemsId == FicVerItemsId &&
-          other.PregFrmDinaId == PregFrmDinaId &&
-          other.FichaVerTabDinId == FichaVerTabDinId &&
-          other.FichaVerTabDinValId == FichaVerTabDinValId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.ficVerId == ficVerId &&
+          other.ficVerItemsId == ficVerItemsId &&
+          other.pregFrmDinaId == pregFrmDinaId &&
+          other.fichaVerTabDinId == fichaVerTabDinId &&
+          other.fichaVerTabDinValId == fichaVerTabDinValId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
@@ -3599,51 +3366,51 @@ class FichaVerItemsPregTabDin extends DataClass
 
 class TableFichaVerItemsPregTabDinCompanion
     extends UpdateCompanion<FichaVerItemsPregTabDin> {
-  final Value<int> FicId;
-  final Value<int> FicVerId;
-  final Value<int> FicVerItemsId;
-  final Value<int> PregFrmDinaId;
-  final Value<int> FichaVerTabDinId;
-  final Value<int> FichaVerTabDinValId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<int> ficVerId;
+  final Value<int> ficVerItemsId;
+  final Value<int> pregFrmDinaId;
+  final Value<int> fichaVerTabDinId;
+  final Value<int> fichaVerTabDinValId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaVerItemsPregTabDinCompanion({
-    this.FicId = const Value.absent(),
-    this.FicVerId = const Value.absent(),
-    this.FicVerItemsId = const Value.absent(),
-    this.PregFrmDinaId = const Value.absent(),
-    this.FichaVerTabDinId = const Value.absent(),
-    this.FichaVerTabDinValId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.ficVerId = const Value.absent(),
+    this.ficVerItemsId = const Value.absent(),
+    this.pregFrmDinaId = const Value.absent(),
+    this.fichaVerTabDinId = const Value.absent(),
+    this.fichaVerTabDinValId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaVerItemsPregTabDinCompanion copyWith(
-      {Value<int> FicId,
-      Value<int> FicVerId,
-      Value<int> FicVerItemsId,
-      Value<int> PregFrmDinaId,
-      Value<int> FichaVerTabDinId,
-      Value<int> FichaVerTabDinValId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<int> ficVerId,
+      Value<int> ficVerItemsId,
+      Value<int> pregFrmDinaId,
+      Value<int> fichaVerTabDinId,
+      Value<int> fichaVerTabDinValId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaVerItemsPregTabDinCompanion(
-      FicId: FicId ?? this.FicId,
-      FicVerId: FicVerId ?? this.FicVerId,
-      FicVerItemsId: FicVerItemsId ?? this.FicVerItemsId,
-      PregFrmDinaId: PregFrmDinaId ?? this.PregFrmDinaId,
-      FichaVerTabDinId: FichaVerTabDinId ?? this.FichaVerTabDinId,
-      FichaVerTabDinValId: FichaVerTabDinValId ?? this.FichaVerTabDinValId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      ficVerId: ficVerId ?? this.ficVerId,
+      ficVerItemsId: ficVerItemsId ?? this.ficVerItemsId,
+      pregFrmDinaId: pregFrmDinaId ?? this.pregFrmDinaId,
+      fichaVerTabDinId: fichaVerTabDinId ?? this.fichaVerTabDinId,
+      fichaVerTabDinValId: fichaVerTabDinValId ?? this.fichaVerTabDinValId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -3657,63 +3424,63 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaVerItemsPregTabDinTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _FicVerIdMeta = const VerificationMeta('FicVerId');
-  GeneratedIntColumn _FicVerId;
+  final VerificationMeta _ficVerIdMeta = const VerificationMeta('ficVerId');
+  GeneratedIntColumn _ficVerId;
   @override
-  GeneratedIntColumn get FicVerId => _FicVerId ??= _constructFicVerId();
+  GeneratedIntColumn get ficVerId => _ficVerId ??= _constructFicVerId();
   GeneratedIntColumn _constructFicVerId() {
     return GeneratedIntColumn('fic_ver_id', $tableName, false,
-        $customConstraints: 'REFERENCES FichaVer(FicVerId)');
+        $customConstraints: 'REFERENCES FichaVer(ficVerId)');
   }
 
-  final VerificationMeta _FicVerItemsIdMeta =
-      const VerificationMeta('FicVerItemsId');
-  GeneratedIntColumn _FicVerItemsId;
+  final VerificationMeta _ficVerItemsIdMeta =
+      const VerificationMeta('ficVerItemsId');
+  GeneratedIntColumn _ficVerItemsId;
   @override
-  GeneratedIntColumn get FicVerItemsId =>
-      _FicVerItemsId ??= _constructFicVerItemsId();
+  GeneratedIntColumn get ficVerItemsId =>
+      _ficVerItemsId ??= _constructFicVerItemsId();
   GeneratedIntColumn _constructFicVerItemsId() {
     return GeneratedIntColumn('fic_ver_items_id', $tableName, false,
-        $customConstraints: 'REFERENCES FichaVerItems(FicVerItemsId)');
+        $customConstraints: 'REFERENCES FichaVerItems(ficVerItemsId)');
   }
 
-  final VerificationMeta _PregFrmDinaIdMeta =
-      const VerificationMeta('PregFrmDinaId');
-  GeneratedIntColumn _PregFrmDinaId;
+  final VerificationMeta _pregFrmDinaIdMeta =
+      const VerificationMeta('pregFrmDinaId');
+  GeneratedIntColumn _pregFrmDinaId;
   @override
-  GeneratedIntColumn get PregFrmDinaId =>
-      _PregFrmDinaId ??= _constructPregFrmDinaId();
+  GeneratedIntColumn get pregFrmDinaId =>
+      _pregFrmDinaId ??= _constructPregFrmDinaId();
   GeneratedIntColumn _constructPregFrmDinaId() {
     return GeneratedIntColumn('preg_frm_dina_id', $tableName, false,
-        $customConstraints: 'REFERENCES PregFrmDina(PregFrmDinaId)');
+        $customConstraints: 'REFERENCES PregFrmDina(pregFrmDinaId)');
   }
 
-  final VerificationMeta _FichaVerTabDinIdMeta =
-      const VerificationMeta('FichaVerTabDinId');
-  GeneratedIntColumn _FichaVerTabDinId;
+  final VerificationMeta _fichaVerTabDinIdMeta =
+      const VerificationMeta('fichaVerTabDinId');
+  GeneratedIntColumn _fichaVerTabDinId;
   @override
-  GeneratedIntColumn get FichaVerTabDinId =>
-      _FichaVerTabDinId ??= _constructFichaVerTabDinId();
+  GeneratedIntColumn get fichaVerTabDinId =>
+      _fichaVerTabDinId ??= _constructFichaVerTabDinId();
   GeneratedIntColumn _constructFichaVerTabDinId() {
     return GeneratedIntColumn('ficha_ver_tab_din_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _FichaVerTabDinValIdMeta =
-      const VerificationMeta('FichaVerTabDinValId');
-  GeneratedIntColumn _FichaVerTabDinValId;
+  final VerificationMeta _fichaVerTabDinValIdMeta =
+      const VerificationMeta('fichaVerTabDinValId');
+  GeneratedIntColumn _fichaVerTabDinValId;
   @override
-  GeneratedIntColumn get FichaVerTabDinValId =>
-      _FichaVerTabDinValId ??= _constructFichaVerTabDinValId();
+  GeneratedIntColumn get fichaVerTabDinValId =>
+      _fichaVerTabDinValId ??= _constructFichaVerTabDinValId();
   GeneratedIntColumn _constructFichaVerTabDinValId() {
     return GeneratedIntColumn(
       'ficha_ver_tab_din_val_id',
@@ -3722,22 +3489,22 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -3778,14 +3545,14 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
 
   @override
   List<GeneratedColumn> get $columns => [
-        FicId,
-        FicVerId,
-        FicVerItemsId,
-        PregFrmDinaId,
-        FichaVerTabDinId,
-        FichaVerTabDinValId,
-        StatusId,
-        UsuId,
+        ficId,
+        ficVerId,
+        ficVerItemsId,
+        pregFrmDinaId,
+        fichaVerTabDinId,
+        fichaVerTabDinValId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -3800,61 +3567,61 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
   VerificationContext validateIntegrity(TableFichaVerItemsPregTabDinCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.FicVerId.present) {
-      context.handle(_FicVerIdMeta,
-          FicVerId.isAcceptableValue(d.FicVerId.value, _FicVerIdMeta));
-    } else if (FicVerId.isRequired && isInserting) {
-      context.missing(_FicVerIdMeta);
+    if (d.ficVerId.present) {
+      context.handle(_ficVerIdMeta,
+          ficVerId.isAcceptableValue(d.ficVerId.value, _ficVerIdMeta));
+    } else if (ficVerId.isRequired && isInserting) {
+      context.missing(_ficVerIdMeta);
     }
-    if (d.FicVerItemsId.present) {
+    if (d.ficVerItemsId.present) {
       context.handle(
-          _FicVerItemsIdMeta,
-          FicVerItemsId.isAcceptableValue(
-              d.FicVerItemsId.value, _FicVerItemsIdMeta));
-    } else if (FicVerItemsId.isRequired && isInserting) {
-      context.missing(_FicVerItemsIdMeta);
+          _ficVerItemsIdMeta,
+          ficVerItemsId.isAcceptableValue(
+              d.ficVerItemsId.value, _ficVerItemsIdMeta));
+    } else if (ficVerItemsId.isRequired && isInserting) {
+      context.missing(_ficVerItemsIdMeta);
     }
-    if (d.PregFrmDinaId.present) {
+    if (d.pregFrmDinaId.present) {
       context.handle(
-          _PregFrmDinaIdMeta,
-          PregFrmDinaId.isAcceptableValue(
-              d.PregFrmDinaId.value, _PregFrmDinaIdMeta));
-    } else if (PregFrmDinaId.isRequired && isInserting) {
-      context.missing(_PregFrmDinaIdMeta);
+          _pregFrmDinaIdMeta,
+          pregFrmDinaId.isAcceptableValue(
+              d.pregFrmDinaId.value, _pregFrmDinaIdMeta));
+    } else if (pregFrmDinaId.isRequired && isInserting) {
+      context.missing(_pregFrmDinaIdMeta);
     }
-    if (d.FichaVerTabDinId.present) {
+    if (d.fichaVerTabDinId.present) {
       context.handle(
-          _FichaVerTabDinIdMeta,
-          FichaVerTabDinId.isAcceptableValue(
-              d.FichaVerTabDinId.value, _FichaVerTabDinIdMeta));
-    } else if (FichaVerTabDinId.isRequired && isInserting) {
-      context.missing(_FichaVerTabDinIdMeta);
+          _fichaVerTabDinIdMeta,
+          fichaVerTabDinId.isAcceptableValue(
+              d.fichaVerTabDinId.value, _fichaVerTabDinIdMeta));
+    } else if (fichaVerTabDinId.isRequired && isInserting) {
+      context.missing(_fichaVerTabDinIdMeta);
     }
-    if (d.FichaVerTabDinValId.present) {
+    if (d.fichaVerTabDinValId.present) {
       context.handle(
-          _FichaVerTabDinValIdMeta,
-          FichaVerTabDinValId.isAcceptableValue(
-              d.FichaVerTabDinValId.value, _FichaVerTabDinValIdMeta));
-    } else if (FichaVerTabDinValId.isRequired && isInserting) {
-      context.missing(_FichaVerTabDinValIdMeta);
+          _fichaVerTabDinValIdMeta,
+          fichaVerTabDinValId.isAcceptableValue(
+              d.fichaVerTabDinValId.value, _fichaVerTabDinValIdMeta));
+    } else if (fichaVerTabDinValId.isRequired && isInserting) {
+      context.missing(_fichaVerTabDinValIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -3878,7 +3645,7 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FichaVerTabDinId};
+  Set<GeneratedColumn> get $primaryKey => {fichaVerTabDinId};
   @override
   FichaVerItemsPregTabDin map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -3888,31 +3655,31 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
   @override
   Map<String, Variable> entityToSql(TableFichaVerItemsPregTabDinCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.FicVerId.present) {
-      map['fic_ver_id'] = Variable<int, IntType>(d.FicVerId.value);
+    if (d.ficVerId.present) {
+      map['fic_ver_id'] = Variable<int, IntType>(d.ficVerId.value);
     }
-    if (d.FicVerItemsId.present) {
-      map['fic_ver_items_id'] = Variable<int, IntType>(d.FicVerItemsId.value);
+    if (d.ficVerItemsId.present) {
+      map['fic_ver_items_id'] = Variable<int, IntType>(d.ficVerItemsId.value);
     }
-    if (d.PregFrmDinaId.present) {
-      map['preg_frm_dina_id'] = Variable<int, IntType>(d.PregFrmDinaId.value);
+    if (d.pregFrmDinaId.present) {
+      map['preg_frm_dina_id'] = Variable<int, IntType>(d.pregFrmDinaId.value);
     }
-    if (d.FichaVerTabDinId.present) {
+    if (d.fichaVerTabDinId.present) {
       map['ficha_ver_tab_din_id'] =
-          Variable<int, IntType>(d.FichaVerTabDinId.value);
+          Variable<int, IntType>(d.fichaVerTabDinId.value);
     }
-    if (d.FichaVerTabDinValId.present) {
+    if (d.fichaVerTabDinValId.present) {
       map['ficha_ver_tab_din_val_id'] =
-          Variable<int, IntType>(d.FichaVerTabDinValId.value);
+          Variable<int, IntType>(d.fichaVerTabDinValId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -3933,18 +3700,18 @@ class $TableFichaVerItemsPregTabDinTable extends TableFichaVerItemsPregTabDin
 }
 
 class OpcFich extends DataClass implements Insertable<OpcFich> {
-  final String OpcFichCod;
-  final String OpcFichDesc;
-  final int StatusId;
-  final int UsuId;
+  final String opcFichCod;
+  final String opcFichDesc;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   OpcFich(
-      {@required this.OpcFichCod,
-      @required this.OpcFichDesc,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.opcFichCod,
+      @required this.opcFichDesc,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -3955,13 +3722,13 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return OpcFich(
-      OpcFichCod: stringType
+      opcFichCod: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}opc_fich_cod']),
-      OpcFichDesc: stringType
+      opcFichDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}opc_fich_desc']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -3973,10 +3740,10 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
   factory OpcFich.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return OpcFich(
-      OpcFichCod: serializer.fromJson<String>(json['OpcFichCod']),
-      OpcFichDesc: serializer.fromJson<String>(json['OpcFichDesc']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      opcFichCod: serializer.fromJson<String>(json['opcFichCod']),
+      opcFichDesc: serializer.fromJson<String>(json['opcFichDesc']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -3986,10 +3753,10 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'OpcFichCod': serializer.toJson<String>(OpcFichCod),
-      'OpcFichDesc': serializer.toJson<String>(OpcFichDesc),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'opcFichCod': serializer.toJson<String>(opcFichCod),
+      'opcFichDesc': serializer.toJson<String>(opcFichDesc),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -3999,17 +3766,17 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
   @override
   T createCompanion<T extends UpdateCompanion<OpcFich>>(bool nullToAbsent) {
     return TableOpcFichCompanion(
-      OpcFichCod: OpcFichCod == null && nullToAbsent
+      opcFichCod: opcFichCod == null && nullToAbsent
           ? const Value.absent()
-          : Value(OpcFichCod),
-      OpcFichDesc: OpcFichDesc == null && nullToAbsent
+          : Value(opcFichCod),
+      opcFichDesc: opcFichDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(OpcFichDesc),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(opcFichDesc),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -4023,18 +3790,18 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
   }
 
   OpcFich copyWith(
-          {String OpcFichCod,
-          String OpcFichDesc,
-          int StatusId,
-          int UsuId,
+          {String opcFichCod,
+          String opcFichDesc,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       OpcFich(
-        OpcFichCod: OpcFichCod ?? this.OpcFichCod,
-        OpcFichDesc: OpcFichDesc ?? this.OpcFichDesc,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        opcFichCod: opcFichCod ?? this.opcFichCod,
+        opcFichDesc: opcFichDesc ?? this.opcFichDesc,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -4042,10 +3809,10 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
   @override
   String toString() {
     return (StringBuffer('OpcFich(')
-          ..write('OpcFichCod: $OpcFichCod, ')
-          ..write('OpcFichDesc: $OpcFichDesc, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('opcFichCod: $opcFichCod, ')
+          ..write('opcFichDesc: $opcFichDesc, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -4055,58 +3822,58 @@ class OpcFich extends DataClass implements Insertable<OpcFich> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      OpcFichCod.hashCode,
+      opcFichCod.hashCode,
       $mrjc(
-          OpcFichDesc.hashCode,
+          opcFichDesc.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is OpcFich &&
-          other.OpcFichCod == OpcFichCod &&
-          other.OpcFichDesc == OpcFichDesc &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.opcFichCod == opcFichCod &&
+          other.opcFichDesc == opcFichDesc &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableOpcFichCompanion extends UpdateCompanion<OpcFich> {
-  final Value<String> OpcFichCod;
-  final Value<String> OpcFichDesc;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<String> opcFichCod;
+  final Value<String> opcFichDesc;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableOpcFichCompanion({
-    this.OpcFichCod = const Value.absent(),
-    this.OpcFichDesc = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.opcFichCod = const Value.absent(),
+    this.opcFichDesc = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableOpcFichCompanion copyWith(
-      {Value<String> OpcFichCod,
-      Value<String> OpcFichDesc,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<String> opcFichCod,
+      Value<String> opcFichDesc,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableOpcFichCompanion(
-      OpcFichCod: OpcFichCod ?? this.OpcFichCod,
-      OpcFichDesc: OpcFichDesc ?? this.OpcFichDesc,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      opcFichCod: opcFichCod ?? this.opcFichCod,
+      opcFichDesc: opcFichDesc ?? this.opcFichDesc,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -4119,10 +3886,10 @@ class $TableOpcFichTable extends TableOpcFich
   final GeneratedDatabase _db;
   final String _alias;
   $TableOpcFichTable(this._db, [this._alias]);
-  final VerificationMeta _OpcFichCodMeta = const VerificationMeta('OpcFichCod');
-  GeneratedTextColumn _OpcFichCod;
+  final VerificationMeta _opcFichCodMeta = const VerificationMeta('opcFichCod');
+  GeneratedTextColumn _opcFichCod;
   @override
-  GeneratedTextColumn get OpcFichCod => _OpcFichCod ??= _constructOpcFichCod();
+  GeneratedTextColumn get opcFichCod => _opcFichCod ??= _constructOpcFichCod();
   GeneratedTextColumn _constructOpcFichCod() {
     return GeneratedTextColumn(
       'opc_fich_cod',
@@ -4131,12 +3898,12 @@ class $TableOpcFichTable extends TableOpcFich
     );
   }
 
-  final VerificationMeta _OpcFichDescMeta =
-      const VerificationMeta('OpcFichDesc');
-  GeneratedTextColumn _OpcFichDesc;
+  final VerificationMeta _opcFichDescMeta =
+      const VerificationMeta('opcFichDesc');
+  GeneratedTextColumn _opcFichDesc;
   @override
-  GeneratedTextColumn get OpcFichDesc =>
-      _OpcFichDesc ??= _constructOpcFichDesc();
+  GeneratedTextColumn get opcFichDesc =>
+      _opcFichDesc ??= _constructOpcFichDesc();
   GeneratedTextColumn _constructOpcFichDesc() {
     return GeneratedTextColumn(
       'opc_fich_desc',
@@ -4145,22 +3912,22 @@ class $TableOpcFichTable extends TableOpcFich
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -4201,10 +3968,10 @@ class $TableOpcFichTable extends TableOpcFich
 
   @override
   List<GeneratedColumn> get $columns => [
-        OpcFichCod,
-        OpcFichDesc,
-        StatusId,
-        UsuId,
+        opcFichCod,
+        opcFichDesc,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -4219,29 +3986,29 @@ class $TableOpcFichTable extends TableOpcFich
   VerificationContext validateIntegrity(TableOpcFichCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.OpcFichCod.present) {
-      context.handle(_OpcFichCodMeta,
-          OpcFichCod.isAcceptableValue(d.OpcFichCod.value, _OpcFichCodMeta));
-    } else if (OpcFichCod.isRequired && isInserting) {
-      context.missing(_OpcFichCodMeta);
+    if (d.opcFichCod.present) {
+      context.handle(_opcFichCodMeta,
+          opcFichCod.isAcceptableValue(d.opcFichCod.value, _opcFichCodMeta));
+    } else if (opcFichCod.isRequired && isInserting) {
+      context.missing(_opcFichCodMeta);
     }
-    if (d.OpcFichDesc.present) {
-      context.handle(_OpcFichDescMeta,
-          OpcFichDesc.isAcceptableValue(d.OpcFichDesc.value, _OpcFichDescMeta));
-    } else if (OpcFichDesc.isRequired && isInserting) {
-      context.missing(_OpcFichDescMeta);
+    if (d.opcFichDesc.present) {
+      context.handle(_opcFichDescMeta,
+          opcFichDesc.isAcceptableValue(d.opcFichDesc.value, _opcFichDescMeta));
+    } else if (opcFichDesc.isRequired && isInserting) {
+      context.missing(_opcFichDescMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -4265,7 +4032,7 @@ class $TableOpcFichTable extends TableOpcFich
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {OpcFichCod};
+  Set<GeneratedColumn> get $primaryKey => {opcFichCod};
   @override
   OpcFich map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -4275,17 +4042,17 @@ class $TableOpcFichTable extends TableOpcFich
   @override
   Map<String, Variable> entityToSql(TableOpcFichCompanion d) {
     final map = <String, Variable>{};
-    if (d.OpcFichCod.present) {
-      map['opc_fich_cod'] = Variable<String, StringType>(d.OpcFichCod.value);
+    if (d.opcFichCod.present) {
+      map['opc_fich_cod'] = Variable<String, StringType>(d.opcFichCod.value);
     }
-    if (d.OpcFichDesc.present) {
-      map['opc_fich_desc'] = Variable<String, StringType>(d.OpcFichDesc.value);
+    if (d.opcFichDesc.present) {
+      map['opc_fich_desc'] = Variable<String, StringType>(d.opcFichDesc.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -4306,18 +4073,18 @@ class $TableOpcFichTable extends TableOpcFich
 }
 
 class FichaOpc extends DataClass implements Insertable<FichaOpc> {
-  final int FicId;
-  final String OpcFichCod;
-  final int StatusId;
-  final int UsuId;
+  final int ficId;
+  final String opcFichCod;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FichaOpc(
-      {@required this.FicId,
-      @required this.OpcFichCod,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.ficId,
+      @required this.opcFichCod,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -4328,12 +4095,12 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FichaOpc(
-      FicId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
-      OpcFichCod: stringType
+      ficId: intType.mapFromDatabaseResponse(data['${effectivePrefix}fic_id']),
+      opcFichCod: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}opc_fich_cod']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -4345,10 +4112,10 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
   factory FichaOpc.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FichaOpc(
-      FicId: serializer.fromJson<int>(json['FicId']),
-      OpcFichCod: serializer.fromJson<String>(json['OpcFichCod']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      ficId: serializer.fromJson<int>(json['ficId']),
+      opcFichCod: serializer.fromJson<String>(json['opcFichCod']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -4358,10 +4125,10 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FicId': serializer.toJson<int>(FicId),
-      'OpcFichCod': serializer.toJson<String>(OpcFichCod),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'ficId': serializer.toJson<int>(ficId),
+      'opcFichCod': serializer.toJson<String>(opcFichCod),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -4371,16 +4138,16 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
   @override
   T createCompanion<T extends UpdateCompanion<FichaOpc>>(bool nullToAbsent) {
     return TableFichaOpcCompanion(
-      FicId:
-          FicId == null && nullToAbsent ? const Value.absent() : Value(FicId),
-      OpcFichCod: OpcFichCod == null && nullToAbsent
+      ficId:
+          ficId == null && nullToAbsent ? const Value.absent() : Value(ficId),
+      opcFichCod: opcFichCod == null && nullToAbsent
           ? const Value.absent()
-          : Value(OpcFichCod),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(opcFichCod),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -4394,18 +4161,18 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
   }
 
   FichaOpc copyWith(
-          {int FicId,
-          String OpcFichCod,
-          int StatusId,
-          int UsuId,
+          {int ficId,
+          String opcFichCod,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FichaOpc(
-        FicId: FicId ?? this.FicId,
-        OpcFichCod: OpcFichCod ?? this.OpcFichCod,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        ficId: ficId ?? this.ficId,
+        opcFichCod: opcFichCod ?? this.opcFichCod,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -4413,10 +4180,10 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
   @override
   String toString() {
     return (StringBuffer('FichaOpc(')
-          ..write('FicId: $FicId, ')
-          ..write('OpcFichCod: $OpcFichCod, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('ficId: $ficId, ')
+          ..write('opcFichCod: $opcFichCod, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -4426,58 +4193,58 @@ class FichaOpc extends DataClass implements Insertable<FichaOpc> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FicId.hashCode,
+      ficId.hashCode,
       $mrjc(
-          OpcFichCod.hashCode,
+          opcFichCod.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FichaOpc &&
-          other.FicId == FicId &&
-          other.OpcFichCod == OpcFichCod &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.ficId == ficId &&
+          other.opcFichCod == opcFichCod &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFichaOpcCompanion extends UpdateCompanion<FichaOpc> {
-  final Value<int> FicId;
-  final Value<String> OpcFichCod;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> ficId;
+  final Value<String> opcFichCod;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFichaOpcCompanion({
-    this.FicId = const Value.absent(),
-    this.OpcFichCod = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.ficId = const Value.absent(),
+    this.opcFichCod = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFichaOpcCompanion copyWith(
-      {Value<int> FicId,
-      Value<String> OpcFichCod,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> ficId,
+      Value<String> opcFichCod,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFichaOpcCompanion(
-      FicId: FicId ?? this.FicId,
-      OpcFichCod: OpcFichCod ?? this.OpcFichCod,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      ficId: ficId ?? this.ficId,
+      opcFichCod: opcFichCod ?? this.opcFichCod,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -4490,40 +4257,40 @@ class $TableFichaOpcTable extends TableFichaOpc
   final GeneratedDatabase _db;
   final String _alias;
   $TableFichaOpcTable(this._db, [this._alias]);
-  final VerificationMeta _FicIdMeta = const VerificationMeta('FicId');
-  GeneratedIntColumn _FicId;
+  final VerificationMeta _ficIdMeta = const VerificationMeta('ficId');
+  GeneratedIntColumn _ficId;
   @override
-  GeneratedIntColumn get FicId => _FicId ??= _constructFicId();
+  GeneratedIntColumn get ficId => _ficId ??= _constructFicId();
   GeneratedIntColumn _constructFicId() {
     return GeneratedIntColumn('fic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _OpcFichCodMeta = const VerificationMeta('OpcFichCod');
-  GeneratedTextColumn _OpcFichCod;
+  final VerificationMeta _opcFichCodMeta = const VerificationMeta('opcFichCod');
+  GeneratedTextColumn _opcFichCod;
   @override
-  GeneratedTextColumn get OpcFichCod => _OpcFichCod ??= _constructOpcFichCod();
+  GeneratedTextColumn get opcFichCod => _opcFichCod ??= _constructOpcFichCod();
   GeneratedTextColumn _constructOpcFichCod() {
     return GeneratedTextColumn('opc_fich_cod', $tableName, false,
-        $customConstraints: 'REFERENCES OpcFich(OpcFichCod)');
+        $customConstraints: 'REFERENCES OpcFich(opcFichCod)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -4564,7 +4331,7 @@ class $TableFichaOpcTable extends TableFichaOpc
 
   @override
   List<GeneratedColumn> get $columns =>
-      [FicId, OpcFichCod, StatusId, UsuId, createdAt, updatedAt, deletedAt];
+      [ficId, opcFichCod, statusId, usuId, createdAt, updatedAt, deletedAt];
   @override
   $TableFichaOpcTable get asDslTable => this;
   @override
@@ -4575,29 +4342,29 @@ class $TableFichaOpcTable extends TableFichaOpc
   VerificationContext validateIntegrity(TableFichaOpcCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FicId.present) {
+    if (d.ficId.present) {
       context.handle(
-          _FicIdMeta, FicId.isAcceptableValue(d.FicId.value, _FicIdMeta));
-    } else if (FicId.isRequired && isInserting) {
-      context.missing(_FicIdMeta);
+          _ficIdMeta, ficId.isAcceptableValue(d.ficId.value, _ficIdMeta));
+    } else if (ficId.isRequired && isInserting) {
+      context.missing(_ficIdMeta);
     }
-    if (d.OpcFichCod.present) {
-      context.handle(_OpcFichCodMeta,
-          OpcFichCod.isAcceptableValue(d.OpcFichCod.value, _OpcFichCodMeta));
-    } else if (OpcFichCod.isRequired && isInserting) {
-      context.missing(_OpcFichCodMeta);
+    if (d.opcFichCod.present) {
+      context.handle(_opcFichCodMeta,
+          opcFichCod.isAcceptableValue(d.opcFichCod.value, _opcFichCodMeta));
+    } else if (opcFichCod.isRequired && isInserting) {
+      context.missing(_opcFichCodMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -4631,17 +4398,17 @@ class $TableFichaOpcTable extends TableFichaOpc
   @override
   Map<String, Variable> entityToSql(TableFichaOpcCompanion d) {
     final map = <String, Variable>{};
-    if (d.FicId.present) {
-      map['fic_id'] = Variable<int, IntType>(d.FicId.value);
+    if (d.ficId.present) {
+      map['fic_id'] = Variable<int, IntType>(d.ficId.value);
     }
-    if (d.OpcFichCod.present) {
-      map['opc_fich_cod'] = Variable<String, StringType>(d.OpcFichCod.value);
+    if (d.opcFichCod.present) {
+      map['opc_fich_cod'] = Variable<String, StringType>(d.opcFichCod.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -4662,20 +4429,20 @@ class $TableFichaOpcTable extends TableFichaOpc
 }
 
 class NomTabDin extends DataClass implements Insertable<NomTabDin> {
-  final int NomTabDinId;
-  final String NomTabDinNom;
-  final int NomTabDinFlgAct;
-  final int StatusId;
-  final int UsuId;
+  final int nomTabDinId;
+  final String nomTabDinNom;
+  final int nomTabDinFlgAct;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   NomTabDin(
-      {@required this.NomTabDinId,
-      @required this.NomTabDinNom,
-      @required this.NomTabDinFlgAct,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.nomTabDinId,
+      @required this.nomTabDinNom,
+      @required this.nomTabDinFlgAct,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -4686,15 +4453,15 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return NomTabDin(
-      NomTabDinId: intType
+      nomTabDinId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}nom_tab_din_id']),
-      NomTabDinNom: stringType
+      nomTabDinNom: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}nom_tab_din_nom']),
-      NomTabDinFlgAct: intType.mapFromDatabaseResponse(
+      nomTabDinFlgAct: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}nom_tab_din_flg_act']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -4706,11 +4473,11 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
   factory NomTabDin.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return NomTabDin(
-      NomTabDinId: serializer.fromJson<int>(json['NomTabDinId']),
-      NomTabDinNom: serializer.fromJson<String>(json['NomTabDinNom']),
-      NomTabDinFlgAct: serializer.fromJson<int>(json['NomTabDinFlgAct']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      nomTabDinId: serializer.fromJson<int>(json['nomTabDinId']),
+      nomTabDinNom: serializer.fromJson<String>(json['nomTabDinNom']),
+      nomTabDinFlgAct: serializer.fromJson<int>(json['nomTabDinFlgAct']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -4720,11 +4487,11 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'NomTabDinId': serializer.toJson<int>(NomTabDinId),
-      'NomTabDinNom': serializer.toJson<String>(NomTabDinNom),
-      'NomTabDinFlgAct': serializer.toJson<int>(NomTabDinFlgAct),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'nomTabDinId': serializer.toJson<int>(nomTabDinId),
+      'nomTabDinNom': serializer.toJson<String>(nomTabDinNom),
+      'nomTabDinFlgAct': serializer.toJson<int>(nomTabDinFlgAct),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -4734,20 +4501,20 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
   @override
   T createCompanion<T extends UpdateCompanion<NomTabDin>>(bool nullToAbsent) {
     return TableNomTabDinCompanion(
-      NomTabDinId: NomTabDinId == null && nullToAbsent
+      nomTabDinId: nomTabDinId == null && nullToAbsent
           ? const Value.absent()
-          : Value(NomTabDinId),
-      NomTabDinNom: NomTabDinNom == null && nullToAbsent
+          : Value(nomTabDinId),
+      nomTabDinNom: nomTabDinNom == null && nullToAbsent
           ? const Value.absent()
-          : Value(NomTabDinNom),
-      NomTabDinFlgAct: NomTabDinFlgAct == null && nullToAbsent
+          : Value(nomTabDinNom),
+      nomTabDinFlgAct: nomTabDinFlgAct == null && nullToAbsent
           ? const Value.absent()
-          : Value(NomTabDinFlgAct),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(nomTabDinFlgAct),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -4761,20 +4528,20 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
   }
 
   NomTabDin copyWith(
-          {int NomTabDinId,
-          String NomTabDinNom,
-          int NomTabDinFlgAct,
-          int StatusId,
-          int UsuId,
+          {int nomTabDinId,
+          String nomTabDinNom,
+          int nomTabDinFlgAct,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       NomTabDin(
-        NomTabDinId: NomTabDinId ?? this.NomTabDinId,
-        NomTabDinNom: NomTabDinNom ?? this.NomTabDinNom,
-        NomTabDinFlgAct: NomTabDinFlgAct ?? this.NomTabDinFlgAct,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        nomTabDinId: nomTabDinId ?? this.nomTabDinId,
+        nomTabDinNom: nomTabDinNom ?? this.nomTabDinNom,
+        nomTabDinFlgAct: nomTabDinFlgAct ?? this.nomTabDinFlgAct,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -4782,11 +4549,11 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
   @override
   String toString() {
     return (StringBuffer('NomTabDin(')
-          ..write('NomTabDinId: $NomTabDinId, ')
-          ..write('NomTabDinNom: $NomTabDinNom, ')
-          ..write('NomTabDinFlgAct: $NomTabDinFlgAct, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('nomTabDinId: $nomTabDinId, ')
+          ..write('nomTabDinNom: $nomTabDinNom, ')
+          ..write('nomTabDinFlgAct: $nomTabDinFlgAct, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -4796,65 +4563,65 @@ class NomTabDin extends DataClass implements Insertable<NomTabDin> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      NomTabDinId.hashCode,
+      nomTabDinId.hashCode,
       $mrjc(
-          NomTabDinNom.hashCode,
+          nomTabDinNom.hashCode,
           $mrjc(
-              NomTabDinFlgAct.hashCode,
+              nomTabDinFlgAct.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is NomTabDin &&
-          other.NomTabDinId == NomTabDinId &&
-          other.NomTabDinNom == NomTabDinNom &&
-          other.NomTabDinFlgAct == NomTabDinFlgAct &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.nomTabDinId == nomTabDinId &&
+          other.nomTabDinNom == nomTabDinNom &&
+          other.nomTabDinFlgAct == nomTabDinFlgAct &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableNomTabDinCompanion extends UpdateCompanion<NomTabDin> {
-  final Value<int> NomTabDinId;
-  final Value<String> NomTabDinNom;
-  final Value<int> NomTabDinFlgAct;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> nomTabDinId;
+  final Value<String> nomTabDinNom;
+  final Value<int> nomTabDinFlgAct;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableNomTabDinCompanion({
-    this.NomTabDinId = const Value.absent(),
-    this.NomTabDinNom = const Value.absent(),
-    this.NomTabDinFlgAct = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.nomTabDinId = const Value.absent(),
+    this.nomTabDinNom = const Value.absent(),
+    this.nomTabDinFlgAct = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableNomTabDinCompanion copyWith(
-      {Value<int> NomTabDinId,
-      Value<String> NomTabDinNom,
-      Value<int> NomTabDinFlgAct,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> nomTabDinId,
+      Value<String> nomTabDinNom,
+      Value<int> nomTabDinFlgAct,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableNomTabDinCompanion(
-      NomTabDinId: NomTabDinId ?? this.NomTabDinId,
-      NomTabDinNom: NomTabDinNom ?? this.NomTabDinNom,
-      NomTabDinFlgAct: NomTabDinFlgAct ?? this.NomTabDinFlgAct,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      nomTabDinId: nomTabDinId ?? this.nomTabDinId,
+      nomTabDinNom: nomTabDinNom ?? this.nomTabDinNom,
+      nomTabDinFlgAct: nomTabDinFlgAct ?? this.nomTabDinFlgAct,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -4867,23 +4634,23 @@ class $TableNomTabDinTable extends TableNomTabDin
   final GeneratedDatabase _db;
   final String _alias;
   $TableNomTabDinTable(this._db, [this._alias]);
-  final VerificationMeta _NomTabDinIdMeta =
-      const VerificationMeta('NomTabDinId');
-  GeneratedIntColumn _NomTabDinId;
+  final VerificationMeta _nomTabDinIdMeta =
+      const VerificationMeta('nomTabDinId');
+  GeneratedIntColumn _nomTabDinId;
   @override
-  GeneratedIntColumn get NomTabDinId =>
-      _NomTabDinId ??= _constructNomTabDinId();
+  GeneratedIntColumn get nomTabDinId =>
+      _nomTabDinId ??= _constructNomTabDinId();
   GeneratedIntColumn _constructNomTabDinId() {
     return GeneratedIntColumn('nom_tab_din_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _NomTabDinNomMeta =
-      const VerificationMeta('NomTabDinNom');
-  GeneratedTextColumn _NomTabDinNom;
+  final VerificationMeta _nomTabDinNomMeta =
+      const VerificationMeta('nomTabDinNom');
+  GeneratedTextColumn _nomTabDinNom;
   @override
-  GeneratedTextColumn get NomTabDinNom =>
-      _NomTabDinNom ??= _constructNomTabDinNom();
+  GeneratedTextColumn get nomTabDinNom =>
+      _nomTabDinNom ??= _constructNomTabDinNom();
   GeneratedTextColumn _constructNomTabDinNom() {
     return GeneratedTextColumn(
       'nom_tab_din_nom',
@@ -4892,12 +4659,12 @@ class $TableNomTabDinTable extends TableNomTabDin
     );
   }
 
-  final VerificationMeta _NomTabDinFlgActMeta =
-      const VerificationMeta('NomTabDinFlgAct');
-  GeneratedIntColumn _NomTabDinFlgAct;
+  final VerificationMeta _nomTabDinFlgActMeta =
+      const VerificationMeta('nomTabDinFlgAct');
+  GeneratedIntColumn _nomTabDinFlgAct;
   @override
-  GeneratedIntColumn get NomTabDinFlgAct =>
-      _NomTabDinFlgAct ??= _constructNomTabDinFlgAct();
+  GeneratedIntColumn get nomTabDinFlgAct =>
+      _nomTabDinFlgAct ??= _constructNomTabDinFlgAct();
   GeneratedIntColumn _constructNomTabDinFlgAct() {
     return GeneratedIntColumn(
       'nom_tab_din_flg_act',
@@ -4906,22 +4673,22 @@ class $TableNomTabDinTable extends TableNomTabDin
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -4962,11 +4729,11 @@ class $TableNomTabDinTable extends TableNomTabDin
 
   @override
   List<GeneratedColumn> get $columns => [
-        NomTabDinId,
-        NomTabDinNom,
-        NomTabDinFlgAct,
-        StatusId,
-        UsuId,
+        nomTabDinId,
+        nomTabDinNom,
+        nomTabDinFlgAct,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -4981,39 +4748,39 @@ class $TableNomTabDinTable extends TableNomTabDin
   VerificationContext validateIntegrity(TableNomTabDinCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.NomTabDinId.present) {
-      context.handle(_NomTabDinIdMeta,
-          NomTabDinId.isAcceptableValue(d.NomTabDinId.value, _NomTabDinIdMeta));
-    } else if (NomTabDinId.isRequired && isInserting) {
-      context.missing(_NomTabDinIdMeta);
+    if (d.nomTabDinId.present) {
+      context.handle(_nomTabDinIdMeta,
+          nomTabDinId.isAcceptableValue(d.nomTabDinId.value, _nomTabDinIdMeta));
+    } else if (nomTabDinId.isRequired && isInserting) {
+      context.missing(_nomTabDinIdMeta);
     }
-    if (d.NomTabDinNom.present) {
+    if (d.nomTabDinNom.present) {
       context.handle(
-          _NomTabDinNomMeta,
-          NomTabDinNom.isAcceptableValue(
-              d.NomTabDinNom.value, _NomTabDinNomMeta));
-    } else if (NomTabDinNom.isRequired && isInserting) {
-      context.missing(_NomTabDinNomMeta);
+          _nomTabDinNomMeta,
+          nomTabDinNom.isAcceptableValue(
+              d.nomTabDinNom.value, _nomTabDinNomMeta));
+    } else if (nomTabDinNom.isRequired && isInserting) {
+      context.missing(_nomTabDinNomMeta);
     }
-    if (d.NomTabDinFlgAct.present) {
+    if (d.nomTabDinFlgAct.present) {
       context.handle(
-          _NomTabDinFlgActMeta,
-          NomTabDinFlgAct.isAcceptableValue(
-              d.NomTabDinFlgAct.value, _NomTabDinFlgActMeta));
-    } else if (NomTabDinFlgAct.isRequired && isInserting) {
-      context.missing(_NomTabDinFlgActMeta);
+          _nomTabDinFlgActMeta,
+          nomTabDinFlgAct.isAcceptableValue(
+              d.nomTabDinFlgAct.value, _nomTabDinFlgActMeta));
+    } else if (nomTabDinFlgAct.isRequired && isInserting) {
+      context.missing(_nomTabDinFlgActMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -5037,7 +4804,7 @@ class $TableNomTabDinTable extends TableNomTabDin
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {NomTabDinId};
+  Set<GeneratedColumn> get $primaryKey => {nomTabDinId};
   @override
   NomTabDin map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -5047,22 +4814,22 @@ class $TableNomTabDinTable extends TableNomTabDin
   @override
   Map<String, Variable> entityToSql(TableNomTabDinCompanion d) {
     final map = <String, Variable>{};
-    if (d.NomTabDinId.present) {
-      map['nom_tab_din_id'] = Variable<int, IntType>(d.NomTabDinId.value);
+    if (d.nomTabDinId.present) {
+      map['nom_tab_din_id'] = Variable<int, IntType>(d.nomTabDinId.value);
     }
-    if (d.NomTabDinNom.present) {
+    if (d.nomTabDinNom.present) {
       map['nom_tab_din_nom'] =
-          Variable<String, StringType>(d.NomTabDinNom.value);
+          Variable<String, StringType>(d.nomTabDinNom.value);
     }
-    if (d.NomTabDinFlgAct.present) {
+    if (d.nomTabDinFlgAct.present) {
       map['nom_tab_din_flg_act'] =
-          Variable<int, IntType>(d.NomTabDinFlgAct.value);
+          Variable<int, IntType>(d.nomTabDinFlgAct.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -5083,20 +4850,20 @@ class $TableNomTabDinTable extends TableNomTabDin
 }
 
 class TabDinVal extends DataClass implements Insertable<TabDinVal> {
-  final int NomTabDinId;
-  final int TabDinValId;
-  final int TabDinValFlgAct;
-  final int StatusId;
-  final int UsuId;
+  final int nomTabDinId;
+  final int tabDinValId;
+  final int tabDinValFlgAct;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   TabDinVal(
-      {@required this.NomTabDinId,
-      @required this.TabDinValId,
-      @required this.TabDinValFlgAct,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.nomTabDinId,
+      @required this.tabDinValId,
+      @required this.tabDinValFlgAct,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -5106,15 +4873,15 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return TabDinVal(
-      NomTabDinId: intType
+      nomTabDinId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}nom_tab_din_id']),
-      TabDinValId: intType
+      tabDinValId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}tab_din_val_id']),
-      TabDinValFlgAct: intType.mapFromDatabaseResponse(
+      tabDinValFlgAct: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}tab_din_val_flg_act']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -5126,11 +4893,11 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
   factory TabDinVal.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return TabDinVal(
-      NomTabDinId: serializer.fromJson<int>(json['NomTabDinId']),
-      TabDinValId: serializer.fromJson<int>(json['TabDinValId']),
-      TabDinValFlgAct: serializer.fromJson<int>(json['TabDinValFlgAct']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      nomTabDinId: serializer.fromJson<int>(json['nomTabDinId']),
+      tabDinValId: serializer.fromJson<int>(json['tabDinValId']),
+      tabDinValFlgAct: serializer.fromJson<int>(json['tabDinValFlgAct']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -5140,11 +4907,11 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'NomTabDinId': serializer.toJson<int>(NomTabDinId),
-      'TabDinValId': serializer.toJson<int>(TabDinValId),
-      'TabDinValFlgAct': serializer.toJson<int>(TabDinValFlgAct),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'nomTabDinId': serializer.toJson<int>(nomTabDinId),
+      'tabDinValId': serializer.toJson<int>(tabDinValId),
+      'tabDinValFlgAct': serializer.toJson<int>(tabDinValFlgAct),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -5154,20 +4921,20 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
   @override
   T createCompanion<T extends UpdateCompanion<TabDinVal>>(bool nullToAbsent) {
     return TableTabDinValCompanion(
-      NomTabDinId: NomTabDinId == null && nullToAbsent
+      nomTabDinId: nomTabDinId == null && nullToAbsent
           ? const Value.absent()
-          : Value(NomTabDinId),
-      TabDinValId: TabDinValId == null && nullToAbsent
+          : Value(nomTabDinId),
+      tabDinValId: tabDinValId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TabDinValId),
-      TabDinValFlgAct: TabDinValFlgAct == null && nullToAbsent
+          : Value(tabDinValId),
+      tabDinValFlgAct: tabDinValFlgAct == null && nullToAbsent
           ? const Value.absent()
-          : Value(TabDinValFlgAct),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(tabDinValFlgAct),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -5181,20 +4948,20 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
   }
 
   TabDinVal copyWith(
-          {int NomTabDinId,
-          int TabDinValId,
-          int TabDinValFlgAct,
-          int StatusId,
-          int UsuId,
+          {int nomTabDinId,
+          int tabDinValId,
+          int tabDinValFlgAct,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       TabDinVal(
-        NomTabDinId: NomTabDinId ?? this.NomTabDinId,
-        TabDinValId: TabDinValId ?? this.TabDinValId,
-        TabDinValFlgAct: TabDinValFlgAct ?? this.TabDinValFlgAct,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        nomTabDinId: nomTabDinId ?? this.nomTabDinId,
+        tabDinValId: tabDinValId ?? this.tabDinValId,
+        tabDinValFlgAct: tabDinValFlgAct ?? this.tabDinValFlgAct,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -5202,11 +4969,11 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
   @override
   String toString() {
     return (StringBuffer('TabDinVal(')
-          ..write('NomTabDinId: $NomTabDinId, ')
-          ..write('TabDinValId: $TabDinValId, ')
-          ..write('TabDinValFlgAct: $TabDinValFlgAct, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('nomTabDinId: $nomTabDinId, ')
+          ..write('tabDinValId: $tabDinValId, ')
+          ..write('tabDinValFlgAct: $tabDinValFlgAct, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -5216,65 +4983,65 @@ class TabDinVal extends DataClass implements Insertable<TabDinVal> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      NomTabDinId.hashCode,
+      nomTabDinId.hashCode,
       $mrjc(
-          TabDinValId.hashCode,
+          tabDinValId.hashCode,
           $mrjc(
-              TabDinValFlgAct.hashCode,
+              tabDinValFlgAct.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is TabDinVal &&
-          other.NomTabDinId == NomTabDinId &&
-          other.TabDinValId == TabDinValId &&
-          other.TabDinValFlgAct == TabDinValFlgAct &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.nomTabDinId == nomTabDinId &&
+          other.tabDinValId == tabDinValId &&
+          other.tabDinValFlgAct == tabDinValFlgAct &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableTabDinValCompanion extends UpdateCompanion<TabDinVal> {
-  final Value<int> NomTabDinId;
-  final Value<int> TabDinValId;
-  final Value<int> TabDinValFlgAct;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> nomTabDinId;
+  final Value<int> tabDinValId;
+  final Value<int> tabDinValFlgAct;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableTabDinValCompanion({
-    this.NomTabDinId = const Value.absent(),
-    this.TabDinValId = const Value.absent(),
-    this.TabDinValFlgAct = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.nomTabDinId = const Value.absent(),
+    this.tabDinValId = const Value.absent(),
+    this.tabDinValFlgAct = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableTabDinValCompanion copyWith(
-      {Value<int> NomTabDinId,
-      Value<int> TabDinValId,
-      Value<int> TabDinValFlgAct,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> nomTabDinId,
+      Value<int> tabDinValId,
+      Value<int> tabDinValFlgAct,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableTabDinValCompanion(
-      NomTabDinId: NomTabDinId ?? this.NomTabDinId,
-      TabDinValId: TabDinValId ?? this.TabDinValId,
-      TabDinValFlgAct: TabDinValFlgAct ?? this.TabDinValFlgAct,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      nomTabDinId: nomTabDinId ?? this.nomTabDinId,
+      tabDinValId: tabDinValId ?? this.tabDinValId,
+      tabDinValFlgAct: tabDinValFlgAct ?? this.tabDinValFlgAct,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -5287,34 +5054,34 @@ class $TableTabDinValTable extends TableTabDinVal
   final GeneratedDatabase _db;
   final String _alias;
   $TableTabDinValTable(this._db, [this._alias]);
-  final VerificationMeta _NomTabDinIdMeta =
-      const VerificationMeta('NomTabDinId');
-  GeneratedIntColumn _NomTabDinId;
+  final VerificationMeta _nomTabDinIdMeta =
+      const VerificationMeta('nomTabDinId');
+  GeneratedIntColumn _nomTabDinId;
   @override
-  GeneratedIntColumn get NomTabDinId =>
-      _NomTabDinId ??= _constructNomTabDinId();
+  GeneratedIntColumn get nomTabDinId =>
+      _nomTabDinId ??= _constructNomTabDinId();
   GeneratedIntColumn _constructNomTabDinId() {
     return GeneratedIntColumn('nom_tab_din_id', $tableName, false,
-        $customConstraints: 'REFERENCES NomTabDin(NomTabDinId)');
+        $customConstraints: 'REFERENCES NomTabDin(nomTabDinId)');
   }
 
-  final VerificationMeta _TabDinValIdMeta =
-      const VerificationMeta('TabDinValId');
-  GeneratedIntColumn _TabDinValId;
+  final VerificationMeta _tabDinValIdMeta =
+      const VerificationMeta('tabDinValId');
+  GeneratedIntColumn _tabDinValId;
   @override
-  GeneratedIntColumn get TabDinValId =>
-      _TabDinValId ??= _constructTabDinValId();
+  GeneratedIntColumn get tabDinValId =>
+      _tabDinValId ??= _constructTabDinValId();
   GeneratedIntColumn _constructTabDinValId() {
     return GeneratedIntColumn('tab_din_val_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _TabDinValFlgActMeta =
-      const VerificationMeta('TabDinValFlgAct');
-  GeneratedIntColumn _TabDinValFlgAct;
+  final VerificationMeta _tabDinValFlgActMeta =
+      const VerificationMeta('tabDinValFlgAct');
+  GeneratedIntColumn _tabDinValFlgAct;
   @override
-  GeneratedIntColumn get TabDinValFlgAct =>
-      _TabDinValFlgAct ??= _constructTabDinValFlgAct();
+  GeneratedIntColumn get tabDinValFlgAct =>
+      _tabDinValFlgAct ??= _constructTabDinValFlgAct();
   GeneratedIntColumn _constructTabDinValFlgAct() {
     return GeneratedIntColumn(
       'tab_din_val_flg_act',
@@ -5323,22 +5090,22 @@ class $TableTabDinValTable extends TableTabDinVal
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -5379,11 +5146,11 @@ class $TableTabDinValTable extends TableTabDinVal
 
   @override
   List<GeneratedColumn> get $columns => [
-        NomTabDinId,
-        TabDinValId,
-        TabDinValFlgAct,
-        StatusId,
-        UsuId,
+        nomTabDinId,
+        tabDinValId,
+        tabDinValFlgAct,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -5398,37 +5165,37 @@ class $TableTabDinValTable extends TableTabDinVal
   VerificationContext validateIntegrity(TableTabDinValCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.NomTabDinId.present) {
-      context.handle(_NomTabDinIdMeta,
-          NomTabDinId.isAcceptableValue(d.NomTabDinId.value, _NomTabDinIdMeta));
-    } else if (NomTabDinId.isRequired && isInserting) {
-      context.missing(_NomTabDinIdMeta);
+    if (d.nomTabDinId.present) {
+      context.handle(_nomTabDinIdMeta,
+          nomTabDinId.isAcceptableValue(d.nomTabDinId.value, _nomTabDinIdMeta));
+    } else if (nomTabDinId.isRequired && isInserting) {
+      context.missing(_nomTabDinIdMeta);
     }
-    if (d.TabDinValId.present) {
-      context.handle(_TabDinValIdMeta,
-          TabDinValId.isAcceptableValue(d.TabDinValId.value, _TabDinValIdMeta));
-    } else if (TabDinValId.isRequired && isInserting) {
-      context.missing(_TabDinValIdMeta);
+    if (d.tabDinValId.present) {
+      context.handle(_tabDinValIdMeta,
+          tabDinValId.isAcceptableValue(d.tabDinValId.value, _tabDinValIdMeta));
+    } else if (tabDinValId.isRequired && isInserting) {
+      context.missing(_tabDinValIdMeta);
     }
-    if (d.TabDinValFlgAct.present) {
+    if (d.tabDinValFlgAct.present) {
       context.handle(
-          _TabDinValFlgActMeta,
-          TabDinValFlgAct.isAcceptableValue(
-              d.TabDinValFlgAct.value, _TabDinValFlgActMeta));
-    } else if (TabDinValFlgAct.isRequired && isInserting) {
-      context.missing(_TabDinValFlgActMeta);
+          _tabDinValFlgActMeta,
+          tabDinValFlgAct.isAcceptableValue(
+              d.tabDinValFlgAct.value, _tabDinValFlgActMeta));
+    } else if (tabDinValFlgAct.isRequired && isInserting) {
+      context.missing(_tabDinValFlgActMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -5452,7 +5219,7 @@ class $TableTabDinValTable extends TableTabDinVal
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {TabDinValId};
+  Set<GeneratedColumn> get $primaryKey => {tabDinValId};
   @override
   TabDinVal map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -5462,21 +5229,21 @@ class $TableTabDinValTable extends TableTabDinVal
   @override
   Map<String, Variable> entityToSql(TableTabDinValCompanion d) {
     final map = <String, Variable>{};
-    if (d.NomTabDinId.present) {
-      map['nom_tab_din_id'] = Variable<int, IntType>(d.NomTabDinId.value);
+    if (d.nomTabDinId.present) {
+      map['nom_tab_din_id'] = Variable<int, IntType>(d.nomTabDinId.value);
     }
-    if (d.TabDinValId.present) {
-      map['tab_din_val_id'] = Variable<int, IntType>(d.TabDinValId.value);
+    if (d.tabDinValId.present) {
+      map['tab_din_val_id'] = Variable<int, IntType>(d.tabDinValId.value);
     }
-    if (d.TabDinValFlgAct.present) {
+    if (d.tabDinValFlgAct.present) {
       map['tab_din_val_flg_act'] =
-          Variable<int, IntType>(d.TabDinValFlgAct.value);
+          Variable<int, IntType>(d.tabDinValFlgAct.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -5497,18 +5264,18 @@ class $TableTabDinValTable extends TableTabDinVal
 }
 
 class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
-  final int TabDinValCondTDId;
-  final int TabDinValCondTDValId;
-  final int StatusId;
-  final int UsuId;
+  final int tabDinValCondTDId;
+  final int tabDinValCondTDValId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   TabDinValCond(
-      {@required this.TabDinValCondTDId,
-      @required this.TabDinValCondTDValId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.tabDinValCondTDId,
+      @required this.tabDinValCondTDValId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -5519,13 +5286,13 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return TabDinValCond(
-      TabDinValCondTDId: intType.mapFromDatabaseResponse(
+      tabDinValCondTDId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}tab_din_val_cond_t_d_id']),
-      TabDinValCondTDValId: intType.mapFromDatabaseResponse(
+      tabDinValCondTDValId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}tab_din_val_cond_t_d_val_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -5537,11 +5304,11 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
   factory TabDinValCond.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return TabDinValCond(
-      TabDinValCondTDId: serializer.fromJson<int>(json['TabDinValCondTDId']),
-      TabDinValCondTDValId:
-          serializer.fromJson<int>(json['TabDinValCondTDValId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      tabDinValCondTDId: serializer.fromJson<int>(json['tabDinValCondTDId']),
+      tabDinValCondTDValId:
+          serializer.fromJson<int>(json['tabDinValCondTDValId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -5551,10 +5318,10 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'TabDinValCondTDId': serializer.toJson<int>(TabDinValCondTDId),
-      'TabDinValCondTDValId': serializer.toJson<int>(TabDinValCondTDValId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'tabDinValCondTDId': serializer.toJson<int>(tabDinValCondTDId),
+      'tabDinValCondTDValId': serializer.toJson<int>(tabDinValCondTDValId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -5565,17 +5332,17 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
   T createCompanion<T extends UpdateCompanion<TabDinValCond>>(
       bool nullToAbsent) {
     return TableTabDinValCondCompanion(
-      TabDinValCondTDId: TabDinValCondTDId == null && nullToAbsent
+      tabDinValCondTDId: tabDinValCondTDId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TabDinValCondTDId),
-      TabDinValCondTDValId: TabDinValCondTDValId == null && nullToAbsent
+          : Value(tabDinValCondTDId),
+      tabDinValCondTDValId: tabDinValCondTDValId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TabDinValCondTDValId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(tabDinValCondTDValId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -5589,18 +5356,18 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
   }
 
   TabDinValCond copyWith(
-          {int TabDinValCondTDId,
-          int TabDinValCondTDValId,
-          int StatusId,
-          int UsuId,
+          {int tabDinValCondTDId,
+          int tabDinValCondTDValId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       TabDinValCond(
-        TabDinValCondTDId: TabDinValCondTDId ?? this.TabDinValCondTDId,
-        TabDinValCondTDValId: TabDinValCondTDValId ?? this.TabDinValCondTDValId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        tabDinValCondTDId: tabDinValCondTDId ?? this.tabDinValCondTDId,
+        tabDinValCondTDValId: tabDinValCondTDValId ?? this.tabDinValCondTDValId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -5608,10 +5375,10 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
   @override
   String toString() {
     return (StringBuffer('TabDinValCond(')
-          ..write('TabDinValCondTDId: $TabDinValCondTDId, ')
-          ..write('TabDinValCondTDValId: $TabDinValCondTDValId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('tabDinValCondTDId: $tabDinValCondTDId, ')
+          ..write('tabDinValCondTDValId: $tabDinValCondTDValId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -5621,58 +5388,58 @@ class TabDinValCond extends DataClass implements Insertable<TabDinValCond> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      TabDinValCondTDId.hashCode,
+      tabDinValCondTDId.hashCode,
       $mrjc(
-          TabDinValCondTDValId.hashCode,
+          tabDinValCondTDValId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is TabDinValCond &&
-          other.TabDinValCondTDId == TabDinValCondTDId &&
-          other.TabDinValCondTDValId == TabDinValCondTDValId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.tabDinValCondTDId == tabDinValCondTDId &&
+          other.tabDinValCondTDValId == tabDinValCondTDValId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableTabDinValCondCompanion extends UpdateCompanion<TabDinValCond> {
-  final Value<int> TabDinValCondTDId;
-  final Value<int> TabDinValCondTDValId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> tabDinValCondTDId;
+  final Value<int> tabDinValCondTDValId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableTabDinValCondCompanion({
-    this.TabDinValCondTDId = const Value.absent(),
-    this.TabDinValCondTDValId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.tabDinValCondTDId = const Value.absent(),
+    this.tabDinValCondTDValId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableTabDinValCondCompanion copyWith(
-      {Value<int> TabDinValCondTDId,
-      Value<int> TabDinValCondTDValId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> tabDinValCondTDId,
+      Value<int> tabDinValCondTDValId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableTabDinValCondCompanion(
-      TabDinValCondTDId: TabDinValCondTDId ?? this.TabDinValCondTDId,
-      TabDinValCondTDValId: TabDinValCondTDValId ?? this.TabDinValCondTDValId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      tabDinValCondTDId: tabDinValCondTDId ?? this.tabDinValCondTDId,
+      tabDinValCondTDValId: tabDinValCondTDValId ?? this.tabDinValCondTDValId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -5685,44 +5452,44 @@ class $TableTabDinValCondTable extends TableTabDinValCond
   final GeneratedDatabase _db;
   final String _alias;
   $TableTabDinValCondTable(this._db, [this._alias]);
-  final VerificationMeta _TabDinValCondTDIdMeta =
-      const VerificationMeta('TabDinValCondTDId');
-  GeneratedIntColumn _TabDinValCondTDId;
+  final VerificationMeta _tabDinValCondTDIdMeta =
+      const VerificationMeta('tabDinValCondTDId');
+  GeneratedIntColumn _tabDinValCondTDId;
   @override
-  GeneratedIntColumn get TabDinValCondTDId =>
-      _TabDinValCondTDId ??= _constructTabDinValCondTDId();
+  GeneratedIntColumn get tabDinValCondTDId =>
+      _tabDinValCondTDId ??= _constructTabDinValCondTDId();
   GeneratedIntColumn _constructTabDinValCondTDId() {
     return GeneratedIntColumn('tab_din_val_cond_t_d_id', $tableName, false,
-        $customConstraints: 'REFERENCES NomTabDin(NomTabDinId)');
+        $customConstraints: 'REFERENCES NomTabDin(nomTabDinId)');
   }
 
-  final VerificationMeta _TabDinValCondTDValIdMeta =
-      const VerificationMeta('TabDinValCondTDValId');
-  GeneratedIntColumn _TabDinValCondTDValId;
+  final VerificationMeta _tabDinValCondTDValIdMeta =
+      const VerificationMeta('tabDinValCondTDValId');
+  GeneratedIntColumn _tabDinValCondTDValId;
   @override
-  GeneratedIntColumn get TabDinValCondTDValId =>
-      _TabDinValCondTDValId ??= _constructTabDinValCondTDValId();
+  GeneratedIntColumn get tabDinValCondTDValId =>
+      _tabDinValCondTDValId ??= _constructTabDinValCondTDValId();
   GeneratedIntColumn _constructTabDinValCondTDValId() {
     return GeneratedIntColumn('tab_din_val_cond_t_d_val_id', $tableName, false,
-        $customConstraints: 'REFERENCES TabDinVal(TabDinValId)');
+        $customConstraints: 'REFERENCES TabDinVal(tabDinValId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -5763,10 +5530,10 @@ class $TableTabDinValCondTable extends TableTabDinValCond
 
   @override
   List<GeneratedColumn> get $columns => [
-        TabDinValCondTDId,
-        TabDinValCondTDValId,
-        StatusId,
-        UsuId,
+        tabDinValCondTDId,
+        tabDinValCondTDValId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -5781,33 +5548,33 @@ class $TableTabDinValCondTable extends TableTabDinValCond
   VerificationContext validateIntegrity(TableTabDinValCondCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.TabDinValCondTDId.present) {
+    if (d.tabDinValCondTDId.present) {
       context.handle(
-          _TabDinValCondTDIdMeta,
-          TabDinValCondTDId.isAcceptableValue(
-              d.TabDinValCondTDId.value, _TabDinValCondTDIdMeta));
-    } else if (TabDinValCondTDId.isRequired && isInserting) {
-      context.missing(_TabDinValCondTDIdMeta);
+          _tabDinValCondTDIdMeta,
+          tabDinValCondTDId.isAcceptableValue(
+              d.tabDinValCondTDId.value, _tabDinValCondTDIdMeta));
+    } else if (tabDinValCondTDId.isRequired && isInserting) {
+      context.missing(_tabDinValCondTDIdMeta);
     }
-    if (d.TabDinValCondTDValId.present) {
+    if (d.tabDinValCondTDValId.present) {
       context.handle(
-          _TabDinValCondTDValIdMeta,
-          TabDinValCondTDValId.isAcceptableValue(
-              d.TabDinValCondTDValId.value, _TabDinValCondTDValIdMeta));
-    } else if (TabDinValCondTDValId.isRequired && isInserting) {
-      context.missing(_TabDinValCondTDValIdMeta);
+          _tabDinValCondTDValIdMeta,
+          tabDinValCondTDValId.isAcceptableValue(
+              d.tabDinValCondTDValId.value, _tabDinValCondTDValIdMeta));
+    } else if (tabDinValCondTDValId.isRequired && isInserting) {
+      context.missing(_tabDinValCondTDValIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -5841,19 +5608,19 @@ class $TableTabDinValCondTable extends TableTabDinValCond
   @override
   Map<String, Variable> entityToSql(TableTabDinValCondCompanion d) {
     final map = <String, Variable>{};
-    if (d.TabDinValCondTDId.present) {
+    if (d.tabDinValCondTDId.present) {
       map['tab_din_val_cond_t_d_id'] =
-          Variable<int, IntType>(d.TabDinValCondTDId.value);
+          Variable<int, IntType>(d.tabDinValCondTDId.value);
     }
-    if (d.TabDinValCondTDValId.present) {
+    if (d.tabDinValCondTDValId.present) {
       map['tab_din_val_cond_t_d_val_id'] =
-          Variable<int, IntType>(d.TabDinValCondTDValId.value);
+          Variable<int, IntType>(d.tabDinValCondTDValId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -5874,34 +5641,34 @@ class $TableTabDinValCondTable extends TableTabDinValCond
 }
 
 class Usuarios extends DataClass implements Insertable<Usuarios> {
-  final int UsuId;
-  final String UsuNom;
-  final String UsuNom2;
-  final String UsuApe;
-  final String UsuApe2;
-  final String UsuNick;
-  final String UsuKeyPass;
-  final String UsuHashPass;
-  final String UsuPassAlgoritmo;
-  final int UsuFlgAct;
-  final int UsuFlgGenerico;
-  final int StatusId;
+  final int usuId;
+  final String usuNom;
+  final String usuNom2;
+  final String usuApe;
+  final String usuApe2;
+  final String usuNick;
+  final String usuKeyPass;
+  final String usuHashPass;
+  final String usuPassAlgoritmo;
+  final int usuFlgAct;
+  final int usuFlgGenerico;
+  final int statusId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Usuarios(
-      {@required this.UsuId,
-      @required this.UsuNom,
-      @required this.UsuNom2,
-      @required this.UsuApe,
-      @required this.UsuApe2,
-      @required this.UsuNick,
-      @required this.UsuKeyPass,
-      @required this.UsuHashPass,
-      @required this.UsuPassAlgoritmo,
-      @required this.UsuFlgAct,
-      @required this.UsuFlgGenerico,
-      @required this.StatusId,
+      {@required this.usuId,
+      @required this.usuNom,
+      @required this.usuNom2,
+      @required this.usuApe,
+      @required this.usuApe2,
+      @required this.usuNick,
+      @required this.usuKeyPass,
+      @required this.usuHashPass,
+      @required this.usuPassAlgoritmo,
+      @required this.usuFlgAct,
+      @required this.usuFlgGenerico,
+      @required this.statusId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -5912,28 +5679,28 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Usuarios(
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
-      UsuNom:
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuNom:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}usu_nom']),
-      UsuNom2: stringType
+      usuNom2: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_nom2']),
-      UsuApe:
+      usuApe:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}usu_ape']),
-      UsuApe2: stringType
+      usuApe2: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_ape2']),
-      UsuNick: stringType
+      usuNick: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_nick']),
-      UsuKeyPass: stringType
+      usuKeyPass: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_key_pass']),
-      UsuHashPass: stringType
+      usuHashPass: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_hash_pass']),
-      UsuPassAlgoritmo: stringType.mapFromDatabaseResponse(
+      usuPassAlgoritmo: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}usu_pass_algoritmo']),
-      UsuFlgAct: intType
+      usuFlgAct: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_flg_act']),
-      UsuFlgGenerico: intType
+      usuFlgGenerico: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}usu_flg_generico']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -5946,18 +5713,18 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   factory Usuarios.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Usuarios(
-      UsuId: serializer.fromJson<int>(json['UsuId']),
-      UsuNom: serializer.fromJson<String>(json['UsuNom']),
-      UsuNom2: serializer.fromJson<String>(json['UsuNom2']),
-      UsuApe: serializer.fromJson<String>(json['UsuApe']),
-      UsuApe2: serializer.fromJson<String>(json['UsuApe2']),
-      UsuNick: serializer.fromJson<String>(json['UsuNick']),
-      UsuKeyPass: serializer.fromJson<String>(json['UsuKeyPass']),
-      UsuHashPass: serializer.fromJson<String>(json['UsuHashPass']),
-      UsuPassAlgoritmo: serializer.fromJson<String>(json['UsuPassAlgoritmo']),
-      UsuFlgAct: serializer.fromJson<int>(json['UsuFlgAct']),
-      UsuFlgGenerico: serializer.fromJson<int>(json['UsuFlgGenerico']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
+      usuNom: serializer.fromJson<String>(json['usuNom']),
+      usuNom2: serializer.fromJson<String>(json['usuNom2']),
+      usuApe: serializer.fromJson<String>(json['usuApe']),
+      usuApe2: serializer.fromJson<String>(json['usuApe2']),
+      usuNick: serializer.fromJson<String>(json['usuNick']),
+      usuKeyPass: serializer.fromJson<String>(json['usuKeyPass']),
+      usuHashPass: serializer.fromJson<String>(json['usuHashPass']),
+      usuPassAlgoritmo: serializer.fromJson<String>(json['usuPassAlgoritmo']),
+      usuFlgAct: serializer.fromJson<int>(json['usuFlgAct']),
+      usuFlgGenerico: serializer.fromJson<int>(json['usuFlgGenerico']),
+      statusId: serializer.fromJson<int>(json['statusId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -5967,18 +5734,18 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'UsuId': serializer.toJson<int>(UsuId),
-      'UsuNom': serializer.toJson<String>(UsuNom),
-      'UsuNom2': serializer.toJson<String>(UsuNom2),
-      'UsuApe': serializer.toJson<String>(UsuApe),
-      'UsuApe2': serializer.toJson<String>(UsuApe2),
-      'UsuNick': serializer.toJson<String>(UsuNick),
-      'UsuKeyPass': serializer.toJson<String>(UsuKeyPass),
-      'UsuHashPass': serializer.toJson<String>(UsuHashPass),
-      'UsuPassAlgoritmo': serializer.toJson<String>(UsuPassAlgoritmo),
-      'UsuFlgAct': serializer.toJson<int>(UsuFlgAct),
-      'UsuFlgGenerico': serializer.toJson<int>(UsuFlgGenerico),
-      'StatusId': serializer.toJson<int>(StatusId),
+      'usuId': serializer.toJson<int>(usuId),
+      'usuNom': serializer.toJson<String>(usuNom),
+      'usuNom2': serializer.toJson<String>(usuNom2),
+      'usuApe': serializer.toJson<String>(usuApe),
+      'usuApe2': serializer.toJson<String>(usuApe2),
+      'usuNick': serializer.toJson<String>(usuNick),
+      'usuKeyPass': serializer.toJson<String>(usuKeyPass),
+      'usuHashPass': serializer.toJson<String>(usuHashPass),
+      'usuPassAlgoritmo': serializer.toJson<String>(usuPassAlgoritmo),
+      'usuFlgAct': serializer.toJson<int>(usuFlgAct),
+      'usuFlgGenerico': serializer.toJson<int>(usuFlgGenerico),
+      'statusId': serializer.toJson<int>(statusId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -5988,39 +5755,39 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   @override
   T createCompanion<T extends UpdateCompanion<Usuarios>>(bool nullToAbsent) {
     return TableUsuariosCompanion(
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
-      UsuNom:
-          UsuNom == null && nullToAbsent ? const Value.absent() : Value(UsuNom),
-      UsuNom2: UsuNom2 == null && nullToAbsent
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
+      usuNom:
+          usuNom == null && nullToAbsent ? const Value.absent() : Value(usuNom),
+      usuNom2: usuNom2 == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuNom2),
-      UsuApe:
-          UsuApe == null && nullToAbsent ? const Value.absent() : Value(UsuApe),
-      UsuApe2: UsuApe2 == null && nullToAbsent
+          : Value(usuNom2),
+      usuApe:
+          usuApe == null && nullToAbsent ? const Value.absent() : Value(usuApe),
+      usuApe2: usuApe2 == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuApe2),
-      UsuNick: UsuNick == null && nullToAbsent
+          : Value(usuApe2),
+      usuNick: usuNick == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuNick),
-      UsuKeyPass: UsuKeyPass == null && nullToAbsent
+          : Value(usuNick),
+      usuKeyPass: usuKeyPass == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuKeyPass),
-      UsuHashPass: UsuHashPass == null && nullToAbsent
+          : Value(usuKeyPass),
+      usuHashPass: usuHashPass == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuHashPass),
-      UsuPassAlgoritmo: UsuPassAlgoritmo == null && nullToAbsent
+          : Value(usuHashPass),
+      usuPassAlgoritmo: usuPassAlgoritmo == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuPassAlgoritmo),
-      UsuFlgAct: UsuFlgAct == null && nullToAbsent
+          : Value(usuPassAlgoritmo),
+      usuFlgAct: usuFlgAct == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuFlgAct),
-      UsuFlgGenerico: UsuFlgGenerico == null && nullToAbsent
+          : Value(usuFlgAct),
+      usuFlgGenerico: usuFlgGenerico == null && nullToAbsent
           ? const Value.absent()
-          : Value(UsuFlgGenerico),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(usuFlgGenerico),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
+          : Value(statusId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -6034,34 +5801,34 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   }
 
   Usuarios copyWith(
-          {int UsuId,
-          String UsuNom,
-          String UsuNom2,
-          String UsuApe,
-          String UsuApe2,
-          String UsuNick,
-          String UsuKeyPass,
-          String UsuHashPass,
-          String UsuPassAlgoritmo,
-          int UsuFlgAct,
-          int UsuFlgGenerico,
-          int StatusId,
+          {int usuId,
+          String usuNom,
+          String usuNom2,
+          String usuApe,
+          String usuApe2,
+          String usuNick,
+          String usuKeyPass,
+          String usuHashPass,
+          String usuPassAlgoritmo,
+          int usuFlgAct,
+          int usuFlgGenerico,
+          int statusId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Usuarios(
-        UsuId: UsuId ?? this.UsuId,
-        UsuNom: UsuNom ?? this.UsuNom,
-        UsuNom2: UsuNom2 ?? this.UsuNom2,
-        UsuApe: UsuApe ?? this.UsuApe,
-        UsuApe2: UsuApe2 ?? this.UsuApe2,
-        UsuNick: UsuNick ?? this.UsuNick,
-        UsuKeyPass: UsuKeyPass ?? this.UsuKeyPass,
-        UsuHashPass: UsuHashPass ?? this.UsuHashPass,
-        UsuPassAlgoritmo: UsuPassAlgoritmo ?? this.UsuPassAlgoritmo,
-        UsuFlgAct: UsuFlgAct ?? this.UsuFlgAct,
-        UsuFlgGenerico: UsuFlgGenerico ?? this.UsuFlgGenerico,
-        StatusId: StatusId ?? this.StatusId,
+        usuId: usuId ?? this.usuId,
+        usuNom: usuNom ?? this.usuNom,
+        usuNom2: usuNom2 ?? this.usuNom2,
+        usuApe: usuApe ?? this.usuApe,
+        usuApe2: usuApe2 ?? this.usuApe2,
+        usuNick: usuNick ?? this.usuNick,
+        usuKeyPass: usuKeyPass ?? this.usuKeyPass,
+        usuHashPass: usuHashPass ?? this.usuHashPass,
+        usuPassAlgoritmo: usuPassAlgoritmo ?? this.usuPassAlgoritmo,
+        usuFlgAct: usuFlgAct ?? this.usuFlgAct,
+        usuFlgGenerico: usuFlgGenerico ?? this.usuFlgGenerico,
+        statusId: statusId ?? this.statusId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -6069,18 +5836,18 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   @override
   String toString() {
     return (StringBuffer('Usuarios(')
-          ..write('UsuId: $UsuId, ')
-          ..write('UsuNom: $UsuNom, ')
-          ..write('UsuNom2: $UsuNom2, ')
-          ..write('UsuApe: $UsuApe, ')
-          ..write('UsuApe2: $UsuApe2, ')
-          ..write('UsuNick: $UsuNick, ')
-          ..write('UsuKeyPass: $UsuKeyPass, ')
-          ..write('UsuHashPass: $UsuHashPass, ')
-          ..write('UsuPassAlgoritmo: $UsuPassAlgoritmo, ')
-          ..write('UsuFlgAct: $UsuFlgAct, ')
-          ..write('UsuFlgGenerico: $UsuFlgGenerico, ')
-          ..write('StatusId: $StatusId, ')
+          ..write('usuId: $usuId, ')
+          ..write('usuNom: $usuNom, ')
+          ..write('usuNom2: $usuNom2, ')
+          ..write('usuApe: $usuApe, ')
+          ..write('usuApe2: $usuApe2, ')
+          ..write('usuNick: $usuNick, ')
+          ..write('usuKeyPass: $usuKeyPass, ')
+          ..write('usuHashPass: $usuHashPass, ')
+          ..write('usuPassAlgoritmo: $usuPassAlgoritmo, ')
+          ..write('usuFlgAct: $usuFlgAct, ')
+          ..write('usuFlgGenerico: $usuFlgGenerico, ')
+          ..write('statusId: $statusId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -6090,29 +5857,29 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      UsuId.hashCode,
+      usuId.hashCode,
       $mrjc(
-          UsuNom.hashCode,
+          usuNom.hashCode,
           $mrjc(
-              UsuNom2.hashCode,
+              usuNom2.hashCode,
               $mrjc(
-                  UsuApe.hashCode,
+                  usuApe.hashCode,
                   $mrjc(
-                      UsuApe2.hashCode,
+                      usuApe2.hashCode,
                       $mrjc(
-                          UsuNick.hashCode,
+                          usuNick.hashCode,
                           $mrjc(
-                              UsuKeyPass.hashCode,
+                              usuKeyPass.hashCode,
                               $mrjc(
-                                  UsuHashPass.hashCode,
+                                  usuHashPass.hashCode,
                                   $mrjc(
-                                      UsuPassAlgoritmo.hashCode,
+                                      usuPassAlgoritmo.hashCode,
                                       $mrjc(
-                                          UsuFlgAct.hashCode,
+                                          usuFlgAct.hashCode,
                                           $mrjc(
-                                              UsuFlgGenerico.hashCode,
+                                              usuFlgGenerico.hashCode,
                                               $mrjc(
-                                                  StatusId.hashCode,
+                                                  statusId.hashCode,
                                                   $mrjc(
                                                       createdAt.hashCode,
                                                       $mrjc(
@@ -6123,85 +5890,85 @@ class Usuarios extends DataClass implements Insertable<Usuarios> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Usuarios &&
-          other.UsuId == UsuId &&
-          other.UsuNom == UsuNom &&
-          other.UsuNom2 == UsuNom2 &&
-          other.UsuApe == UsuApe &&
-          other.UsuApe2 == UsuApe2 &&
-          other.UsuNick == UsuNick &&
-          other.UsuKeyPass == UsuKeyPass &&
-          other.UsuHashPass == UsuHashPass &&
-          other.UsuPassAlgoritmo == UsuPassAlgoritmo &&
-          other.UsuFlgAct == UsuFlgAct &&
-          other.UsuFlgGenerico == UsuFlgGenerico &&
-          other.StatusId == StatusId &&
+          other.usuId == usuId &&
+          other.usuNom == usuNom &&
+          other.usuNom2 == usuNom2 &&
+          other.usuApe == usuApe &&
+          other.usuApe2 == usuApe2 &&
+          other.usuNick == usuNick &&
+          other.usuKeyPass == usuKeyPass &&
+          other.usuHashPass == usuHashPass &&
+          other.usuPassAlgoritmo == usuPassAlgoritmo &&
+          other.usuFlgAct == usuFlgAct &&
+          other.usuFlgGenerico == usuFlgGenerico &&
+          other.statusId == statusId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableUsuariosCompanion extends UpdateCompanion<Usuarios> {
-  final Value<int> UsuId;
-  final Value<String> UsuNom;
-  final Value<String> UsuNom2;
-  final Value<String> UsuApe;
-  final Value<String> UsuApe2;
-  final Value<String> UsuNick;
-  final Value<String> UsuKeyPass;
-  final Value<String> UsuHashPass;
-  final Value<String> UsuPassAlgoritmo;
-  final Value<int> UsuFlgAct;
-  final Value<int> UsuFlgGenerico;
-  final Value<int> StatusId;
+  final Value<int> usuId;
+  final Value<String> usuNom;
+  final Value<String> usuNom2;
+  final Value<String> usuApe;
+  final Value<String> usuApe2;
+  final Value<String> usuNick;
+  final Value<String> usuKeyPass;
+  final Value<String> usuHashPass;
+  final Value<String> usuPassAlgoritmo;
+  final Value<int> usuFlgAct;
+  final Value<int> usuFlgGenerico;
+  final Value<int> statusId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableUsuariosCompanion({
-    this.UsuId = const Value.absent(),
-    this.UsuNom = const Value.absent(),
-    this.UsuNom2 = const Value.absent(),
-    this.UsuApe = const Value.absent(),
-    this.UsuApe2 = const Value.absent(),
-    this.UsuNick = const Value.absent(),
-    this.UsuKeyPass = const Value.absent(),
-    this.UsuHashPass = const Value.absent(),
-    this.UsuPassAlgoritmo = const Value.absent(),
-    this.UsuFlgAct = const Value.absent(),
-    this.UsuFlgGenerico = const Value.absent(),
-    this.StatusId = const Value.absent(),
+    this.usuId = const Value.absent(),
+    this.usuNom = const Value.absent(),
+    this.usuNom2 = const Value.absent(),
+    this.usuApe = const Value.absent(),
+    this.usuApe2 = const Value.absent(),
+    this.usuNick = const Value.absent(),
+    this.usuKeyPass = const Value.absent(),
+    this.usuHashPass = const Value.absent(),
+    this.usuPassAlgoritmo = const Value.absent(),
+    this.usuFlgAct = const Value.absent(),
+    this.usuFlgGenerico = const Value.absent(),
+    this.statusId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableUsuariosCompanion copyWith(
-      {Value<int> UsuId,
-      Value<String> UsuNom,
-      Value<String> UsuNom2,
-      Value<String> UsuApe,
-      Value<String> UsuApe2,
-      Value<String> UsuNick,
-      Value<String> UsuKeyPass,
-      Value<String> UsuHashPass,
-      Value<String> UsuPassAlgoritmo,
-      Value<int> UsuFlgAct,
-      Value<int> UsuFlgGenerico,
-      Value<int> StatusId,
+      {Value<int> usuId,
+      Value<String> usuNom,
+      Value<String> usuNom2,
+      Value<String> usuApe,
+      Value<String> usuApe2,
+      Value<String> usuNick,
+      Value<String> usuKeyPass,
+      Value<String> usuHashPass,
+      Value<String> usuPassAlgoritmo,
+      Value<int> usuFlgAct,
+      Value<int> usuFlgGenerico,
+      Value<int> statusId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableUsuariosCompanion(
-      UsuId: UsuId ?? this.UsuId,
-      UsuNom: UsuNom ?? this.UsuNom,
-      UsuNom2: UsuNom2 ?? this.UsuNom2,
-      UsuApe: UsuApe ?? this.UsuApe,
-      UsuApe2: UsuApe2 ?? this.UsuApe2,
-      UsuNick: UsuNick ?? this.UsuNick,
-      UsuKeyPass: UsuKeyPass ?? this.UsuKeyPass,
-      UsuHashPass: UsuHashPass ?? this.UsuHashPass,
-      UsuPassAlgoritmo: UsuPassAlgoritmo ?? this.UsuPassAlgoritmo,
-      UsuFlgAct: UsuFlgAct ?? this.UsuFlgAct,
-      UsuFlgGenerico: UsuFlgGenerico ?? this.UsuFlgGenerico,
-      StatusId: StatusId ?? this.StatusId,
+      usuId: usuId ?? this.usuId,
+      usuNom: usuNom ?? this.usuNom,
+      usuNom2: usuNom2 ?? this.usuNom2,
+      usuApe: usuApe ?? this.usuApe,
+      usuApe2: usuApe2 ?? this.usuApe2,
+      usuNick: usuNick ?? this.usuNick,
+      usuKeyPass: usuKeyPass ?? this.usuKeyPass,
+      usuHashPass: usuHashPass ?? this.usuHashPass,
+      usuPassAlgoritmo: usuPassAlgoritmo ?? this.usuPassAlgoritmo,
+      usuFlgAct: usuFlgAct ?? this.usuFlgAct,
+      usuFlgGenerico: usuFlgGenerico ?? this.usuFlgGenerico,
+      statusId: statusId ?? this.statusId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -6214,19 +5981,19 @@ class $TableUsuariosTable extends TableUsuarios
   final GeneratedDatabase _db;
   final String _alias;
   $TableUsuariosTable(this._db, [this._alias]);
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _UsuNomMeta = const VerificationMeta('UsuNom');
-  GeneratedTextColumn _UsuNom;
+  final VerificationMeta _usuNomMeta = const VerificationMeta('usuNom');
+  GeneratedTextColumn _usuNom;
   @override
-  GeneratedTextColumn get UsuNom => _UsuNom ??= _constructUsuNom();
+  GeneratedTextColumn get usuNom => _usuNom ??= _constructUsuNom();
   GeneratedTextColumn _constructUsuNom() {
     return GeneratedTextColumn(
       'usu_nom',
@@ -6235,10 +6002,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuNom2Meta = const VerificationMeta('UsuNom2');
-  GeneratedTextColumn _UsuNom2;
+  final VerificationMeta _usuNom2Meta = const VerificationMeta('usuNom2');
+  GeneratedTextColumn _usuNom2;
   @override
-  GeneratedTextColumn get UsuNom2 => _UsuNom2 ??= _constructUsuNom2();
+  GeneratedTextColumn get usuNom2 => _usuNom2 ??= _constructUsuNom2();
   GeneratedTextColumn _constructUsuNom2() {
     return GeneratedTextColumn(
       'usu_nom2',
@@ -6247,10 +6014,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuApeMeta = const VerificationMeta('UsuApe');
-  GeneratedTextColumn _UsuApe;
+  final VerificationMeta _usuApeMeta = const VerificationMeta('usuApe');
+  GeneratedTextColumn _usuApe;
   @override
-  GeneratedTextColumn get UsuApe => _UsuApe ??= _constructUsuApe();
+  GeneratedTextColumn get usuApe => _usuApe ??= _constructUsuApe();
   GeneratedTextColumn _constructUsuApe() {
     return GeneratedTextColumn(
       'usu_ape',
@@ -6259,10 +6026,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuApe2Meta = const VerificationMeta('UsuApe2');
-  GeneratedTextColumn _UsuApe2;
+  final VerificationMeta _usuApe2Meta = const VerificationMeta('usuApe2');
+  GeneratedTextColumn _usuApe2;
   @override
-  GeneratedTextColumn get UsuApe2 => _UsuApe2 ??= _constructUsuApe2();
+  GeneratedTextColumn get usuApe2 => _usuApe2 ??= _constructUsuApe2();
   GeneratedTextColumn _constructUsuApe2() {
     return GeneratedTextColumn(
       'usu_ape2',
@@ -6271,10 +6038,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuNickMeta = const VerificationMeta('UsuNick');
-  GeneratedTextColumn _UsuNick;
+  final VerificationMeta _usuNickMeta = const VerificationMeta('usuNick');
+  GeneratedTextColumn _usuNick;
   @override
-  GeneratedTextColumn get UsuNick => _UsuNick ??= _constructUsuNick();
+  GeneratedTextColumn get usuNick => _usuNick ??= _constructUsuNick();
   GeneratedTextColumn _constructUsuNick() {
     return GeneratedTextColumn(
       'usu_nick',
@@ -6283,10 +6050,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuKeyPassMeta = const VerificationMeta('UsuKeyPass');
-  GeneratedTextColumn _UsuKeyPass;
+  final VerificationMeta _usuKeyPassMeta = const VerificationMeta('usuKeyPass');
+  GeneratedTextColumn _usuKeyPass;
   @override
-  GeneratedTextColumn get UsuKeyPass => _UsuKeyPass ??= _constructUsuKeyPass();
+  GeneratedTextColumn get usuKeyPass => _usuKeyPass ??= _constructUsuKeyPass();
   GeneratedTextColumn _constructUsuKeyPass() {
     return GeneratedTextColumn(
       'usu_key_pass',
@@ -6295,12 +6062,12 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuHashPassMeta =
-      const VerificationMeta('UsuHashPass');
-  GeneratedTextColumn _UsuHashPass;
+  final VerificationMeta _usuHashPassMeta =
+      const VerificationMeta('usuHashPass');
+  GeneratedTextColumn _usuHashPass;
   @override
-  GeneratedTextColumn get UsuHashPass =>
-      _UsuHashPass ??= _constructUsuHashPass();
+  GeneratedTextColumn get usuHashPass =>
+      _usuHashPass ??= _constructUsuHashPass();
   GeneratedTextColumn _constructUsuHashPass() {
     return GeneratedTextColumn(
       'usu_hash_pass',
@@ -6309,12 +6076,12 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuPassAlgoritmoMeta =
-      const VerificationMeta('UsuPassAlgoritmo');
-  GeneratedTextColumn _UsuPassAlgoritmo;
+  final VerificationMeta _usuPassAlgoritmoMeta =
+      const VerificationMeta('usuPassAlgoritmo');
+  GeneratedTextColumn _usuPassAlgoritmo;
   @override
-  GeneratedTextColumn get UsuPassAlgoritmo =>
-      _UsuPassAlgoritmo ??= _constructUsuPassAlgoritmo();
+  GeneratedTextColumn get usuPassAlgoritmo =>
+      _usuPassAlgoritmo ??= _constructUsuPassAlgoritmo();
   GeneratedTextColumn _constructUsuPassAlgoritmo() {
     return GeneratedTextColumn(
       'usu_pass_algoritmo',
@@ -6323,10 +6090,10 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuFlgActMeta = const VerificationMeta('UsuFlgAct');
-  GeneratedIntColumn _UsuFlgAct;
+  final VerificationMeta _usuFlgActMeta = const VerificationMeta('usuFlgAct');
+  GeneratedIntColumn _usuFlgAct;
   @override
-  GeneratedIntColumn get UsuFlgAct => _UsuFlgAct ??= _constructUsuFlgAct();
+  GeneratedIntColumn get usuFlgAct => _usuFlgAct ??= _constructUsuFlgAct();
   GeneratedIntColumn _constructUsuFlgAct() {
     return GeneratedIntColumn(
       'usu_flg_act',
@@ -6335,12 +6102,12 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _UsuFlgGenericoMeta =
-      const VerificationMeta('UsuFlgGenerico');
-  GeneratedIntColumn _UsuFlgGenerico;
+  final VerificationMeta _usuFlgGenericoMeta =
+      const VerificationMeta('usuFlgGenerico');
+  GeneratedIntColumn _usuFlgGenerico;
   @override
-  GeneratedIntColumn get UsuFlgGenerico =>
-      _UsuFlgGenerico ??= _constructUsuFlgGenerico();
+  GeneratedIntColumn get usuFlgGenerico =>
+      _usuFlgGenerico ??= _constructUsuFlgGenerico();
   GeneratedIntColumn _constructUsuFlgGenerico() {
     return GeneratedIntColumn(
       'usu_flg_generico',
@@ -6349,13 +6116,13 @@ class $TableUsuariosTable extends TableUsuarios
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -6396,18 +6163,18 @@ class $TableUsuariosTable extends TableUsuarios
 
   @override
   List<GeneratedColumn> get $columns => [
-        UsuId,
-        UsuNom,
-        UsuNom2,
-        UsuApe,
-        UsuApe2,
-        UsuNick,
-        UsuKeyPass,
-        UsuHashPass,
-        UsuPassAlgoritmo,
-        UsuFlgAct,
-        UsuFlgGenerico,
-        StatusId,
+        usuId,
+        usuNom,
+        usuNom2,
+        usuApe,
+        usuApe2,
+        usuNick,
+        usuKeyPass,
+        usuHashPass,
+        usuPassAlgoritmo,
+        usuFlgAct,
+        usuFlgGenerico,
+        statusId,
         createdAt,
         updatedAt,
         deletedAt
@@ -6422,81 +6189,81 @@ class $TableUsuariosTable extends TableUsuarios
   VerificationContext validateIntegrity(TableUsuariosCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
-    if (d.UsuNom.present) {
+    if (d.usuNom.present) {
       context.handle(
-          _UsuNomMeta, UsuNom.isAcceptableValue(d.UsuNom.value, _UsuNomMeta));
-    } else if (UsuNom.isRequired && isInserting) {
-      context.missing(_UsuNomMeta);
+          _usuNomMeta, usuNom.isAcceptableValue(d.usuNom.value, _usuNomMeta));
+    } else if (usuNom.isRequired && isInserting) {
+      context.missing(_usuNomMeta);
     }
-    if (d.UsuNom2.present) {
-      context.handle(_UsuNom2Meta,
-          UsuNom2.isAcceptableValue(d.UsuNom2.value, _UsuNom2Meta));
-    } else if (UsuNom2.isRequired && isInserting) {
-      context.missing(_UsuNom2Meta);
+    if (d.usuNom2.present) {
+      context.handle(_usuNom2Meta,
+          usuNom2.isAcceptableValue(d.usuNom2.value, _usuNom2Meta));
+    } else if (usuNom2.isRequired && isInserting) {
+      context.missing(_usuNom2Meta);
     }
-    if (d.UsuApe.present) {
+    if (d.usuApe.present) {
       context.handle(
-          _UsuApeMeta, UsuApe.isAcceptableValue(d.UsuApe.value, _UsuApeMeta));
-    } else if (UsuApe.isRequired && isInserting) {
-      context.missing(_UsuApeMeta);
+          _usuApeMeta, usuApe.isAcceptableValue(d.usuApe.value, _usuApeMeta));
+    } else if (usuApe.isRequired && isInserting) {
+      context.missing(_usuApeMeta);
     }
-    if (d.UsuApe2.present) {
-      context.handle(_UsuApe2Meta,
-          UsuApe2.isAcceptableValue(d.UsuApe2.value, _UsuApe2Meta));
-    } else if (UsuApe2.isRequired && isInserting) {
-      context.missing(_UsuApe2Meta);
+    if (d.usuApe2.present) {
+      context.handle(_usuApe2Meta,
+          usuApe2.isAcceptableValue(d.usuApe2.value, _usuApe2Meta));
+    } else if (usuApe2.isRequired && isInserting) {
+      context.missing(_usuApe2Meta);
     }
-    if (d.UsuNick.present) {
-      context.handle(_UsuNickMeta,
-          UsuNick.isAcceptableValue(d.UsuNick.value, _UsuNickMeta));
-    } else if (UsuNick.isRequired && isInserting) {
-      context.missing(_UsuNickMeta);
+    if (d.usuNick.present) {
+      context.handle(_usuNickMeta,
+          usuNick.isAcceptableValue(d.usuNick.value, _usuNickMeta));
+    } else if (usuNick.isRequired && isInserting) {
+      context.missing(_usuNickMeta);
     }
-    if (d.UsuKeyPass.present) {
-      context.handle(_UsuKeyPassMeta,
-          UsuKeyPass.isAcceptableValue(d.UsuKeyPass.value, _UsuKeyPassMeta));
-    } else if (UsuKeyPass.isRequired && isInserting) {
-      context.missing(_UsuKeyPassMeta);
+    if (d.usuKeyPass.present) {
+      context.handle(_usuKeyPassMeta,
+          usuKeyPass.isAcceptableValue(d.usuKeyPass.value, _usuKeyPassMeta));
+    } else if (usuKeyPass.isRequired && isInserting) {
+      context.missing(_usuKeyPassMeta);
     }
-    if (d.UsuHashPass.present) {
-      context.handle(_UsuHashPassMeta,
-          UsuHashPass.isAcceptableValue(d.UsuHashPass.value, _UsuHashPassMeta));
-    } else if (UsuHashPass.isRequired && isInserting) {
-      context.missing(_UsuHashPassMeta);
+    if (d.usuHashPass.present) {
+      context.handle(_usuHashPassMeta,
+          usuHashPass.isAcceptableValue(d.usuHashPass.value, _usuHashPassMeta));
+    } else if (usuHashPass.isRequired && isInserting) {
+      context.missing(_usuHashPassMeta);
     }
-    if (d.UsuPassAlgoritmo.present) {
+    if (d.usuPassAlgoritmo.present) {
       context.handle(
-          _UsuPassAlgoritmoMeta,
-          UsuPassAlgoritmo.isAcceptableValue(
-              d.UsuPassAlgoritmo.value, _UsuPassAlgoritmoMeta));
-    } else if (UsuPassAlgoritmo.isRequired && isInserting) {
-      context.missing(_UsuPassAlgoritmoMeta);
+          _usuPassAlgoritmoMeta,
+          usuPassAlgoritmo.isAcceptableValue(
+              d.usuPassAlgoritmo.value, _usuPassAlgoritmoMeta));
+    } else if (usuPassAlgoritmo.isRequired && isInserting) {
+      context.missing(_usuPassAlgoritmoMeta);
     }
-    if (d.UsuFlgAct.present) {
-      context.handle(_UsuFlgActMeta,
-          UsuFlgAct.isAcceptableValue(d.UsuFlgAct.value, _UsuFlgActMeta));
-    } else if (UsuFlgAct.isRequired && isInserting) {
-      context.missing(_UsuFlgActMeta);
+    if (d.usuFlgAct.present) {
+      context.handle(_usuFlgActMeta,
+          usuFlgAct.isAcceptableValue(d.usuFlgAct.value, _usuFlgActMeta));
+    } else if (usuFlgAct.isRequired && isInserting) {
+      context.missing(_usuFlgActMeta);
     }
-    if (d.UsuFlgGenerico.present) {
+    if (d.usuFlgGenerico.present) {
       context.handle(
-          _UsuFlgGenericoMeta,
-          UsuFlgGenerico.isAcceptableValue(
-              d.UsuFlgGenerico.value, _UsuFlgGenericoMeta));
-    } else if (UsuFlgGenerico.isRequired && isInserting) {
-      context.missing(_UsuFlgGenericoMeta);
+          _usuFlgGenericoMeta,
+          usuFlgGenerico.isAcceptableValue(
+              d.usuFlgGenerico.value, _usuFlgGenericoMeta));
+    } else if (usuFlgGenerico.isRequired && isInserting) {
+      context.missing(_usuFlgGenericoMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -6520,7 +6287,7 @@ class $TableUsuariosTable extends TableUsuarios
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {UsuId};
+  Set<GeneratedColumn> get $primaryKey => {usuId};
   @override
   Usuarios map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -6530,42 +6297,42 @@ class $TableUsuariosTable extends TableUsuarios
   @override
   Map<String, Variable> entityToSql(TableUsuariosCompanion d) {
     final map = <String, Variable>{};
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
-    if (d.UsuNom.present) {
-      map['usu_nom'] = Variable<String, StringType>(d.UsuNom.value);
+    if (d.usuNom.present) {
+      map['usu_nom'] = Variable<String, StringType>(d.usuNom.value);
     }
-    if (d.UsuNom2.present) {
-      map['usu_nom2'] = Variable<String, StringType>(d.UsuNom2.value);
+    if (d.usuNom2.present) {
+      map['usu_nom2'] = Variable<String, StringType>(d.usuNom2.value);
     }
-    if (d.UsuApe.present) {
-      map['usu_ape'] = Variable<String, StringType>(d.UsuApe.value);
+    if (d.usuApe.present) {
+      map['usu_ape'] = Variable<String, StringType>(d.usuApe.value);
     }
-    if (d.UsuApe2.present) {
-      map['usu_ape2'] = Variable<String, StringType>(d.UsuApe2.value);
+    if (d.usuApe2.present) {
+      map['usu_ape2'] = Variable<String, StringType>(d.usuApe2.value);
     }
-    if (d.UsuNick.present) {
-      map['usu_nick'] = Variable<String, StringType>(d.UsuNick.value);
+    if (d.usuNick.present) {
+      map['usu_nick'] = Variable<String, StringType>(d.usuNick.value);
     }
-    if (d.UsuKeyPass.present) {
-      map['usu_key_pass'] = Variable<String, StringType>(d.UsuKeyPass.value);
+    if (d.usuKeyPass.present) {
+      map['usu_key_pass'] = Variable<String, StringType>(d.usuKeyPass.value);
     }
-    if (d.UsuHashPass.present) {
-      map['usu_hash_pass'] = Variable<String, StringType>(d.UsuHashPass.value);
+    if (d.usuHashPass.present) {
+      map['usu_hash_pass'] = Variable<String, StringType>(d.usuHashPass.value);
     }
-    if (d.UsuPassAlgoritmo.present) {
+    if (d.usuPassAlgoritmo.present) {
       map['usu_pass_algoritmo'] =
-          Variable<String, StringType>(d.UsuPassAlgoritmo.value);
+          Variable<String, StringType>(d.usuPassAlgoritmo.value);
     }
-    if (d.UsuFlgAct.present) {
-      map['usu_flg_act'] = Variable<int, IntType>(d.UsuFlgAct.value);
+    if (d.usuFlgAct.present) {
+      map['usu_flg_act'] = Variable<int, IntType>(d.usuFlgAct.value);
     }
-    if (d.UsuFlgGenerico.present) {
-      map['usu_flg_generico'] = Variable<int, IntType>(d.UsuFlgGenerico.value);
+    if (d.usuFlgGenerico.present) {
+      map['usu_flg_generico'] = Variable<int, IntType>(d.usuFlgGenerico.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -6586,18 +6353,18 @@ class $TableUsuariosTable extends TableUsuarios
 }
 
 class PerfSis extends DataClass implements Insertable<PerfSis> {
-  final int PerfSisId;
-  final String PerfSisDesc;
-  final int StatusId;
-  final int UsuId;
+  final int perfSisId;
+  final String perfSisDesc;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   PerfSis(
-      {@required this.PerfSisId,
-      @required this.PerfSisDesc,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.perfSisId,
+      @required this.perfSisDesc,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -6608,13 +6375,13 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return PerfSis(
-      PerfSisId: intType
+      perfSisId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}perf_sis_id']),
-      PerfSisDesc: stringType
+      perfSisDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}perf_sis_desc']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -6626,10 +6393,10 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
   factory PerfSis.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return PerfSis(
-      PerfSisId: serializer.fromJson<int>(json['PerfSisId']),
-      PerfSisDesc: serializer.fromJson<String>(json['PerfSisDesc']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      perfSisId: serializer.fromJson<int>(json['perfSisId']),
+      perfSisDesc: serializer.fromJson<String>(json['perfSisDesc']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -6639,10 +6406,10 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'PerfSisId': serializer.toJson<int>(PerfSisId),
-      'PerfSisDesc': serializer.toJson<String>(PerfSisDesc),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'perfSisId': serializer.toJson<int>(perfSisId),
+      'perfSisDesc': serializer.toJson<String>(perfSisDesc),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -6652,17 +6419,17 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
   @override
   T createCompanion<T extends UpdateCompanion<PerfSis>>(bool nullToAbsent) {
     return TablePerfSisCompanion(
-      PerfSisId: PerfSisId == null && nullToAbsent
+      perfSisId: perfSisId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PerfSisId),
-      PerfSisDesc: PerfSisDesc == null && nullToAbsent
+          : Value(perfSisId),
+      perfSisDesc: perfSisDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(PerfSisDesc),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(perfSisDesc),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -6676,18 +6443,18 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
   }
 
   PerfSis copyWith(
-          {int PerfSisId,
-          String PerfSisDesc,
-          int StatusId,
-          int UsuId,
+          {int perfSisId,
+          String perfSisDesc,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       PerfSis(
-        PerfSisId: PerfSisId ?? this.PerfSisId,
-        PerfSisDesc: PerfSisDesc ?? this.PerfSisDesc,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        perfSisId: perfSisId ?? this.perfSisId,
+        perfSisDesc: perfSisDesc ?? this.perfSisDesc,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -6695,10 +6462,10 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
   @override
   String toString() {
     return (StringBuffer('PerfSis(')
-          ..write('PerfSisId: $PerfSisId, ')
-          ..write('PerfSisDesc: $PerfSisDesc, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('perfSisId: $perfSisId, ')
+          ..write('perfSisDesc: $perfSisDesc, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -6708,58 +6475,58 @@ class PerfSis extends DataClass implements Insertable<PerfSis> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      PerfSisId.hashCode,
+      perfSisId.hashCode,
       $mrjc(
-          PerfSisDesc.hashCode,
+          perfSisDesc.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is PerfSis &&
-          other.PerfSisId == PerfSisId &&
-          other.PerfSisDesc == PerfSisDesc &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.perfSisId == perfSisId &&
+          other.perfSisDesc == perfSisDesc &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TablePerfSisCompanion extends UpdateCompanion<PerfSis> {
-  final Value<int> PerfSisId;
-  final Value<String> PerfSisDesc;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> perfSisId;
+  final Value<String> perfSisDesc;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TablePerfSisCompanion({
-    this.PerfSisId = const Value.absent(),
-    this.PerfSisDesc = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.perfSisId = const Value.absent(),
+    this.perfSisDesc = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TablePerfSisCompanion copyWith(
-      {Value<int> PerfSisId,
-      Value<String> PerfSisDesc,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> perfSisId,
+      Value<String> perfSisDesc,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TablePerfSisCompanion(
-      PerfSisId: PerfSisId ?? this.PerfSisId,
-      PerfSisDesc: PerfSisDesc ?? this.PerfSisDesc,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      perfSisId: perfSisId ?? this.perfSisId,
+      perfSisDesc: perfSisDesc ?? this.perfSisDesc,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -6772,21 +6539,21 @@ class $TablePerfSisTable extends TablePerfSis
   final GeneratedDatabase _db;
   final String _alias;
   $TablePerfSisTable(this._db, [this._alias]);
-  final VerificationMeta _PerfSisIdMeta = const VerificationMeta('PerfSisId');
-  GeneratedIntColumn _PerfSisId;
+  final VerificationMeta _perfSisIdMeta = const VerificationMeta('perfSisId');
+  GeneratedIntColumn _perfSisId;
   @override
-  GeneratedIntColumn get PerfSisId => _PerfSisId ??= _constructPerfSisId();
+  GeneratedIntColumn get perfSisId => _perfSisId ??= _constructPerfSisId();
   GeneratedIntColumn _constructPerfSisId() {
     return GeneratedIntColumn('perf_sis_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _PerfSisDescMeta =
-      const VerificationMeta('PerfSisDesc');
-  GeneratedTextColumn _PerfSisDesc;
+  final VerificationMeta _perfSisDescMeta =
+      const VerificationMeta('perfSisDesc');
+  GeneratedTextColumn _perfSisDesc;
   @override
-  GeneratedTextColumn get PerfSisDesc =>
-      _PerfSisDesc ??= _constructPerfSisDesc();
+  GeneratedTextColumn get perfSisDesc =>
+      _perfSisDesc ??= _constructPerfSisDesc();
   GeneratedTextColumn _constructPerfSisDesc() {
     return GeneratedTextColumn(
       'perf_sis_desc',
@@ -6795,22 +6562,22 @@ class $TablePerfSisTable extends TablePerfSis
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -6851,10 +6618,10 @@ class $TablePerfSisTable extends TablePerfSis
 
   @override
   List<GeneratedColumn> get $columns => [
-        PerfSisId,
-        PerfSisDesc,
-        StatusId,
-        UsuId,
+        perfSisId,
+        perfSisDesc,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -6869,29 +6636,29 @@ class $TablePerfSisTable extends TablePerfSis
   VerificationContext validateIntegrity(TablePerfSisCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.PerfSisId.present) {
-      context.handle(_PerfSisIdMeta,
-          PerfSisId.isAcceptableValue(d.PerfSisId.value, _PerfSisIdMeta));
-    } else if (PerfSisId.isRequired && isInserting) {
-      context.missing(_PerfSisIdMeta);
+    if (d.perfSisId.present) {
+      context.handle(_perfSisIdMeta,
+          perfSisId.isAcceptableValue(d.perfSisId.value, _perfSisIdMeta));
+    } else if (perfSisId.isRequired && isInserting) {
+      context.missing(_perfSisIdMeta);
     }
-    if (d.PerfSisDesc.present) {
-      context.handle(_PerfSisDescMeta,
-          PerfSisDesc.isAcceptableValue(d.PerfSisDesc.value, _PerfSisDescMeta));
-    } else if (PerfSisDesc.isRequired && isInserting) {
-      context.missing(_PerfSisDescMeta);
+    if (d.perfSisDesc.present) {
+      context.handle(_perfSisDescMeta,
+          perfSisDesc.isAcceptableValue(d.perfSisDesc.value, _perfSisDescMeta));
+    } else if (perfSisDesc.isRequired && isInserting) {
+      context.missing(_perfSisDescMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -6915,7 +6682,7 @@ class $TablePerfSisTable extends TablePerfSis
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {PerfSisId};
+  Set<GeneratedColumn> get $primaryKey => {perfSisId};
   @override
   PerfSis map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -6925,17 +6692,17 @@ class $TablePerfSisTable extends TablePerfSis
   @override
   Map<String, Variable> entityToSql(TablePerfSisCompanion d) {
     final map = <String, Variable>{};
-    if (d.PerfSisId.present) {
-      map['perf_sis_id'] = Variable<int, IntType>(d.PerfSisId.value);
+    if (d.perfSisId.present) {
+      map['perf_sis_id'] = Variable<int, IntType>(d.perfSisId.value);
     }
-    if (d.PerfSisDesc.present) {
-      map['perf_sis_desc'] = Variable<String, StringType>(d.PerfSisDesc.value);
+    if (d.perfSisDesc.present) {
+      map['perf_sis_desc'] = Variable<String, StringType>(d.perfSisDesc.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -6956,20 +6723,20 @@ class $TablePerfSisTable extends TablePerfSis
 }
 
 class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
-  final int SisId;
-  final int PerfSisId;
-  final int UsuId;
-  final int SisUsuPerfHab;
-  final int StatusId;
+  final int sisId;
+  final int perfSisId;
+  final int usuId;
+  final int sisUsuPerfHab;
+  final int statusId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   SisUsuPerf(
-      {@required this.SisId,
-      @required this.PerfSisId,
-      @required this.UsuId,
-      @required this.SisUsuPerfHab,
-      @required this.StatusId,
+      {@required this.sisId,
+      @required this.perfSisId,
+      @required this.usuId,
+      @required this.sisUsuPerfHab,
+      @required this.statusId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -6979,13 +6746,13 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return SisUsuPerf(
-      SisId: intType.mapFromDatabaseResponse(data['${effectivePrefix}sis_id']),
-      PerfSisId: intType
+      sisId: intType.mapFromDatabaseResponse(data['${effectivePrefix}sis_id']),
+      perfSisId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}perf_sis_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
-      SisUsuPerfHab: intType
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      sisUsuPerfHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}sis_usu_perf_hab']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -6998,11 +6765,11 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
   factory SisUsuPerf.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return SisUsuPerf(
-      SisId: serializer.fromJson<int>(json['SisId']),
-      PerfSisId: serializer.fromJson<int>(json['PerfSisId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
-      SisUsuPerfHab: serializer.fromJson<int>(json['SisUsuPerfHab']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
+      sisId: serializer.fromJson<int>(json['sisId']),
+      perfSisId: serializer.fromJson<int>(json['perfSisId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
+      sisUsuPerfHab: serializer.fromJson<int>(json['sisUsuPerfHab']),
+      statusId: serializer.fromJson<int>(json['statusId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -7012,11 +6779,11 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'SisId': serializer.toJson<int>(SisId),
-      'PerfSisId': serializer.toJson<int>(PerfSisId),
-      'UsuId': serializer.toJson<int>(UsuId),
-      'SisUsuPerfHab': serializer.toJson<int>(SisUsuPerfHab),
-      'StatusId': serializer.toJson<int>(StatusId),
+      'sisId': serializer.toJson<int>(sisId),
+      'perfSisId': serializer.toJson<int>(perfSisId),
+      'usuId': serializer.toJson<int>(usuId),
+      'sisUsuPerfHab': serializer.toJson<int>(sisUsuPerfHab),
+      'statusId': serializer.toJson<int>(statusId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -7026,19 +6793,19 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
   @override
   T createCompanion<T extends UpdateCompanion<SisUsuPerf>>(bool nullToAbsent) {
     return TableSisUsuPerfCompanion(
-      SisId:
-          SisId == null && nullToAbsent ? const Value.absent() : Value(SisId),
-      PerfSisId: PerfSisId == null && nullToAbsent
+      sisId:
+          sisId == null && nullToAbsent ? const Value.absent() : Value(sisId),
+      perfSisId: perfSisId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PerfSisId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
-      SisUsuPerfHab: SisUsuPerfHab == null && nullToAbsent
+          : Value(perfSisId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
+      sisUsuPerfHab: sisUsuPerfHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(SisUsuPerfHab),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(sisUsuPerfHab),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
+          : Value(statusId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -7052,20 +6819,20 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
   }
 
   SisUsuPerf copyWith(
-          {int SisId,
-          int PerfSisId,
-          int UsuId,
-          int SisUsuPerfHab,
-          int StatusId,
+          {int sisId,
+          int perfSisId,
+          int usuId,
+          int sisUsuPerfHab,
+          int statusId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       SisUsuPerf(
-        SisId: SisId ?? this.SisId,
-        PerfSisId: PerfSisId ?? this.PerfSisId,
-        UsuId: UsuId ?? this.UsuId,
-        SisUsuPerfHab: SisUsuPerfHab ?? this.SisUsuPerfHab,
-        StatusId: StatusId ?? this.StatusId,
+        sisId: sisId ?? this.sisId,
+        perfSisId: perfSisId ?? this.perfSisId,
+        usuId: usuId ?? this.usuId,
+        sisUsuPerfHab: sisUsuPerfHab ?? this.sisUsuPerfHab,
+        statusId: statusId ?? this.statusId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -7073,11 +6840,11 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
   @override
   String toString() {
     return (StringBuffer('SisUsuPerf(')
-          ..write('SisId: $SisId, ')
-          ..write('PerfSisId: $PerfSisId, ')
-          ..write('UsuId: $UsuId, ')
-          ..write('SisUsuPerfHab: $SisUsuPerfHab, ')
-          ..write('StatusId: $StatusId, ')
+          ..write('sisId: $sisId, ')
+          ..write('perfSisId: $perfSisId, ')
+          ..write('usuId: $usuId, ')
+          ..write('sisUsuPerfHab: $sisUsuPerfHab, ')
+          ..write('statusId: $statusId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -7087,65 +6854,65 @@ class SisUsuPerf extends DataClass implements Insertable<SisUsuPerf> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      SisId.hashCode,
+      sisId.hashCode,
       $mrjc(
-          PerfSisId.hashCode,
+          perfSisId.hashCode,
           $mrjc(
-              UsuId.hashCode,
+              usuId.hashCode,
               $mrjc(
-                  SisUsuPerfHab.hashCode,
+                  sisUsuPerfHab.hashCode,
                   $mrjc(
-                      StatusId.hashCode,
+                      statusId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is SisUsuPerf &&
-          other.SisId == SisId &&
-          other.PerfSisId == PerfSisId &&
-          other.UsuId == UsuId &&
-          other.SisUsuPerfHab == SisUsuPerfHab &&
-          other.StatusId == StatusId &&
+          other.sisId == sisId &&
+          other.perfSisId == perfSisId &&
+          other.usuId == usuId &&
+          other.sisUsuPerfHab == sisUsuPerfHab &&
+          other.statusId == statusId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableSisUsuPerfCompanion extends UpdateCompanion<SisUsuPerf> {
-  final Value<int> SisId;
-  final Value<int> PerfSisId;
-  final Value<int> UsuId;
-  final Value<int> SisUsuPerfHab;
-  final Value<int> StatusId;
+  final Value<int> sisId;
+  final Value<int> perfSisId;
+  final Value<int> usuId;
+  final Value<int> sisUsuPerfHab;
+  final Value<int> statusId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableSisUsuPerfCompanion({
-    this.SisId = const Value.absent(),
-    this.PerfSisId = const Value.absent(),
-    this.UsuId = const Value.absent(),
-    this.SisUsuPerfHab = const Value.absent(),
-    this.StatusId = const Value.absent(),
+    this.sisId = const Value.absent(),
+    this.perfSisId = const Value.absent(),
+    this.usuId = const Value.absent(),
+    this.sisUsuPerfHab = const Value.absent(),
+    this.statusId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableSisUsuPerfCompanion copyWith(
-      {Value<int> SisId,
-      Value<int> PerfSisId,
-      Value<int> UsuId,
-      Value<int> SisUsuPerfHab,
-      Value<int> StatusId,
+      {Value<int> sisId,
+      Value<int> perfSisId,
+      Value<int> usuId,
+      Value<int> sisUsuPerfHab,
+      Value<int> statusId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableSisUsuPerfCompanion(
-      SisId: SisId ?? this.SisId,
-      PerfSisId: PerfSisId ?? this.PerfSisId,
-      UsuId: UsuId ?? this.UsuId,
-      SisUsuPerfHab: SisUsuPerfHab ?? this.SisUsuPerfHab,
-      StatusId: StatusId ?? this.StatusId,
+      sisId: sisId ?? this.sisId,
+      perfSisId: perfSisId ?? this.perfSisId,
+      usuId: usuId ?? this.usuId,
+      sisUsuPerfHab: sisUsuPerfHab ?? this.sisUsuPerfHab,
+      statusId: statusId ?? this.statusId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -7158,10 +6925,10 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
   final GeneratedDatabase _db;
   final String _alias;
   $TableSisUsuPerfTable(this._db, [this._alias]);
-  final VerificationMeta _SisIdMeta = const VerificationMeta('SisId');
-  GeneratedIntColumn _SisId;
+  final VerificationMeta _sisIdMeta = const VerificationMeta('sisId');
+  GeneratedIntColumn _sisId;
   @override
-  GeneratedIntColumn get SisId => _SisId ??= _constructSisId();
+  GeneratedIntColumn get sisId => _sisId ??= _constructSisId();
   GeneratedIntColumn _constructSisId() {
     return GeneratedIntColumn(
       'sis_id',
@@ -7170,30 +6937,30 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
     );
   }
 
-  final VerificationMeta _PerfSisIdMeta = const VerificationMeta('PerfSisId');
-  GeneratedIntColumn _PerfSisId;
+  final VerificationMeta _perfSisIdMeta = const VerificationMeta('perfSisId');
+  GeneratedIntColumn _perfSisId;
   @override
-  GeneratedIntColumn get PerfSisId => _PerfSisId ??= _constructPerfSisId();
+  GeneratedIntColumn get perfSisId => _perfSisId ??= _constructPerfSisId();
   GeneratedIntColumn _constructPerfSisId() {
     return GeneratedIntColumn('perf_sis_id', $tableName, false,
-        $customConstraints: 'REFERENCES PerfSis(PerfSisId)');
+        $customConstraints: 'REFERENCES PerfSis(perfSisId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
-  final VerificationMeta _SisUsuPerfHabMeta =
-      const VerificationMeta('SisUsuPerfHab');
-  GeneratedIntColumn _SisUsuPerfHab;
+  final VerificationMeta _sisUsuPerfHabMeta =
+      const VerificationMeta('sisUsuPerfHab');
+  GeneratedIntColumn _sisUsuPerfHab;
   @override
-  GeneratedIntColumn get SisUsuPerfHab =>
-      _SisUsuPerfHab ??= _constructSisUsuPerfHab();
+  GeneratedIntColumn get sisUsuPerfHab =>
+      _sisUsuPerfHab ??= _constructSisUsuPerfHab();
   GeneratedIntColumn _constructSisUsuPerfHab() {
     return GeneratedIntColumn(
       'sis_usu_perf_hab',
@@ -7202,13 +6969,13 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -7249,11 +7016,11 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
 
   @override
   List<GeneratedColumn> get $columns => [
-        SisId,
-        PerfSisId,
-        UsuId,
-        SisUsuPerfHab,
-        StatusId,
+        sisId,
+        perfSisId,
+        usuId,
+        sisUsuPerfHab,
+        statusId,
         createdAt,
         updatedAt,
         deletedAt
@@ -7268,37 +7035,37 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
   VerificationContext validateIntegrity(TableSisUsuPerfCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.SisId.present) {
+    if (d.sisId.present) {
       context.handle(
-          _SisIdMeta, SisId.isAcceptableValue(d.SisId.value, _SisIdMeta));
-    } else if (SisId.isRequired && isInserting) {
-      context.missing(_SisIdMeta);
+          _sisIdMeta, sisId.isAcceptableValue(d.sisId.value, _sisIdMeta));
+    } else if (sisId.isRequired && isInserting) {
+      context.missing(_sisIdMeta);
     }
-    if (d.PerfSisId.present) {
-      context.handle(_PerfSisIdMeta,
-          PerfSisId.isAcceptableValue(d.PerfSisId.value, _PerfSisIdMeta));
-    } else if (PerfSisId.isRequired && isInserting) {
-      context.missing(_PerfSisIdMeta);
+    if (d.perfSisId.present) {
+      context.handle(_perfSisIdMeta,
+          perfSisId.isAcceptableValue(d.perfSisId.value, _perfSisIdMeta));
+    } else if (perfSisId.isRequired && isInserting) {
+      context.missing(_perfSisIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
-    if (d.SisUsuPerfHab.present) {
+    if (d.sisUsuPerfHab.present) {
       context.handle(
-          _SisUsuPerfHabMeta,
-          SisUsuPerfHab.isAcceptableValue(
-              d.SisUsuPerfHab.value, _SisUsuPerfHabMeta));
-    } else if (SisUsuPerfHab.isRequired && isInserting) {
-      context.missing(_SisUsuPerfHabMeta);
+          _sisUsuPerfHabMeta,
+          sisUsuPerfHab.isAcceptableValue(
+              d.sisUsuPerfHab.value, _sisUsuPerfHabMeta));
+    } else if (sisUsuPerfHab.isRequired && isInserting) {
+      context.missing(_sisUsuPerfHabMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -7332,20 +7099,20 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
   @override
   Map<String, Variable> entityToSql(TableSisUsuPerfCompanion d) {
     final map = <String, Variable>{};
-    if (d.SisId.present) {
-      map['sis_id'] = Variable<int, IntType>(d.SisId.value);
+    if (d.sisId.present) {
+      map['sis_id'] = Variable<int, IntType>(d.sisId.value);
     }
-    if (d.PerfSisId.present) {
-      map['perf_sis_id'] = Variable<int, IntType>(d.PerfSisId.value);
+    if (d.perfSisId.present) {
+      map['perf_sis_id'] = Variable<int, IntType>(d.perfSisId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
-    if (d.SisUsuPerfHab.present) {
-      map['sis_usu_perf_hab'] = Variable<int, IntType>(d.SisUsuPerfHab.value);
+    if (d.sisUsuPerfHab.present) {
+      map['sis_usu_perf_hab'] = Variable<int, IntType>(d.sisUsuPerfHab.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -7366,18 +7133,18 @@ class $TableSisUsuPerfTable extends TableSisUsuPerf
 }
 
 class Roles extends DataClass implements Insertable<Roles> {
-  final int RolId;
-  final String RolNom;
-  final int StatusId;
-  final int UsuId;
+  final int rolId;
+  final String rolNom;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Roles(
-      {@required this.RolId,
-      @required this.RolNom,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.rolId,
+      @required this.rolNom,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -7388,12 +7155,12 @@ class Roles extends DataClass implements Insertable<Roles> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Roles(
-      RolId: intType.mapFromDatabaseResponse(data['${effectivePrefix}rol_id']),
-      RolNom:
+      rolId: intType.mapFromDatabaseResponse(data['${effectivePrefix}rol_id']),
+      rolNom:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}rol_nom']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -7405,10 +7172,10 @@ class Roles extends DataClass implements Insertable<Roles> {
   factory Roles.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Roles(
-      RolId: serializer.fromJson<int>(json['RolId']),
-      RolNom: serializer.fromJson<String>(json['RolNom']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      rolId: serializer.fromJson<int>(json['rolId']),
+      rolNom: serializer.fromJson<String>(json['rolNom']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -7418,10 +7185,10 @@ class Roles extends DataClass implements Insertable<Roles> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'RolId': serializer.toJson<int>(RolId),
-      'RolNom': serializer.toJson<String>(RolNom),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'rolId': serializer.toJson<int>(rolId),
+      'rolNom': serializer.toJson<String>(rolNom),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -7431,15 +7198,15 @@ class Roles extends DataClass implements Insertable<Roles> {
   @override
   T createCompanion<T extends UpdateCompanion<Roles>>(bool nullToAbsent) {
     return TableRolesCompanion(
-      RolId:
-          RolId == null && nullToAbsent ? const Value.absent() : Value(RolId),
-      RolNom:
-          RolNom == null && nullToAbsent ? const Value.absent() : Value(RolNom),
-      StatusId: StatusId == null && nullToAbsent
+      rolId:
+          rolId == null && nullToAbsent ? const Value.absent() : Value(rolId),
+      rolNom:
+          rolNom == null && nullToAbsent ? const Value.absent() : Value(rolNom),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -7453,18 +7220,18 @@ class Roles extends DataClass implements Insertable<Roles> {
   }
 
   Roles copyWith(
-          {int RolId,
-          String RolNom,
-          int StatusId,
-          int UsuId,
+          {int rolId,
+          String rolNom,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Roles(
-        RolId: RolId ?? this.RolId,
-        RolNom: RolNom ?? this.RolNom,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        rolId: rolId ?? this.rolId,
+        rolNom: rolNom ?? this.rolNom,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -7472,10 +7239,10 @@ class Roles extends DataClass implements Insertable<Roles> {
   @override
   String toString() {
     return (StringBuffer('Roles(')
-          ..write('RolId: $RolId, ')
-          ..write('RolNom: $RolNom, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('rolId: $rolId, ')
+          ..write('rolNom: $rolNom, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -7485,58 +7252,58 @@ class Roles extends DataClass implements Insertable<Roles> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      RolId.hashCode,
+      rolId.hashCode,
       $mrjc(
-          RolNom.hashCode,
+          rolNom.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Roles &&
-          other.RolId == RolId &&
-          other.RolNom == RolNom &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.rolId == rolId &&
+          other.rolNom == rolNom &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableRolesCompanion extends UpdateCompanion<Roles> {
-  final Value<int> RolId;
-  final Value<String> RolNom;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> rolId;
+  final Value<String> rolNom;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableRolesCompanion({
-    this.RolId = const Value.absent(),
-    this.RolNom = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.rolId = const Value.absent(),
+    this.rolNom = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableRolesCompanion copyWith(
-      {Value<int> RolId,
-      Value<String> RolNom,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> rolId,
+      Value<String> rolNom,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableRolesCompanion(
-      RolId: RolId ?? this.RolId,
-      RolNom: RolNom ?? this.RolNom,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      rolId: rolId ?? this.rolId,
+      rolNom: rolNom ?? this.rolNom,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -7549,19 +7316,19 @@ class $TableRolesTable extends TableRoles
   final GeneratedDatabase _db;
   final String _alias;
   $TableRolesTable(this._db, [this._alias]);
-  final VerificationMeta _RolIdMeta = const VerificationMeta('RolId');
-  GeneratedIntColumn _RolId;
+  final VerificationMeta _rolIdMeta = const VerificationMeta('rolId');
+  GeneratedIntColumn _rolId;
   @override
-  GeneratedIntColumn get RolId => _RolId ??= _constructRolId();
+  GeneratedIntColumn get rolId => _rolId ??= _constructRolId();
   GeneratedIntColumn _constructRolId() {
     return GeneratedIntColumn('rol_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _RolNomMeta = const VerificationMeta('RolNom');
-  GeneratedTextColumn _RolNom;
+  final VerificationMeta _rolNomMeta = const VerificationMeta('rolNom');
+  GeneratedTextColumn _rolNom;
   @override
-  GeneratedTextColumn get RolNom => _RolNom ??= _constructRolNom();
+  GeneratedTextColumn get rolNom => _rolNom ??= _constructRolNom();
   GeneratedTextColumn _constructRolNom() {
     return GeneratedTextColumn(
       'rol_nom',
@@ -7570,22 +7337,22 @@ class $TableRolesTable extends TableRoles
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -7626,7 +7393,7 @@ class $TableRolesTable extends TableRoles
 
   @override
   List<GeneratedColumn> get $columns =>
-      [RolId, RolNom, StatusId, UsuId, createdAt, updatedAt, deletedAt];
+      [rolId, rolNom, statusId, usuId, createdAt, updatedAt, deletedAt];
   @override
   $TableRolesTable get asDslTable => this;
   @override
@@ -7637,29 +7404,29 @@ class $TableRolesTable extends TableRoles
   VerificationContext validateIntegrity(TableRolesCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.RolId.present) {
+    if (d.rolId.present) {
       context.handle(
-          _RolIdMeta, RolId.isAcceptableValue(d.RolId.value, _RolIdMeta));
-    } else if (RolId.isRequired && isInserting) {
-      context.missing(_RolIdMeta);
+          _rolIdMeta, rolId.isAcceptableValue(d.rolId.value, _rolIdMeta));
+    } else if (rolId.isRequired && isInserting) {
+      context.missing(_rolIdMeta);
     }
-    if (d.RolNom.present) {
+    if (d.rolNom.present) {
       context.handle(
-          _RolNomMeta, RolNom.isAcceptableValue(d.RolNom.value, _RolNomMeta));
-    } else if (RolNom.isRequired && isInserting) {
-      context.missing(_RolNomMeta);
+          _rolNomMeta, rolNom.isAcceptableValue(d.rolNom.value, _rolNomMeta));
+    } else if (rolNom.isRequired && isInserting) {
+      context.missing(_rolNomMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -7683,7 +7450,7 @@ class $TableRolesTable extends TableRoles
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {RolId};
+  Set<GeneratedColumn> get $primaryKey => {rolId};
   @override
   Roles map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -7693,17 +7460,17 @@ class $TableRolesTable extends TableRoles
   @override
   Map<String, Variable> entityToSql(TableRolesCompanion d) {
     final map = <String, Variable>{};
-    if (d.RolId.present) {
-      map['rol_id'] = Variable<int, IntType>(d.RolId.value);
+    if (d.rolId.present) {
+      map['rol_id'] = Variable<int, IntType>(d.rolId.value);
     }
-    if (d.RolNom.present) {
-      map['rol_nom'] = Variable<String, StringType>(d.RolNom.value);
+    if (d.rolNom.present) {
+      map['rol_nom'] = Variable<String, StringType>(d.rolNom.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -7724,24 +7491,24 @@ class $TableRolesTable extends TableRoles
 }
 
 class RRHH extends DataClass implements Insertable<RRHH> {
-  final int RRHHId;
-  final String RRHHDesc;
-  final int RRHHFlgAct;
-  final String RRHHPref;
-  final String RRHHSuf;
-  final int StatusId;
-  final int UsuId;
+  final int rRHHId;
+  final String rRHHDesc;
+  final int rRHHFlgAct;
+  final String rRHHPref;
+  final String rRHHSuf;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   RRHH(
-      {@required this.RRHHId,
-      @required this.RRHHDesc,
-      @required this.RRHHFlgAct,
-      @required this.RRHHPref,
-      @required this.RRHHSuf,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.rRHHId,
+      @required this.rRHHDesc,
+      @required this.rRHHFlgAct,
+      @required this.rRHHPref,
+      @required this.rRHHSuf,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -7752,19 +7519,19 @@ class RRHH extends DataClass implements Insertable<RRHH> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return RRHH(
-      RRHHId:
+      rRHHId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_id']),
-      RRHHDesc: stringType
+      rRHHDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_desc']),
-      RRHHFlgAct: intType
+      rRHHFlgAct: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_flg_act']),
-      RRHHPref: stringType
+      rRHHPref: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_pref']),
-      RRHHSuf: stringType
+      rRHHSuf: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_suf']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -7776,13 +7543,13 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   factory RRHH.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return RRHH(
-      RRHHId: serializer.fromJson<int>(json['RRHHId']),
-      RRHHDesc: serializer.fromJson<String>(json['RRHHDesc']),
-      RRHHFlgAct: serializer.fromJson<int>(json['RRHHFlgAct']),
-      RRHHPref: serializer.fromJson<String>(json['RRHHPref']),
-      RRHHSuf: serializer.fromJson<String>(json['RRHHSuf']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      rRHHId: serializer.fromJson<int>(json['rRHHId']),
+      rRHHDesc: serializer.fromJson<String>(json['rRHHDesc']),
+      rRHHFlgAct: serializer.fromJson<int>(json['rRHHFlgAct']),
+      rRHHPref: serializer.fromJson<String>(json['rRHHPref']),
+      rRHHSuf: serializer.fromJson<String>(json['rRHHSuf']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -7792,13 +7559,13 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'RRHHId': serializer.toJson<int>(RRHHId),
-      'RRHHDesc': serializer.toJson<String>(RRHHDesc),
-      'RRHHFlgAct': serializer.toJson<int>(RRHHFlgAct),
-      'RRHHPref': serializer.toJson<String>(RRHHPref),
-      'RRHHSuf': serializer.toJson<String>(RRHHSuf),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'rRHHId': serializer.toJson<int>(rRHHId),
+      'rRHHDesc': serializer.toJson<String>(rRHHDesc),
+      'rRHHFlgAct': serializer.toJson<int>(rRHHFlgAct),
+      'rRHHPref': serializer.toJson<String>(rRHHPref),
+      'rRHHSuf': serializer.toJson<String>(rRHHSuf),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -7808,25 +7575,25 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   @override
   T createCompanion<T extends UpdateCompanion<RRHH>>(bool nullToAbsent) {
     return TableRRHHCompanion(
-      RRHHId:
-          RRHHId == null && nullToAbsent ? const Value.absent() : Value(RRHHId),
-      RRHHDesc: RRHHDesc == null && nullToAbsent
+      rRHHId:
+          rRHHId == null && nullToAbsent ? const Value.absent() : Value(rRHHId),
+      rRHHDesc: rRHHDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(RRHHDesc),
-      RRHHFlgAct: RRHHFlgAct == null && nullToAbsent
+          : Value(rRHHDesc),
+      rRHHFlgAct: rRHHFlgAct == null && nullToAbsent
           ? const Value.absent()
-          : Value(RRHHFlgAct),
-      RRHHPref: RRHHPref == null && nullToAbsent
+          : Value(rRHHFlgAct),
+      rRHHPref: rRHHPref == null && nullToAbsent
           ? const Value.absent()
-          : Value(RRHHPref),
-      RRHHSuf: RRHHSuf == null && nullToAbsent
+          : Value(rRHHPref),
+      rRHHSuf: rRHHSuf == null && nullToAbsent
           ? const Value.absent()
-          : Value(RRHHSuf),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(rRHHSuf),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -7840,24 +7607,24 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   }
 
   RRHH copyWith(
-          {int RRHHId,
-          String RRHHDesc,
-          int RRHHFlgAct,
-          String RRHHPref,
-          String RRHHSuf,
-          int StatusId,
-          int UsuId,
+          {int rRHHId,
+          String rRHHDesc,
+          int rRHHFlgAct,
+          String rRHHPref,
+          String rRHHSuf,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       RRHH(
-        RRHHId: RRHHId ?? this.RRHHId,
-        RRHHDesc: RRHHDesc ?? this.RRHHDesc,
-        RRHHFlgAct: RRHHFlgAct ?? this.RRHHFlgAct,
-        RRHHPref: RRHHPref ?? this.RRHHPref,
-        RRHHSuf: RRHHSuf ?? this.RRHHSuf,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        rRHHId: rRHHId ?? this.rRHHId,
+        rRHHDesc: rRHHDesc ?? this.rRHHDesc,
+        rRHHFlgAct: rRHHFlgAct ?? this.rRHHFlgAct,
+        rRHHPref: rRHHPref ?? this.rRHHPref,
+        rRHHSuf: rRHHSuf ?? this.rRHHSuf,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -7865,13 +7632,13 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   @override
   String toString() {
     return (StringBuffer('RRHH(')
-          ..write('RRHHId: $RRHHId, ')
-          ..write('RRHHDesc: $RRHHDesc, ')
-          ..write('RRHHFlgAct: $RRHHFlgAct, ')
-          ..write('RRHHPref: $RRHHPref, ')
-          ..write('RRHHSuf: $RRHHSuf, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('rRHHId: $rRHHId, ')
+          ..write('rRHHDesc: $rRHHDesc, ')
+          ..write('rRHHFlgAct: $rRHHFlgAct, ')
+          ..write('rRHHPref: $rRHHPref, ')
+          ..write('rRHHSuf: $rRHHSuf, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -7881,19 +7648,19 @@ class RRHH extends DataClass implements Insertable<RRHH> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      RRHHId.hashCode,
+      rRHHId.hashCode,
       $mrjc(
-          RRHHDesc.hashCode,
+          rRHHDesc.hashCode,
           $mrjc(
-              RRHHFlgAct.hashCode,
+              rRHHFlgAct.hashCode,
               $mrjc(
-                  RRHHPref.hashCode,
+                  rRHHPref.hashCode,
                   $mrjc(
-                      RRHHSuf.hashCode,
+                      rRHHSuf.hashCode,
                       $mrjc(
-                          StatusId.hashCode,
+                          statusId.hashCode,
                           $mrjc(
-                              UsuId.hashCode,
+                              usuId.hashCode,
                               $mrjc(
                                   createdAt.hashCode,
                                   $mrjc(updatedAt.hashCode,
@@ -7902,60 +7669,60 @@ class RRHH extends DataClass implements Insertable<RRHH> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is RRHH &&
-          other.RRHHId == RRHHId &&
-          other.RRHHDesc == RRHHDesc &&
-          other.RRHHFlgAct == RRHHFlgAct &&
-          other.RRHHPref == RRHHPref &&
-          other.RRHHSuf == RRHHSuf &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.rRHHId == rRHHId &&
+          other.rRHHDesc == rRHHDesc &&
+          other.rRHHFlgAct == rRHHFlgAct &&
+          other.rRHHPref == rRHHPref &&
+          other.rRHHSuf == rRHHSuf &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableRRHHCompanion extends UpdateCompanion<RRHH> {
-  final Value<int> RRHHId;
-  final Value<String> RRHHDesc;
-  final Value<int> RRHHFlgAct;
-  final Value<String> RRHHPref;
-  final Value<String> RRHHSuf;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> rRHHId;
+  final Value<String> rRHHDesc;
+  final Value<int> rRHHFlgAct;
+  final Value<String> rRHHPref;
+  final Value<String> rRHHSuf;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableRRHHCompanion({
-    this.RRHHId = const Value.absent(),
-    this.RRHHDesc = const Value.absent(),
-    this.RRHHFlgAct = const Value.absent(),
-    this.RRHHPref = const Value.absent(),
-    this.RRHHSuf = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.rRHHId = const Value.absent(),
+    this.rRHHDesc = const Value.absent(),
+    this.rRHHFlgAct = const Value.absent(),
+    this.rRHHPref = const Value.absent(),
+    this.rRHHSuf = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableRRHHCompanion copyWith(
-      {Value<int> RRHHId,
-      Value<String> RRHHDesc,
-      Value<int> RRHHFlgAct,
-      Value<String> RRHHPref,
-      Value<String> RRHHSuf,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> rRHHId,
+      Value<String> rRHHDesc,
+      Value<int> rRHHFlgAct,
+      Value<String> rRHHPref,
+      Value<String> rRHHSuf,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableRRHHCompanion(
-      RRHHId: RRHHId ?? this.RRHHId,
-      RRHHDesc: RRHHDesc ?? this.RRHHDesc,
-      RRHHFlgAct: RRHHFlgAct ?? this.RRHHFlgAct,
-      RRHHPref: RRHHPref ?? this.RRHHPref,
-      RRHHSuf: RRHHSuf ?? this.RRHHSuf,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      rRHHId: rRHHId ?? this.rRHHId,
+      rRHHDesc: rRHHDesc ?? this.rRHHDesc,
+      rRHHFlgAct: rRHHFlgAct ?? this.rRHHFlgAct,
+      rRHHPref: rRHHPref ?? this.rRHHPref,
+      rRHHSuf: rRHHSuf ?? this.rRHHSuf,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -7967,19 +7734,19 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
   final GeneratedDatabase _db;
   final String _alias;
   $TableRRHHTable(this._db, [this._alias]);
-  final VerificationMeta _RRHHIdMeta = const VerificationMeta('RRHHId');
-  GeneratedIntColumn _RRHHId;
+  final VerificationMeta _rRHHIdMeta = const VerificationMeta('rRHHId');
+  GeneratedIntColumn _rRHHId;
   @override
-  GeneratedIntColumn get RRHHId => _RRHHId ??= _constructRRHHId();
+  GeneratedIntColumn get rRHHId => _rRHHId ??= _constructRRHHId();
   GeneratedIntColumn _constructRRHHId() {
     return GeneratedIntColumn('r_r_h_h_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _RRHHDescMeta = const VerificationMeta('RRHHDesc');
-  GeneratedTextColumn _RRHHDesc;
+  final VerificationMeta _rRHHDescMeta = const VerificationMeta('rRHHDesc');
+  GeneratedTextColumn _rRHHDesc;
   @override
-  GeneratedTextColumn get RRHHDesc => _RRHHDesc ??= _constructRRHHDesc();
+  GeneratedTextColumn get rRHHDesc => _rRHHDesc ??= _constructRRHHDesc();
   GeneratedTextColumn _constructRRHHDesc() {
     return GeneratedTextColumn(
       'r_r_h_h_desc',
@@ -7988,10 +7755,10 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
     );
   }
 
-  final VerificationMeta _RRHHFlgActMeta = const VerificationMeta('RRHHFlgAct');
-  GeneratedIntColumn _RRHHFlgAct;
+  final VerificationMeta _rRHHFlgActMeta = const VerificationMeta('rRHHFlgAct');
+  GeneratedIntColumn _rRHHFlgAct;
   @override
-  GeneratedIntColumn get RRHHFlgAct => _RRHHFlgAct ??= _constructRRHHFlgAct();
+  GeneratedIntColumn get rRHHFlgAct => _rRHHFlgAct ??= _constructRRHHFlgAct();
   GeneratedIntColumn _constructRRHHFlgAct() {
     return GeneratedIntColumn(
       'r_r_h_h_flg_act',
@@ -8000,10 +7767,10 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
     );
   }
 
-  final VerificationMeta _RRHHPrefMeta = const VerificationMeta('RRHHPref');
-  GeneratedTextColumn _RRHHPref;
+  final VerificationMeta _rRHHPrefMeta = const VerificationMeta('rRHHPref');
+  GeneratedTextColumn _rRHHPref;
   @override
-  GeneratedTextColumn get RRHHPref => _RRHHPref ??= _constructRRHHPref();
+  GeneratedTextColumn get rRHHPref => _rRHHPref ??= _constructRRHHPref();
   GeneratedTextColumn _constructRRHHPref() {
     return GeneratedTextColumn(
       'r_r_h_h_pref',
@@ -8012,10 +7779,10 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
     );
   }
 
-  final VerificationMeta _RRHHSufMeta = const VerificationMeta('RRHHSuf');
-  GeneratedTextColumn _RRHHSuf;
+  final VerificationMeta _rRHHSufMeta = const VerificationMeta('rRHHSuf');
+  GeneratedTextColumn _rRHHSuf;
   @override
-  GeneratedTextColumn get RRHHSuf => _RRHHSuf ??= _constructRRHHSuf();
+  GeneratedTextColumn get rRHHSuf => _rRHHSuf ??= _constructRRHHSuf();
   GeneratedTextColumn _constructRRHHSuf() {
     return GeneratedTextColumn(
       'r_r_h_h_suf',
@@ -8024,22 +7791,22 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -8080,13 +7847,13 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
 
   @override
   List<GeneratedColumn> get $columns => [
-        RRHHId,
-        RRHHDesc,
-        RRHHFlgAct,
-        RRHHPref,
-        RRHHSuf,
-        StatusId,
-        UsuId,
+        rRHHId,
+        rRHHDesc,
+        rRHHFlgAct,
+        rRHHPref,
+        rRHHSuf,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -8101,47 +7868,47 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
   VerificationContext validateIntegrity(TableRRHHCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.RRHHId.present) {
+    if (d.rRHHId.present) {
       context.handle(
-          _RRHHIdMeta, RRHHId.isAcceptableValue(d.RRHHId.value, _RRHHIdMeta));
-    } else if (RRHHId.isRequired && isInserting) {
-      context.missing(_RRHHIdMeta);
+          _rRHHIdMeta, rRHHId.isAcceptableValue(d.rRHHId.value, _rRHHIdMeta));
+    } else if (rRHHId.isRequired && isInserting) {
+      context.missing(_rRHHIdMeta);
     }
-    if (d.RRHHDesc.present) {
-      context.handle(_RRHHDescMeta,
-          RRHHDesc.isAcceptableValue(d.RRHHDesc.value, _RRHHDescMeta));
-    } else if (RRHHDesc.isRequired && isInserting) {
-      context.missing(_RRHHDescMeta);
+    if (d.rRHHDesc.present) {
+      context.handle(_rRHHDescMeta,
+          rRHHDesc.isAcceptableValue(d.rRHHDesc.value, _rRHHDescMeta));
+    } else if (rRHHDesc.isRequired && isInserting) {
+      context.missing(_rRHHDescMeta);
     }
-    if (d.RRHHFlgAct.present) {
-      context.handle(_RRHHFlgActMeta,
-          RRHHFlgAct.isAcceptableValue(d.RRHHFlgAct.value, _RRHHFlgActMeta));
-    } else if (RRHHFlgAct.isRequired && isInserting) {
-      context.missing(_RRHHFlgActMeta);
+    if (d.rRHHFlgAct.present) {
+      context.handle(_rRHHFlgActMeta,
+          rRHHFlgAct.isAcceptableValue(d.rRHHFlgAct.value, _rRHHFlgActMeta));
+    } else if (rRHHFlgAct.isRequired && isInserting) {
+      context.missing(_rRHHFlgActMeta);
     }
-    if (d.RRHHPref.present) {
-      context.handle(_RRHHPrefMeta,
-          RRHHPref.isAcceptableValue(d.RRHHPref.value, _RRHHPrefMeta));
-    } else if (RRHHPref.isRequired && isInserting) {
-      context.missing(_RRHHPrefMeta);
+    if (d.rRHHPref.present) {
+      context.handle(_rRHHPrefMeta,
+          rRHHPref.isAcceptableValue(d.rRHHPref.value, _rRHHPrefMeta));
+    } else if (rRHHPref.isRequired && isInserting) {
+      context.missing(_rRHHPrefMeta);
     }
-    if (d.RRHHSuf.present) {
-      context.handle(_RRHHSufMeta,
-          RRHHSuf.isAcceptableValue(d.RRHHSuf.value, _RRHHSufMeta));
-    } else if (RRHHSuf.isRequired && isInserting) {
-      context.missing(_RRHHSufMeta);
+    if (d.rRHHSuf.present) {
+      context.handle(_rRHHSufMeta,
+          rRHHSuf.isAcceptableValue(d.rRHHSuf.value, _rRHHSufMeta));
+    } else if (rRHHSuf.isRequired && isInserting) {
+      context.missing(_rRHHSufMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -8165,7 +7932,7 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {RRHHId};
+  Set<GeneratedColumn> get $primaryKey => {rRHHId};
   @override
   RRHH map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -8175,26 +7942,26 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
   @override
   Map<String, Variable> entityToSql(TableRRHHCompanion d) {
     final map = <String, Variable>{};
-    if (d.RRHHId.present) {
-      map['r_r_h_h_id'] = Variable<int, IntType>(d.RRHHId.value);
+    if (d.rRHHId.present) {
+      map['r_r_h_h_id'] = Variable<int, IntType>(d.rRHHId.value);
     }
-    if (d.RRHHDesc.present) {
-      map['r_r_h_h_desc'] = Variable<String, StringType>(d.RRHHDesc.value);
+    if (d.rRHHDesc.present) {
+      map['r_r_h_h_desc'] = Variable<String, StringType>(d.rRHHDesc.value);
     }
-    if (d.RRHHFlgAct.present) {
-      map['r_r_h_h_flg_act'] = Variable<int, IntType>(d.RRHHFlgAct.value);
+    if (d.rRHHFlgAct.present) {
+      map['r_r_h_h_flg_act'] = Variable<int, IntType>(d.rRHHFlgAct.value);
     }
-    if (d.RRHHPref.present) {
-      map['r_r_h_h_pref'] = Variable<String, StringType>(d.RRHHPref.value);
+    if (d.rRHHPref.present) {
+      map['r_r_h_h_pref'] = Variable<String, StringType>(d.rRHHPref.value);
     }
-    if (d.RRHHSuf.present) {
-      map['r_r_h_h_suf'] = Variable<String, StringType>(d.RRHHSuf.value);
+    if (d.rRHHSuf.present) {
+      map['r_r_h_h_suf'] = Variable<String, StringType>(d.rRHHSuf.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -8215,16 +7982,16 @@ class $TableRRHHTable extends TableRRHH with TableInfo<$TableRRHHTable, RRHH> {
 }
 
 class RRHHPers extends DataClass implements Insertable<RRHHPers> {
-  final int RRHHId;
-  final int UsuId;
-  final int StatusId;
+  final int rRHHId;
+  final int usuId;
+  final int statusId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   RRHHPers(
-      {@required this.RRHHId,
-      @required this.UsuId,
-      @required this.StatusId,
+      {@required this.rRHHId,
+      @required this.usuId,
+      @required this.statusId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -8234,10 +8001,10 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return RRHHPers(
-      RRHHId:
+      rRHHId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
-      StatusId:
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
@@ -8250,9 +8017,9 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
   factory RRHHPers.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return RRHHPers(
-      RRHHId: serializer.fromJson<int>(json['RRHHId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
+      rRHHId: serializer.fromJson<int>(json['rRHHId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -8262,9 +8029,9 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'RRHHId': serializer.toJson<int>(RRHHId),
-      'UsuId': serializer.toJson<int>(UsuId),
-      'StatusId': serializer.toJson<int>(StatusId),
+      'rRHHId': serializer.toJson<int>(rRHHId),
+      'usuId': serializer.toJson<int>(usuId),
+      'statusId': serializer.toJson<int>(statusId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -8274,13 +8041,13 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
   @override
   T createCompanion<T extends UpdateCompanion<RRHHPers>>(bool nullToAbsent) {
     return TableRRHHPersCompanion(
-      RRHHId:
-          RRHHId == null && nullToAbsent ? const Value.absent() : Value(RRHHId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
-      StatusId: StatusId == null && nullToAbsent
+      rRHHId:
+          rRHHId == null && nullToAbsent ? const Value.absent() : Value(rRHHId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
+          : Value(statusId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -8294,16 +8061,16 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
   }
 
   RRHHPers copyWith(
-          {int RRHHId,
-          int UsuId,
-          int StatusId,
+          {int rRHHId,
+          int usuId,
+          int statusId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       RRHHPers(
-        RRHHId: RRHHId ?? this.RRHHId,
-        UsuId: UsuId ?? this.UsuId,
-        StatusId: StatusId ?? this.StatusId,
+        rRHHId: rRHHId ?? this.rRHHId,
+        usuId: usuId ?? this.usuId,
+        statusId: statusId ?? this.statusId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -8311,9 +8078,9 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
   @override
   String toString() {
     return (StringBuffer('RRHHPers(')
-          ..write('RRHHId: $RRHHId, ')
-          ..write('UsuId: $UsuId, ')
-          ..write('StatusId: $StatusId, ')
+          ..write('rRHHId: $rRHHId, ')
+          ..write('usuId: $usuId, ')
+          ..write('statusId: $statusId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -8323,51 +8090,51 @@ class RRHHPers extends DataClass implements Insertable<RRHHPers> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      RRHHId.hashCode,
+      rRHHId.hashCode,
       $mrjc(
-          UsuId.hashCode,
+          usuId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(createdAt.hashCode,
                   $mrjc(updatedAt.hashCode, deletedAt.hashCode))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is RRHHPers &&
-          other.RRHHId == RRHHId &&
-          other.UsuId == UsuId &&
-          other.StatusId == StatusId &&
+          other.rRHHId == rRHHId &&
+          other.usuId == usuId &&
+          other.statusId == statusId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableRRHHPersCompanion extends UpdateCompanion<RRHHPers> {
-  final Value<int> RRHHId;
-  final Value<int> UsuId;
-  final Value<int> StatusId;
+  final Value<int> rRHHId;
+  final Value<int> usuId;
+  final Value<int> statusId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableRRHHPersCompanion({
-    this.RRHHId = const Value.absent(),
-    this.UsuId = const Value.absent(),
-    this.StatusId = const Value.absent(),
+    this.rRHHId = const Value.absent(),
+    this.usuId = const Value.absent(),
+    this.statusId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableRRHHPersCompanion copyWith(
-      {Value<int> RRHHId,
-      Value<int> UsuId,
-      Value<int> StatusId,
+      {Value<int> rRHHId,
+      Value<int> usuId,
+      Value<int> statusId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableRRHHPersCompanion(
-      RRHHId: RRHHId ?? this.RRHHId,
-      UsuId: UsuId ?? this.UsuId,
-      StatusId: StatusId ?? this.StatusId,
+      rRHHId: rRHHId ?? this.rRHHId,
+      usuId: usuId ?? this.usuId,
+      statusId: statusId ?? this.statusId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -8380,10 +8147,10 @@ class $TableRRHHPersTable extends TableRRHHPers
   final GeneratedDatabase _db;
   final String _alias;
   $TableRRHHPersTable(this._db, [this._alias]);
-  final VerificationMeta _RRHHIdMeta = const VerificationMeta('RRHHId');
-  GeneratedIntColumn _RRHHId;
+  final VerificationMeta _rRHHIdMeta = const VerificationMeta('rRHHId');
+  GeneratedIntColumn _rRHHId;
   @override
-  GeneratedIntColumn get RRHHId => _RRHHId ??= _constructRRHHId();
+  GeneratedIntColumn get rRHHId => _rRHHId ??= _constructRRHHId();
   GeneratedIntColumn _constructRRHHId() {
     return GeneratedIntColumn(
       'r_r_h_h_id',
@@ -8392,22 +8159,22 @@ class $TableRRHHPersTable extends TableRRHHPers
     );
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -8448,7 +8215,7 @@ class $TableRRHHPersTable extends TableRRHHPers
 
   @override
   List<GeneratedColumn> get $columns =>
-      [RRHHId, UsuId, StatusId, createdAt, updatedAt, deletedAt];
+      [rRHHId, usuId, statusId, createdAt, updatedAt, deletedAt];
   @override
   $TableRRHHPersTable get asDslTable => this;
   @override
@@ -8459,23 +8226,23 @@ class $TableRRHHPersTable extends TableRRHHPers
   VerificationContext validateIntegrity(TableRRHHPersCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.RRHHId.present) {
+    if (d.rRHHId.present) {
       context.handle(
-          _RRHHIdMeta, RRHHId.isAcceptableValue(d.RRHHId.value, _RRHHIdMeta));
-    } else if (RRHHId.isRequired && isInserting) {
-      context.missing(_RRHHIdMeta);
+          _rRHHIdMeta, rRHHId.isAcceptableValue(d.rRHHId.value, _rRHHIdMeta));
+    } else if (rRHHId.isRequired && isInserting) {
+      context.missing(_rRHHIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -8509,14 +8276,14 @@ class $TableRRHHPersTable extends TableRRHHPers
   @override
   Map<String, Variable> entityToSql(TableRRHHPersCompanion d) {
     final map = <String, Variable>{};
-    if (d.RRHHId.present) {
-      map['r_r_h_h_id'] = Variable<int, IntType>(d.RRHHId.value);
+    if (d.rRHHId.present) {
+      map['r_r_h_h_id'] = Variable<int, IntType>(d.rRHHId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -8537,20 +8304,20 @@ class $TableRRHHPersTable extends TableRRHHPers
 }
 
 class RRHHRol extends DataClass implements Insertable<RRHHRol> {
-  final int RRHHId;
-  final String RRHHRolFchIni;
-  final int RolId;
-  final int StatusId;
-  final int UsuId;
+  final int rRHHId;
+  final String rRHHRolFchIni;
+  final int rolId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   RRHHRol(
-      {@required this.RRHHId,
-      @required this.RRHHRolFchIni,
-      @required this.RolId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.rRHHId,
+      @required this.rRHHRolFchIni,
+      @required this.rolId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -8561,14 +8328,14 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return RRHHRol(
-      RRHHId:
+      rRHHId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}r_r_h_h_id']),
-      RRHHRolFchIni: stringType.mapFromDatabaseResponse(
+      rRHHRolFchIni: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}r_r_h_h_rol_fch_ini']),
-      RolId: intType.mapFromDatabaseResponse(data['${effectivePrefix}rol_id']),
-      StatusId:
+      rolId: intType.mapFromDatabaseResponse(data['${effectivePrefix}rol_id']),
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -8580,11 +8347,11 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
   factory RRHHRol.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return RRHHRol(
-      RRHHId: serializer.fromJson<int>(json['RRHHId']),
-      RRHHRolFchIni: serializer.fromJson<String>(json['RRHHRolFchIni']),
-      RolId: serializer.fromJson<int>(json['RolId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      rRHHId: serializer.fromJson<int>(json['rRHHId']),
+      rRHHRolFchIni: serializer.fromJson<String>(json['rRHHRolFchIni']),
+      rolId: serializer.fromJson<int>(json['rolId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -8594,11 +8361,11 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'RRHHId': serializer.toJson<int>(RRHHId),
-      'RRHHRolFchIni': serializer.toJson<String>(RRHHRolFchIni),
-      'RolId': serializer.toJson<int>(RolId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'rRHHId': serializer.toJson<int>(rRHHId),
+      'rRHHRolFchIni': serializer.toJson<String>(rRHHRolFchIni),
+      'rolId': serializer.toJson<int>(rolId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -8608,18 +8375,18 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
   @override
   T createCompanion<T extends UpdateCompanion<RRHHRol>>(bool nullToAbsent) {
     return TableRRHHRolCompanion(
-      RRHHId:
-          RRHHId == null && nullToAbsent ? const Value.absent() : Value(RRHHId),
-      RRHHRolFchIni: RRHHRolFchIni == null && nullToAbsent
+      rRHHId:
+          rRHHId == null && nullToAbsent ? const Value.absent() : Value(rRHHId),
+      rRHHRolFchIni: rRHHRolFchIni == null && nullToAbsent
           ? const Value.absent()
-          : Value(RRHHRolFchIni),
-      RolId:
-          RolId == null && nullToAbsent ? const Value.absent() : Value(RolId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(rRHHRolFchIni),
+      rolId:
+          rolId == null && nullToAbsent ? const Value.absent() : Value(rolId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -8633,20 +8400,20 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
   }
 
   RRHHRol copyWith(
-          {int RRHHId,
-          String RRHHRolFchIni,
-          int RolId,
-          int StatusId,
-          int UsuId,
+          {int rRHHId,
+          String rRHHRolFchIni,
+          int rolId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       RRHHRol(
-        RRHHId: RRHHId ?? this.RRHHId,
-        RRHHRolFchIni: RRHHRolFchIni ?? this.RRHHRolFchIni,
-        RolId: RolId ?? this.RolId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        rRHHId: rRHHId ?? this.rRHHId,
+        rRHHRolFchIni: rRHHRolFchIni ?? this.rRHHRolFchIni,
+        rolId: rolId ?? this.rolId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -8654,11 +8421,11 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
   @override
   String toString() {
     return (StringBuffer('RRHHRol(')
-          ..write('RRHHId: $RRHHId, ')
-          ..write('RRHHRolFchIni: $RRHHRolFchIni, ')
-          ..write('RolId: $RolId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('rRHHId: $rRHHId, ')
+          ..write('rRHHRolFchIni: $rRHHRolFchIni, ')
+          ..write('rolId: $rolId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -8668,65 +8435,65 @@ class RRHHRol extends DataClass implements Insertable<RRHHRol> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      RRHHId.hashCode,
+      rRHHId.hashCode,
       $mrjc(
-          RRHHRolFchIni.hashCode,
+          rRHHRolFchIni.hashCode,
           $mrjc(
-              RolId.hashCode,
+              rolId.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is RRHHRol &&
-          other.RRHHId == RRHHId &&
-          other.RRHHRolFchIni == RRHHRolFchIni &&
-          other.RolId == RolId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.rRHHId == rRHHId &&
+          other.rRHHRolFchIni == rRHHRolFchIni &&
+          other.rolId == rolId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableRRHHRolCompanion extends UpdateCompanion<RRHHRol> {
-  final Value<int> RRHHId;
-  final Value<String> RRHHRolFchIni;
-  final Value<int> RolId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> rRHHId;
+  final Value<String> rRHHRolFchIni;
+  final Value<int> rolId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableRRHHRolCompanion({
-    this.RRHHId = const Value.absent(),
-    this.RRHHRolFchIni = const Value.absent(),
-    this.RolId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.rRHHId = const Value.absent(),
+    this.rRHHRolFchIni = const Value.absent(),
+    this.rolId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableRRHHRolCompanion copyWith(
-      {Value<int> RRHHId,
-      Value<String> RRHHRolFchIni,
-      Value<int> RolId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> rRHHId,
+      Value<String> rRHHRolFchIni,
+      Value<int> rolId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableRRHHRolCompanion(
-      RRHHId: RRHHId ?? this.RRHHId,
-      RRHHRolFchIni: RRHHRolFchIni ?? this.RRHHRolFchIni,
-      RolId: RolId ?? this.RolId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      rRHHId: rRHHId ?? this.rRHHId,
+      rRHHRolFchIni: rRHHRolFchIni ?? this.rRHHRolFchIni,
+      rolId: rolId ?? this.rolId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -8739,10 +8506,10 @@ class $TableRRHHRolTable extends TableRRHHRol
   final GeneratedDatabase _db;
   final String _alias;
   $TableRRHHRolTable(this._db, [this._alias]);
-  final VerificationMeta _RRHHIdMeta = const VerificationMeta('RRHHId');
-  GeneratedIntColumn _RRHHId;
+  final VerificationMeta _rRHHIdMeta = const VerificationMeta('rRHHId');
+  GeneratedIntColumn _rRHHId;
   @override
-  GeneratedIntColumn get RRHHId => _RRHHId ??= _constructRRHHId();
+  GeneratedIntColumn get rRHHId => _rRHHId ??= _constructRRHHId();
   GeneratedIntColumn _constructRRHHId() {
     return GeneratedIntColumn(
       'r_r_h_h_id',
@@ -8751,12 +8518,12 @@ class $TableRRHHRolTable extends TableRRHHRol
     );
   }
 
-  final VerificationMeta _RRHHRolFchIniMeta =
-      const VerificationMeta('RRHHRolFchIni');
-  GeneratedTextColumn _RRHHRolFchIni;
+  final VerificationMeta _rRHHRolFchIniMeta =
+      const VerificationMeta('rRHHRolFchIni');
+  GeneratedTextColumn _rRHHRolFchIni;
   @override
-  GeneratedTextColumn get RRHHRolFchIni =>
-      _RRHHRolFchIni ??= _constructRRHHRolFchIni();
+  GeneratedTextColumn get rRHHRolFchIni =>
+      _rRHHRolFchIni ??= _constructRRHHRolFchIni();
   GeneratedTextColumn _constructRRHHRolFchIni() {
     return GeneratedTextColumn(
       'r_r_h_h_rol_fch_ini',
@@ -8765,31 +8532,31 @@ class $TableRRHHRolTable extends TableRRHHRol
     );
   }
 
-  final VerificationMeta _RolIdMeta = const VerificationMeta('RolId');
-  GeneratedIntColumn _RolId;
+  final VerificationMeta _rolIdMeta = const VerificationMeta('rolId');
+  GeneratedIntColumn _rolId;
   @override
-  GeneratedIntColumn get RolId => _RolId ??= _constructRolId();
+  GeneratedIntColumn get rolId => _rolId ??= _constructRolId();
   GeneratedIntColumn _constructRolId() {
     return GeneratedIntColumn('rol_id', $tableName, false,
-        $customConstraints: 'REFERENCES Roles(RolId)');
+        $customConstraints: 'REFERENCES Roles(rolId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -8830,11 +8597,11 @@ class $TableRRHHRolTable extends TableRRHHRol
 
   @override
   List<GeneratedColumn> get $columns => [
-        RRHHId,
-        RRHHRolFchIni,
-        RolId,
-        StatusId,
-        UsuId,
+        rRHHId,
+        rRHHRolFchIni,
+        rolId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -8849,37 +8616,37 @@ class $TableRRHHRolTable extends TableRRHHRol
   VerificationContext validateIntegrity(TableRRHHRolCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.RRHHId.present) {
+    if (d.rRHHId.present) {
       context.handle(
-          _RRHHIdMeta, RRHHId.isAcceptableValue(d.RRHHId.value, _RRHHIdMeta));
-    } else if (RRHHId.isRequired && isInserting) {
-      context.missing(_RRHHIdMeta);
+          _rRHHIdMeta, rRHHId.isAcceptableValue(d.rRHHId.value, _rRHHIdMeta));
+    } else if (rRHHId.isRequired && isInserting) {
+      context.missing(_rRHHIdMeta);
     }
-    if (d.RRHHRolFchIni.present) {
+    if (d.rRHHRolFchIni.present) {
       context.handle(
-          _RRHHRolFchIniMeta,
-          RRHHRolFchIni.isAcceptableValue(
-              d.RRHHRolFchIni.value, _RRHHRolFchIniMeta));
-    } else if (RRHHRolFchIni.isRequired && isInserting) {
-      context.missing(_RRHHRolFchIniMeta);
+          _rRHHRolFchIniMeta,
+          rRHHRolFchIni.isAcceptableValue(
+              d.rRHHRolFchIni.value, _rRHHRolFchIniMeta));
+    } else if (rRHHRolFchIni.isRequired && isInserting) {
+      context.missing(_rRHHRolFchIniMeta);
     }
-    if (d.RolId.present) {
+    if (d.rolId.present) {
       context.handle(
-          _RolIdMeta, RolId.isAcceptableValue(d.RolId.value, _RolIdMeta));
-    } else if (RolId.isRequired && isInserting) {
-      context.missing(_RolIdMeta);
+          _rolIdMeta, rolId.isAcceptableValue(d.rolId.value, _rolIdMeta));
+    } else if (rolId.isRequired && isInserting) {
+      context.missing(_rolIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -8913,21 +8680,21 @@ class $TableRRHHRolTable extends TableRRHHRol
   @override
   Map<String, Variable> entityToSql(TableRRHHRolCompanion d) {
     final map = <String, Variable>{};
-    if (d.RRHHId.present) {
-      map['r_r_h_h_id'] = Variable<int, IntType>(d.RRHHId.value);
+    if (d.rRHHId.present) {
+      map['r_r_h_h_id'] = Variable<int, IntType>(d.rRHHId.value);
     }
-    if (d.RRHHRolFchIni.present) {
+    if (d.rRHHRolFchIni.present) {
       map['r_r_h_h_rol_fch_ini'] =
-          Variable<String, StringType>(d.RRHHRolFchIni.value);
+          Variable<String, StringType>(d.rRHHRolFchIni.value);
     }
-    if (d.RolId.present) {
-      map['rol_id'] = Variable<int, IntType>(d.RolId.value);
+    if (d.rolId.present) {
+      map['rol_id'] = Variable<int, IntType>(d.rolId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -8948,22 +8715,22 @@ class $TableRRHHRolTable extends TableRRHHRol
 }
 
 class TipActAsist extends DataClass implements Insertable<TipActAsist> {
-  final int TipActAsistId;
-  final String TipActAsistDesc;
-  final int TipActAsistFlgSeIndica;
-  final int TipActAsistFlgParacl;
-  final int StatusId;
-  final int UsuId;
+  final int tipActAsistId;
+  final String tipActAsistDesc;
+  final int tipActAsistFlgSeIndica;
+  final int tipActAsistFlgParacl;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   TipActAsist(
-      {@required this.TipActAsistId,
-      @required this.TipActAsistDesc,
-      @required this.TipActAsistFlgSeIndica,
-      @required this.TipActAsistFlgParacl,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.tipActAsistId,
+      @required this.tipActAsistDesc,
+      @required this.tipActAsistFlgSeIndica,
+      @required this.tipActAsistFlgParacl,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -8974,17 +8741,17 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return TipActAsist(
-      TipActAsistId: intType
+      tipActAsistId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}tip_act_asist_id']),
-      TipActAsistDesc: stringType.mapFromDatabaseResponse(
+      tipActAsistDesc: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}tip_act_asist_desc']),
-      TipActAsistFlgSeIndica: intType.mapFromDatabaseResponse(
+      tipActAsistFlgSeIndica: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}tip_act_asist_flg_se_indica']),
-      TipActAsistFlgParacl: intType.mapFromDatabaseResponse(
+      tipActAsistFlgParacl: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}tip_act_asist_flg_paracl']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -8996,14 +8763,14 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   factory TipActAsist.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return TipActAsist(
-      TipActAsistId: serializer.fromJson<int>(json['TipActAsistId']),
-      TipActAsistDesc: serializer.fromJson<String>(json['TipActAsistDesc']),
-      TipActAsistFlgSeIndica:
-          serializer.fromJson<int>(json['TipActAsistFlgSeIndica']),
-      TipActAsistFlgParacl:
-          serializer.fromJson<int>(json['TipActAsistFlgParacl']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      tipActAsistId: serializer.fromJson<int>(json['tipActAsistId']),
+      tipActAsistDesc: serializer.fromJson<String>(json['tipActAsistDesc']),
+      tipActAsistFlgSeIndica:
+          serializer.fromJson<int>(json['tipActAsistFlgSeIndica']),
+      tipActAsistFlgParacl:
+          serializer.fromJson<int>(json['tipActAsistFlgParacl']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -9013,12 +8780,12 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'TipActAsistId': serializer.toJson<int>(TipActAsistId),
-      'TipActAsistDesc': serializer.toJson<String>(TipActAsistDesc),
-      'TipActAsistFlgSeIndica': serializer.toJson<int>(TipActAsistFlgSeIndica),
-      'TipActAsistFlgParacl': serializer.toJson<int>(TipActAsistFlgParacl),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'tipActAsistId': serializer.toJson<int>(tipActAsistId),
+      'tipActAsistDesc': serializer.toJson<String>(tipActAsistDesc),
+      'tipActAsistFlgSeIndica': serializer.toJson<int>(tipActAsistFlgSeIndica),
+      'tipActAsistFlgParacl': serializer.toJson<int>(tipActAsistFlgParacl),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -9028,23 +8795,23 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   @override
   T createCompanion<T extends UpdateCompanion<TipActAsist>>(bool nullToAbsent) {
     return TableTipActAsistCompanion(
-      TipActAsistId: TipActAsistId == null && nullToAbsent
+      tipActAsistId: tipActAsistId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipActAsistId),
-      TipActAsistDesc: TipActAsistDesc == null && nullToAbsent
+          : Value(tipActAsistId),
+      tipActAsistDesc: tipActAsistDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipActAsistDesc),
-      TipActAsistFlgSeIndica: TipActAsistFlgSeIndica == null && nullToAbsent
+          : Value(tipActAsistDesc),
+      tipActAsistFlgSeIndica: tipActAsistFlgSeIndica == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipActAsistFlgSeIndica),
-      TipActAsistFlgParacl: TipActAsistFlgParacl == null && nullToAbsent
+          : Value(tipActAsistFlgSeIndica),
+      tipActAsistFlgParacl: tipActAsistFlgParacl == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipActAsistFlgParacl),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(tipActAsistFlgParacl),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -9058,23 +8825,23 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   }
 
   TipActAsist copyWith(
-          {int TipActAsistId,
-          String TipActAsistDesc,
-          int TipActAsistFlgSeIndica,
-          int TipActAsistFlgParacl,
-          int StatusId,
-          int UsuId,
+          {int tipActAsistId,
+          String tipActAsistDesc,
+          int tipActAsistFlgSeIndica,
+          int tipActAsistFlgParacl,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       TipActAsist(
-        TipActAsistId: TipActAsistId ?? this.TipActAsistId,
-        TipActAsistDesc: TipActAsistDesc ?? this.TipActAsistDesc,
-        TipActAsistFlgSeIndica:
-            TipActAsistFlgSeIndica ?? this.TipActAsistFlgSeIndica,
-        TipActAsistFlgParacl: TipActAsistFlgParacl ?? this.TipActAsistFlgParacl,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        tipActAsistId: tipActAsistId ?? this.tipActAsistId,
+        tipActAsistDesc: tipActAsistDesc ?? this.tipActAsistDesc,
+        tipActAsistFlgSeIndica:
+            tipActAsistFlgSeIndica ?? this.tipActAsistFlgSeIndica,
+        tipActAsistFlgParacl: tipActAsistFlgParacl ?? this.tipActAsistFlgParacl,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -9082,12 +8849,12 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   @override
   String toString() {
     return (StringBuffer('TipActAsist(')
-          ..write('TipActAsistId: $TipActAsistId, ')
-          ..write('TipActAsistDesc: $TipActAsistDesc, ')
-          ..write('TipActAsistFlgSeIndica: $TipActAsistFlgSeIndica, ')
-          ..write('TipActAsistFlgParacl: $TipActAsistFlgParacl, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('tipActAsistId: $tipActAsistId, ')
+          ..write('tipActAsistDesc: $tipActAsistDesc, ')
+          ..write('tipActAsistFlgSeIndica: $tipActAsistFlgSeIndica, ')
+          ..write('tipActAsistFlgParacl: $tipActAsistFlgParacl, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -9097,17 +8864,17 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      TipActAsistId.hashCode,
+      tipActAsistId.hashCode,
       $mrjc(
-          TipActAsistDesc.hashCode,
+          tipActAsistDesc.hashCode,
           $mrjc(
-              TipActAsistFlgSeIndica.hashCode,
+              tipActAsistFlgSeIndica.hashCode,
               $mrjc(
-                  TipActAsistFlgParacl.hashCode,
+                  tipActAsistFlgParacl.hashCode,
                   $mrjc(
-                      StatusId.hashCode,
+                      statusId.hashCode,
                       $mrjc(
-                          UsuId.hashCode,
+                          usuId.hashCode,
                           $mrjc(
                               createdAt.hashCode,
                               $mrjc(updatedAt.hashCode,
@@ -9116,56 +8883,56 @@ class TipActAsist extends DataClass implements Insertable<TipActAsist> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is TipActAsist &&
-          other.TipActAsistId == TipActAsistId &&
-          other.TipActAsistDesc == TipActAsistDesc &&
-          other.TipActAsistFlgSeIndica == TipActAsistFlgSeIndica &&
-          other.TipActAsistFlgParacl == TipActAsistFlgParacl &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.tipActAsistId == tipActAsistId &&
+          other.tipActAsistDesc == tipActAsistDesc &&
+          other.tipActAsistFlgSeIndica == tipActAsistFlgSeIndica &&
+          other.tipActAsistFlgParacl == tipActAsistFlgParacl &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableTipActAsistCompanion extends UpdateCompanion<TipActAsist> {
-  final Value<int> TipActAsistId;
-  final Value<String> TipActAsistDesc;
-  final Value<int> TipActAsistFlgSeIndica;
-  final Value<int> TipActAsistFlgParacl;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> tipActAsistId;
+  final Value<String> tipActAsistDesc;
+  final Value<int> tipActAsistFlgSeIndica;
+  final Value<int> tipActAsistFlgParacl;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableTipActAsistCompanion({
-    this.TipActAsistId = const Value.absent(),
-    this.TipActAsistDesc = const Value.absent(),
-    this.TipActAsistFlgSeIndica = const Value.absent(),
-    this.TipActAsistFlgParacl = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.tipActAsistId = const Value.absent(),
+    this.tipActAsistDesc = const Value.absent(),
+    this.tipActAsistFlgSeIndica = const Value.absent(),
+    this.tipActAsistFlgParacl = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableTipActAsistCompanion copyWith(
-      {Value<int> TipActAsistId,
-      Value<String> TipActAsistDesc,
-      Value<int> TipActAsistFlgSeIndica,
-      Value<int> TipActAsistFlgParacl,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> tipActAsistId,
+      Value<String> tipActAsistDesc,
+      Value<int> tipActAsistFlgSeIndica,
+      Value<int> tipActAsistFlgParacl,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableTipActAsistCompanion(
-      TipActAsistId: TipActAsistId ?? this.TipActAsistId,
-      TipActAsistDesc: TipActAsistDesc ?? this.TipActAsistDesc,
-      TipActAsistFlgSeIndica:
-          TipActAsistFlgSeIndica ?? this.TipActAsistFlgSeIndica,
-      TipActAsistFlgParacl: TipActAsistFlgParacl ?? this.TipActAsistFlgParacl,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      tipActAsistId: tipActAsistId ?? this.tipActAsistId,
+      tipActAsistDesc: tipActAsistDesc ?? this.tipActAsistDesc,
+      tipActAsistFlgSeIndica:
+          tipActAsistFlgSeIndica ?? this.tipActAsistFlgSeIndica,
+      tipActAsistFlgParacl: tipActAsistFlgParacl ?? this.tipActAsistFlgParacl,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -9178,23 +8945,23 @@ class $TableTipActAsistTable extends TableTipActAsist
   final GeneratedDatabase _db;
   final String _alias;
   $TableTipActAsistTable(this._db, [this._alias]);
-  final VerificationMeta _TipActAsistIdMeta =
-      const VerificationMeta('TipActAsistId');
-  GeneratedIntColumn _TipActAsistId;
+  final VerificationMeta _tipActAsistIdMeta =
+      const VerificationMeta('tipActAsistId');
+  GeneratedIntColumn _tipActAsistId;
   @override
-  GeneratedIntColumn get TipActAsistId =>
-      _TipActAsistId ??= _constructTipActAsistId();
+  GeneratedIntColumn get tipActAsistId =>
+      _tipActAsistId ??= _constructTipActAsistId();
   GeneratedIntColumn _constructTipActAsistId() {
     return GeneratedIntColumn('tip_act_asist_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _TipActAsistDescMeta =
-      const VerificationMeta('TipActAsistDesc');
-  GeneratedTextColumn _TipActAsistDesc;
+  final VerificationMeta _tipActAsistDescMeta =
+      const VerificationMeta('tipActAsistDesc');
+  GeneratedTextColumn _tipActAsistDesc;
   @override
-  GeneratedTextColumn get TipActAsistDesc =>
-      _TipActAsistDesc ??= _constructTipActAsistDesc();
+  GeneratedTextColumn get tipActAsistDesc =>
+      _tipActAsistDesc ??= _constructTipActAsistDesc();
   GeneratedTextColumn _constructTipActAsistDesc() {
     return GeneratedTextColumn(
       'tip_act_asist_desc',
@@ -9203,12 +8970,12 @@ class $TableTipActAsistTable extends TableTipActAsist
     );
   }
 
-  final VerificationMeta _TipActAsistFlgSeIndicaMeta =
-      const VerificationMeta('TipActAsistFlgSeIndica');
-  GeneratedIntColumn _TipActAsistFlgSeIndica;
+  final VerificationMeta _tipActAsistFlgSeIndicaMeta =
+      const VerificationMeta('tipActAsistFlgSeIndica');
+  GeneratedIntColumn _tipActAsistFlgSeIndica;
   @override
-  GeneratedIntColumn get TipActAsistFlgSeIndica =>
-      _TipActAsistFlgSeIndica ??= _constructTipActAsistFlgSeIndica();
+  GeneratedIntColumn get tipActAsistFlgSeIndica =>
+      _tipActAsistFlgSeIndica ??= _constructTipActAsistFlgSeIndica();
   GeneratedIntColumn _constructTipActAsistFlgSeIndica() {
     return GeneratedIntColumn(
       'tip_act_asist_flg_se_indica',
@@ -9217,12 +8984,12 @@ class $TableTipActAsistTable extends TableTipActAsist
     );
   }
 
-  final VerificationMeta _TipActAsistFlgParaclMeta =
-      const VerificationMeta('TipActAsistFlgParacl');
-  GeneratedIntColumn _TipActAsistFlgParacl;
+  final VerificationMeta _tipActAsistFlgParaclMeta =
+      const VerificationMeta('tipActAsistFlgParacl');
+  GeneratedIntColumn _tipActAsistFlgParacl;
   @override
-  GeneratedIntColumn get TipActAsistFlgParacl =>
-      _TipActAsistFlgParacl ??= _constructTipActAsistFlgParacl();
+  GeneratedIntColumn get tipActAsistFlgParacl =>
+      _tipActAsistFlgParacl ??= _constructTipActAsistFlgParacl();
   GeneratedIntColumn _constructTipActAsistFlgParacl() {
     return GeneratedIntColumn(
       'tip_act_asist_flg_paracl',
@@ -9231,22 +8998,22 @@ class $TableTipActAsistTable extends TableTipActAsist
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -9287,12 +9054,12 @@ class $TableTipActAsistTable extends TableTipActAsist
 
   @override
   List<GeneratedColumn> get $columns => [
-        TipActAsistId,
-        TipActAsistDesc,
-        TipActAsistFlgSeIndica,
-        TipActAsistFlgParacl,
-        StatusId,
-        UsuId,
+        tipActAsistId,
+        tipActAsistDesc,
+        tipActAsistFlgSeIndica,
+        tipActAsistFlgParacl,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -9307,49 +9074,49 @@ class $TableTipActAsistTable extends TableTipActAsist
   VerificationContext validateIntegrity(TableTipActAsistCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.TipActAsistId.present) {
+    if (d.tipActAsistId.present) {
       context.handle(
-          _TipActAsistIdMeta,
-          TipActAsistId.isAcceptableValue(
-              d.TipActAsistId.value, _TipActAsistIdMeta));
-    } else if (TipActAsistId.isRequired && isInserting) {
-      context.missing(_TipActAsistIdMeta);
+          _tipActAsistIdMeta,
+          tipActAsistId.isAcceptableValue(
+              d.tipActAsistId.value, _tipActAsistIdMeta));
+    } else if (tipActAsistId.isRequired && isInserting) {
+      context.missing(_tipActAsistIdMeta);
     }
-    if (d.TipActAsistDesc.present) {
+    if (d.tipActAsistDesc.present) {
       context.handle(
-          _TipActAsistDescMeta,
-          TipActAsistDesc.isAcceptableValue(
-              d.TipActAsistDesc.value, _TipActAsistDescMeta));
-    } else if (TipActAsistDesc.isRequired && isInserting) {
-      context.missing(_TipActAsistDescMeta);
+          _tipActAsistDescMeta,
+          tipActAsistDesc.isAcceptableValue(
+              d.tipActAsistDesc.value, _tipActAsistDescMeta));
+    } else if (tipActAsistDesc.isRequired && isInserting) {
+      context.missing(_tipActAsistDescMeta);
     }
-    if (d.TipActAsistFlgSeIndica.present) {
+    if (d.tipActAsistFlgSeIndica.present) {
       context.handle(
-          _TipActAsistFlgSeIndicaMeta,
-          TipActAsistFlgSeIndica.isAcceptableValue(
-              d.TipActAsistFlgSeIndica.value, _TipActAsistFlgSeIndicaMeta));
-    } else if (TipActAsistFlgSeIndica.isRequired && isInserting) {
-      context.missing(_TipActAsistFlgSeIndicaMeta);
+          _tipActAsistFlgSeIndicaMeta,
+          tipActAsistFlgSeIndica.isAcceptableValue(
+              d.tipActAsistFlgSeIndica.value, _tipActAsistFlgSeIndicaMeta));
+    } else if (tipActAsistFlgSeIndica.isRequired && isInserting) {
+      context.missing(_tipActAsistFlgSeIndicaMeta);
     }
-    if (d.TipActAsistFlgParacl.present) {
+    if (d.tipActAsistFlgParacl.present) {
       context.handle(
-          _TipActAsistFlgParaclMeta,
-          TipActAsistFlgParacl.isAcceptableValue(
-              d.TipActAsistFlgParacl.value, _TipActAsistFlgParaclMeta));
-    } else if (TipActAsistFlgParacl.isRequired && isInserting) {
-      context.missing(_TipActAsistFlgParaclMeta);
+          _tipActAsistFlgParaclMeta,
+          tipActAsistFlgParacl.isAcceptableValue(
+              d.tipActAsistFlgParacl.value, _tipActAsistFlgParaclMeta));
+    } else if (tipActAsistFlgParacl.isRequired && isInserting) {
+      context.missing(_tipActAsistFlgParaclMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -9373,7 +9140,7 @@ class $TableTipActAsistTable extends TableTipActAsist
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {TipActAsistId};
+  Set<GeneratedColumn> get $primaryKey => {tipActAsistId};
   @override
   TipActAsist map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -9383,26 +9150,26 @@ class $TableTipActAsistTable extends TableTipActAsist
   @override
   Map<String, Variable> entityToSql(TableTipActAsistCompanion d) {
     final map = <String, Variable>{};
-    if (d.TipActAsistId.present) {
-      map['tip_act_asist_id'] = Variable<int, IntType>(d.TipActAsistId.value);
+    if (d.tipActAsistId.present) {
+      map['tip_act_asist_id'] = Variable<int, IntType>(d.tipActAsistId.value);
     }
-    if (d.TipActAsistDesc.present) {
+    if (d.tipActAsistDesc.present) {
       map['tip_act_asist_desc'] =
-          Variable<String, StringType>(d.TipActAsistDesc.value);
+          Variable<String, StringType>(d.tipActAsistDesc.value);
     }
-    if (d.TipActAsistFlgSeIndica.present) {
+    if (d.tipActAsistFlgSeIndica.present) {
       map['tip_act_asist_flg_se_indica'] =
-          Variable<int, IntType>(d.TipActAsistFlgSeIndica.value);
+          Variable<int, IntType>(d.tipActAsistFlgSeIndica.value);
     }
-    if (d.TipActAsistFlgParacl.present) {
+    if (d.tipActAsistFlgParacl.present) {
       map['tip_act_asist_flg_paracl'] =
-          Variable<int, IntType>(d.TipActAsistFlgParacl.value);
+          Variable<int, IntType>(d.tipActAsistFlgParacl.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -9423,22 +9190,22 @@ class $TableTipActAsistTable extends TableTipActAsist
 }
 
 class UnidMed extends DataClass implements Insertable<UnidMed> {
-  final int UnidMedId;
-  final String UnidMedDesc;
-  final String UnidMedAbrev;
-  final int UnidMedFlgHab;
-  final int StatusId;
-  final int UsuId;
+  final int unidMedId;
+  final String unidMedDesc;
+  final String unidMedAbrev;
+  final int unidMedFlgHab;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   UnidMed(
-      {@required this.UnidMedId,
-      @required this.UnidMedDesc,
-      @required this.UnidMedAbrev,
-      @required this.UnidMedFlgHab,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.unidMedId,
+      @required this.unidMedDesc,
+      @required this.unidMedAbrev,
+      @required this.unidMedFlgHab,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -9449,17 +9216,17 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return UnidMed(
-      UnidMedId: intType
+      unidMedId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_id']),
-      UnidMedDesc: stringType
+      unidMedDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_desc']),
-      UnidMedAbrev: stringType
+      unidMedAbrev: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_abrev']),
-      UnidMedFlgHab: intType
+      unidMedFlgHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_flg_hab']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -9471,12 +9238,12 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   factory UnidMed.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return UnidMed(
-      UnidMedId: serializer.fromJson<int>(json['UnidMedId']),
-      UnidMedDesc: serializer.fromJson<String>(json['UnidMedDesc']),
-      UnidMedAbrev: serializer.fromJson<String>(json['UnidMedAbrev']),
-      UnidMedFlgHab: serializer.fromJson<int>(json['UnidMedFlgHab']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      unidMedId: serializer.fromJson<int>(json['unidMedId']),
+      unidMedDesc: serializer.fromJson<String>(json['unidMedDesc']),
+      unidMedAbrev: serializer.fromJson<String>(json['unidMedAbrev']),
+      unidMedFlgHab: serializer.fromJson<int>(json['unidMedFlgHab']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -9486,12 +9253,12 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'UnidMedId': serializer.toJson<int>(UnidMedId),
-      'UnidMedDesc': serializer.toJson<String>(UnidMedDesc),
-      'UnidMedAbrev': serializer.toJson<String>(UnidMedAbrev),
-      'UnidMedFlgHab': serializer.toJson<int>(UnidMedFlgHab),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'unidMedId': serializer.toJson<int>(unidMedId),
+      'unidMedDesc': serializer.toJson<String>(unidMedDesc),
+      'unidMedAbrev': serializer.toJson<String>(unidMedAbrev),
+      'unidMedFlgHab': serializer.toJson<int>(unidMedFlgHab),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -9501,23 +9268,23 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   @override
   T createCompanion<T extends UpdateCompanion<UnidMed>>(bool nullToAbsent) {
     return TableUnidMedCompanion(
-      UnidMedId: UnidMedId == null && nullToAbsent
+      unidMedId: unidMedId == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedId),
-      UnidMedDesc: UnidMedDesc == null && nullToAbsent
+          : Value(unidMedId),
+      unidMedDesc: unidMedDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedDesc),
-      UnidMedAbrev: UnidMedAbrev == null && nullToAbsent
+          : Value(unidMedDesc),
+      unidMedAbrev: unidMedAbrev == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedAbrev),
-      UnidMedFlgHab: UnidMedFlgHab == null && nullToAbsent
+          : Value(unidMedAbrev),
+      unidMedFlgHab: unidMedFlgHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedFlgHab),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(unidMedFlgHab),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -9531,22 +9298,22 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   }
 
   UnidMed copyWith(
-          {int UnidMedId,
-          String UnidMedDesc,
-          String UnidMedAbrev,
-          int UnidMedFlgHab,
-          int StatusId,
-          int UsuId,
+          {int unidMedId,
+          String unidMedDesc,
+          String unidMedAbrev,
+          int unidMedFlgHab,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       UnidMed(
-        UnidMedId: UnidMedId ?? this.UnidMedId,
-        UnidMedDesc: UnidMedDesc ?? this.UnidMedDesc,
-        UnidMedAbrev: UnidMedAbrev ?? this.UnidMedAbrev,
-        UnidMedFlgHab: UnidMedFlgHab ?? this.UnidMedFlgHab,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        unidMedId: unidMedId ?? this.unidMedId,
+        unidMedDesc: unidMedDesc ?? this.unidMedDesc,
+        unidMedAbrev: unidMedAbrev ?? this.unidMedAbrev,
+        unidMedFlgHab: unidMedFlgHab ?? this.unidMedFlgHab,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -9554,12 +9321,12 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   @override
   String toString() {
     return (StringBuffer('UnidMed(')
-          ..write('UnidMedId: $UnidMedId, ')
-          ..write('UnidMedDesc: $UnidMedDesc, ')
-          ..write('UnidMedAbrev: $UnidMedAbrev, ')
-          ..write('UnidMedFlgHab: $UnidMedFlgHab, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('unidMedId: $unidMedId, ')
+          ..write('unidMedDesc: $unidMedDesc, ')
+          ..write('unidMedAbrev: $unidMedAbrev, ')
+          ..write('unidMedFlgHab: $unidMedFlgHab, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -9569,17 +9336,17 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      UnidMedId.hashCode,
+      unidMedId.hashCode,
       $mrjc(
-          UnidMedDesc.hashCode,
+          unidMedDesc.hashCode,
           $mrjc(
-              UnidMedAbrev.hashCode,
+              unidMedAbrev.hashCode,
               $mrjc(
-                  UnidMedFlgHab.hashCode,
+                  unidMedFlgHab.hashCode,
                   $mrjc(
-                      StatusId.hashCode,
+                      statusId.hashCode,
                       $mrjc(
-                          UsuId.hashCode,
+                          usuId.hashCode,
                           $mrjc(
                               createdAt.hashCode,
                               $mrjc(updatedAt.hashCode,
@@ -9588,55 +9355,55 @@ class UnidMed extends DataClass implements Insertable<UnidMed> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is UnidMed &&
-          other.UnidMedId == UnidMedId &&
-          other.UnidMedDesc == UnidMedDesc &&
-          other.UnidMedAbrev == UnidMedAbrev &&
-          other.UnidMedFlgHab == UnidMedFlgHab &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.unidMedId == unidMedId &&
+          other.unidMedDesc == unidMedDesc &&
+          other.unidMedAbrev == unidMedAbrev &&
+          other.unidMedFlgHab == unidMedFlgHab &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableUnidMedCompanion extends UpdateCompanion<UnidMed> {
-  final Value<int> UnidMedId;
-  final Value<String> UnidMedDesc;
-  final Value<String> UnidMedAbrev;
-  final Value<int> UnidMedFlgHab;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> unidMedId;
+  final Value<String> unidMedDesc;
+  final Value<String> unidMedAbrev;
+  final Value<int> unidMedFlgHab;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableUnidMedCompanion({
-    this.UnidMedId = const Value.absent(),
-    this.UnidMedDesc = const Value.absent(),
-    this.UnidMedAbrev = const Value.absent(),
-    this.UnidMedFlgHab = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.unidMedId = const Value.absent(),
+    this.unidMedDesc = const Value.absent(),
+    this.unidMedAbrev = const Value.absent(),
+    this.unidMedFlgHab = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableUnidMedCompanion copyWith(
-      {Value<int> UnidMedId,
-      Value<String> UnidMedDesc,
-      Value<String> UnidMedAbrev,
-      Value<int> UnidMedFlgHab,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> unidMedId,
+      Value<String> unidMedDesc,
+      Value<String> unidMedAbrev,
+      Value<int> unidMedFlgHab,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableUnidMedCompanion(
-      UnidMedId: UnidMedId ?? this.UnidMedId,
-      UnidMedDesc: UnidMedDesc ?? this.UnidMedDesc,
-      UnidMedAbrev: UnidMedAbrev ?? this.UnidMedAbrev,
-      UnidMedFlgHab: UnidMedFlgHab ?? this.UnidMedFlgHab,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      unidMedId: unidMedId ?? this.unidMedId,
+      unidMedDesc: unidMedDesc ?? this.unidMedDesc,
+      unidMedAbrev: unidMedAbrev ?? this.unidMedAbrev,
+      unidMedFlgHab: unidMedFlgHab ?? this.unidMedFlgHab,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -9649,21 +9416,21 @@ class $TableUnidMedTable extends TableUnidMed
   final GeneratedDatabase _db;
   final String _alias;
   $TableUnidMedTable(this._db, [this._alias]);
-  final VerificationMeta _UnidMedIdMeta = const VerificationMeta('UnidMedId');
-  GeneratedIntColumn _UnidMedId;
+  final VerificationMeta _unidMedIdMeta = const VerificationMeta('unidMedId');
+  GeneratedIntColumn _unidMedId;
   @override
-  GeneratedIntColumn get UnidMedId => _UnidMedId ??= _constructUnidMedId();
+  GeneratedIntColumn get unidMedId => _unidMedId ??= _constructUnidMedId();
   GeneratedIntColumn _constructUnidMedId() {
     return GeneratedIntColumn('unid_med_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _UnidMedDescMeta =
-      const VerificationMeta('UnidMedDesc');
-  GeneratedTextColumn _UnidMedDesc;
+  final VerificationMeta _unidMedDescMeta =
+      const VerificationMeta('unidMedDesc');
+  GeneratedTextColumn _unidMedDesc;
   @override
-  GeneratedTextColumn get UnidMedDesc =>
-      _UnidMedDesc ??= _constructUnidMedDesc();
+  GeneratedTextColumn get unidMedDesc =>
+      _unidMedDesc ??= _constructUnidMedDesc();
   GeneratedTextColumn _constructUnidMedDesc() {
     return GeneratedTextColumn(
       'unid_med_desc',
@@ -9672,12 +9439,12 @@ class $TableUnidMedTable extends TableUnidMed
     );
   }
 
-  final VerificationMeta _UnidMedAbrevMeta =
-      const VerificationMeta('UnidMedAbrev');
-  GeneratedTextColumn _UnidMedAbrev;
+  final VerificationMeta _unidMedAbrevMeta =
+      const VerificationMeta('unidMedAbrev');
+  GeneratedTextColumn _unidMedAbrev;
   @override
-  GeneratedTextColumn get UnidMedAbrev =>
-      _UnidMedAbrev ??= _constructUnidMedAbrev();
+  GeneratedTextColumn get unidMedAbrev =>
+      _unidMedAbrev ??= _constructUnidMedAbrev();
   GeneratedTextColumn _constructUnidMedAbrev() {
     return GeneratedTextColumn(
       'unid_med_abrev',
@@ -9686,12 +9453,12 @@ class $TableUnidMedTable extends TableUnidMed
     );
   }
 
-  final VerificationMeta _UnidMedFlgHabMeta =
-      const VerificationMeta('UnidMedFlgHab');
-  GeneratedIntColumn _UnidMedFlgHab;
+  final VerificationMeta _unidMedFlgHabMeta =
+      const VerificationMeta('unidMedFlgHab');
+  GeneratedIntColumn _unidMedFlgHab;
   @override
-  GeneratedIntColumn get UnidMedFlgHab =>
-      _UnidMedFlgHab ??= _constructUnidMedFlgHab();
+  GeneratedIntColumn get unidMedFlgHab =>
+      _unidMedFlgHab ??= _constructUnidMedFlgHab();
   GeneratedIntColumn _constructUnidMedFlgHab() {
     return GeneratedIntColumn(
       'unid_med_flg_hab',
@@ -9700,22 +9467,22 @@ class $TableUnidMedTable extends TableUnidMed
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -9756,12 +9523,12 @@ class $TableUnidMedTable extends TableUnidMed
 
   @override
   List<GeneratedColumn> get $columns => [
-        UnidMedId,
-        UnidMedDesc,
-        UnidMedAbrev,
-        UnidMedFlgHab,
-        StatusId,
-        UsuId,
+        unidMedId,
+        unidMedDesc,
+        unidMedAbrev,
+        unidMedFlgHab,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -9776,45 +9543,45 @@ class $TableUnidMedTable extends TableUnidMed
   VerificationContext validateIntegrity(TableUnidMedCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.UnidMedId.present) {
-      context.handle(_UnidMedIdMeta,
-          UnidMedId.isAcceptableValue(d.UnidMedId.value, _UnidMedIdMeta));
-    } else if (UnidMedId.isRequired && isInserting) {
-      context.missing(_UnidMedIdMeta);
+    if (d.unidMedId.present) {
+      context.handle(_unidMedIdMeta,
+          unidMedId.isAcceptableValue(d.unidMedId.value, _unidMedIdMeta));
+    } else if (unidMedId.isRequired && isInserting) {
+      context.missing(_unidMedIdMeta);
     }
-    if (d.UnidMedDesc.present) {
-      context.handle(_UnidMedDescMeta,
-          UnidMedDesc.isAcceptableValue(d.UnidMedDesc.value, _UnidMedDescMeta));
-    } else if (UnidMedDesc.isRequired && isInserting) {
-      context.missing(_UnidMedDescMeta);
+    if (d.unidMedDesc.present) {
+      context.handle(_unidMedDescMeta,
+          unidMedDesc.isAcceptableValue(d.unidMedDesc.value, _unidMedDescMeta));
+    } else if (unidMedDesc.isRequired && isInserting) {
+      context.missing(_unidMedDescMeta);
     }
-    if (d.UnidMedAbrev.present) {
+    if (d.unidMedAbrev.present) {
       context.handle(
-          _UnidMedAbrevMeta,
-          UnidMedAbrev.isAcceptableValue(
-              d.UnidMedAbrev.value, _UnidMedAbrevMeta));
-    } else if (UnidMedAbrev.isRequired && isInserting) {
-      context.missing(_UnidMedAbrevMeta);
+          _unidMedAbrevMeta,
+          unidMedAbrev.isAcceptableValue(
+              d.unidMedAbrev.value, _unidMedAbrevMeta));
+    } else if (unidMedAbrev.isRequired && isInserting) {
+      context.missing(_unidMedAbrevMeta);
     }
-    if (d.UnidMedFlgHab.present) {
+    if (d.unidMedFlgHab.present) {
       context.handle(
-          _UnidMedFlgHabMeta,
-          UnidMedFlgHab.isAcceptableValue(
-              d.UnidMedFlgHab.value, _UnidMedFlgHabMeta));
-    } else if (UnidMedFlgHab.isRequired && isInserting) {
-      context.missing(_UnidMedFlgHabMeta);
+          _unidMedFlgHabMeta,
+          unidMedFlgHab.isAcceptableValue(
+              d.unidMedFlgHab.value, _unidMedFlgHabMeta));
+    } else if (unidMedFlgHab.isRequired && isInserting) {
+      context.missing(_unidMedFlgHabMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -9838,7 +9605,7 @@ class $TableUnidMedTable extends TableUnidMed
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {UnidMedId};
+  Set<GeneratedColumn> get $primaryKey => {unidMedId};
   @override
   UnidMed map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -9848,24 +9615,24 @@ class $TableUnidMedTable extends TableUnidMed
   @override
   Map<String, Variable> entityToSql(TableUnidMedCompanion d) {
     final map = <String, Variable>{};
-    if (d.UnidMedId.present) {
-      map['unid_med_id'] = Variable<int, IntType>(d.UnidMedId.value);
+    if (d.unidMedId.present) {
+      map['unid_med_id'] = Variable<int, IntType>(d.unidMedId.value);
     }
-    if (d.UnidMedDesc.present) {
-      map['unid_med_desc'] = Variable<String, StringType>(d.UnidMedDesc.value);
+    if (d.unidMedDesc.present) {
+      map['unid_med_desc'] = Variable<String, StringType>(d.unidMedDesc.value);
     }
-    if (d.UnidMedAbrev.present) {
+    if (d.unidMedAbrev.present) {
       map['unid_med_abrev'] =
-          Variable<String, StringType>(d.UnidMedAbrev.value);
+          Variable<String, StringType>(d.unidMedAbrev.value);
     }
-    if (d.UnidMedFlgHab.present) {
-      map['unid_med_flg_hab'] = Variable<int, IntType>(d.UnidMedFlgHab.value);
+    if (d.unidMedFlgHab.present) {
+      map['unid_med_flg_hab'] = Variable<int, IntType>(d.unidMedFlgHab.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -9886,22 +9653,22 @@ class $TableUnidMedTable extends TableUnidMed
 }
 
 class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
-  final int ViaAdmMedicId;
-  final String ViaAdmMedicDesc;
-  final String ViaAdmMedicAbrev;
-  final int ViaAdmMedicFlgHab;
-  final int StatusId;
-  final int UsuId;
+  final int viaAdmMedicId;
+  final String viaAdmMedicDesc;
+  final String viaAdmMedicAbrev;
+  final int viaAdmMedicFlgHab;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   ViaAdmMedic(
-      {@required this.ViaAdmMedicId,
-      @required this.ViaAdmMedicDesc,
-      @required this.ViaAdmMedicAbrev,
-      @required this.ViaAdmMedicFlgHab,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.viaAdmMedicId,
+      @required this.viaAdmMedicDesc,
+      @required this.viaAdmMedicAbrev,
+      @required this.viaAdmMedicFlgHab,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -9912,17 +9679,17 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return ViaAdmMedic(
-      ViaAdmMedicId: intType
+      viaAdmMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}via_adm_medic_id']),
-      ViaAdmMedicDesc: stringType.mapFromDatabaseResponse(
+      viaAdmMedicDesc: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}via_adm_medic_desc']),
-      ViaAdmMedicAbrev: stringType.mapFromDatabaseResponse(
+      viaAdmMedicAbrev: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}via_adm_medic_abrev']),
-      ViaAdmMedicFlgHab: intType.mapFromDatabaseResponse(
+      viaAdmMedicFlgHab: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}via_adm_medic_flg_hab']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -9934,12 +9701,12 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   factory ViaAdmMedic.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ViaAdmMedic(
-      ViaAdmMedicId: serializer.fromJson<int>(json['ViaAdmMedicId']),
-      ViaAdmMedicDesc: serializer.fromJson<String>(json['ViaAdmMedicDesc']),
-      ViaAdmMedicAbrev: serializer.fromJson<String>(json['ViaAdmMedicAbrev']),
-      ViaAdmMedicFlgHab: serializer.fromJson<int>(json['ViaAdmMedicFlgHab']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      viaAdmMedicId: serializer.fromJson<int>(json['viaAdmMedicId']),
+      viaAdmMedicDesc: serializer.fromJson<String>(json['viaAdmMedicDesc']),
+      viaAdmMedicAbrev: serializer.fromJson<String>(json['viaAdmMedicAbrev']),
+      viaAdmMedicFlgHab: serializer.fromJson<int>(json['viaAdmMedicFlgHab']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -9949,12 +9716,12 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'ViaAdmMedicId': serializer.toJson<int>(ViaAdmMedicId),
-      'ViaAdmMedicDesc': serializer.toJson<String>(ViaAdmMedicDesc),
-      'ViaAdmMedicAbrev': serializer.toJson<String>(ViaAdmMedicAbrev),
-      'ViaAdmMedicFlgHab': serializer.toJson<int>(ViaAdmMedicFlgHab),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'viaAdmMedicId': serializer.toJson<int>(viaAdmMedicId),
+      'viaAdmMedicDesc': serializer.toJson<String>(viaAdmMedicDesc),
+      'viaAdmMedicAbrev': serializer.toJson<String>(viaAdmMedicAbrev),
+      'viaAdmMedicFlgHab': serializer.toJson<int>(viaAdmMedicFlgHab),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -9964,23 +9731,23 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   @override
   T createCompanion<T extends UpdateCompanion<ViaAdmMedic>>(bool nullToAbsent) {
     return TableViaAdmMedicCompanion(
-      ViaAdmMedicId: ViaAdmMedicId == null && nullToAbsent
+      viaAdmMedicId: viaAdmMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicId),
-      ViaAdmMedicDesc: ViaAdmMedicDesc == null && nullToAbsent
+          : Value(viaAdmMedicId),
+      viaAdmMedicDesc: viaAdmMedicDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicDesc),
-      ViaAdmMedicAbrev: ViaAdmMedicAbrev == null && nullToAbsent
+          : Value(viaAdmMedicDesc),
+      viaAdmMedicAbrev: viaAdmMedicAbrev == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicAbrev),
-      ViaAdmMedicFlgHab: ViaAdmMedicFlgHab == null && nullToAbsent
+          : Value(viaAdmMedicAbrev),
+      viaAdmMedicFlgHab: viaAdmMedicFlgHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicFlgHab),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(viaAdmMedicFlgHab),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -9994,22 +9761,22 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   }
 
   ViaAdmMedic copyWith(
-          {int ViaAdmMedicId,
-          String ViaAdmMedicDesc,
-          String ViaAdmMedicAbrev,
-          int ViaAdmMedicFlgHab,
-          int StatusId,
-          int UsuId,
+          {int viaAdmMedicId,
+          String viaAdmMedicDesc,
+          String viaAdmMedicAbrev,
+          int viaAdmMedicFlgHab,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       ViaAdmMedic(
-        ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-        ViaAdmMedicDesc: ViaAdmMedicDesc ?? this.ViaAdmMedicDesc,
-        ViaAdmMedicAbrev: ViaAdmMedicAbrev ?? this.ViaAdmMedicAbrev,
-        ViaAdmMedicFlgHab: ViaAdmMedicFlgHab ?? this.ViaAdmMedicFlgHab,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+        viaAdmMedicDesc: viaAdmMedicDesc ?? this.viaAdmMedicDesc,
+        viaAdmMedicAbrev: viaAdmMedicAbrev ?? this.viaAdmMedicAbrev,
+        viaAdmMedicFlgHab: viaAdmMedicFlgHab ?? this.viaAdmMedicFlgHab,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -10017,12 +9784,12 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   @override
   String toString() {
     return (StringBuffer('ViaAdmMedic(')
-          ..write('ViaAdmMedicId: $ViaAdmMedicId, ')
-          ..write('ViaAdmMedicDesc: $ViaAdmMedicDesc, ')
-          ..write('ViaAdmMedicAbrev: $ViaAdmMedicAbrev, ')
-          ..write('ViaAdmMedicFlgHab: $ViaAdmMedicFlgHab, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('viaAdmMedicId: $viaAdmMedicId, ')
+          ..write('viaAdmMedicDesc: $viaAdmMedicDesc, ')
+          ..write('viaAdmMedicAbrev: $viaAdmMedicAbrev, ')
+          ..write('viaAdmMedicFlgHab: $viaAdmMedicFlgHab, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -10032,17 +9799,17 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      ViaAdmMedicId.hashCode,
+      viaAdmMedicId.hashCode,
       $mrjc(
-          ViaAdmMedicDesc.hashCode,
+          viaAdmMedicDesc.hashCode,
           $mrjc(
-              ViaAdmMedicAbrev.hashCode,
+              viaAdmMedicAbrev.hashCode,
               $mrjc(
-                  ViaAdmMedicFlgHab.hashCode,
+                  viaAdmMedicFlgHab.hashCode,
                   $mrjc(
-                      StatusId.hashCode,
+                      statusId.hashCode,
                       $mrjc(
-                          UsuId.hashCode,
+                          usuId.hashCode,
                           $mrjc(
                               createdAt.hashCode,
                               $mrjc(updatedAt.hashCode,
@@ -10051,55 +9818,55 @@ class ViaAdmMedic extends DataClass implements Insertable<ViaAdmMedic> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ViaAdmMedic &&
-          other.ViaAdmMedicId == ViaAdmMedicId &&
-          other.ViaAdmMedicDesc == ViaAdmMedicDesc &&
-          other.ViaAdmMedicAbrev == ViaAdmMedicAbrev &&
-          other.ViaAdmMedicFlgHab == ViaAdmMedicFlgHab &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.viaAdmMedicId == viaAdmMedicId &&
+          other.viaAdmMedicDesc == viaAdmMedicDesc &&
+          other.viaAdmMedicAbrev == viaAdmMedicAbrev &&
+          other.viaAdmMedicFlgHab == viaAdmMedicFlgHab &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableViaAdmMedicCompanion extends UpdateCompanion<ViaAdmMedic> {
-  final Value<int> ViaAdmMedicId;
-  final Value<String> ViaAdmMedicDesc;
-  final Value<String> ViaAdmMedicAbrev;
-  final Value<int> ViaAdmMedicFlgHab;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> viaAdmMedicId;
+  final Value<String> viaAdmMedicDesc;
+  final Value<String> viaAdmMedicAbrev;
+  final Value<int> viaAdmMedicFlgHab;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableViaAdmMedicCompanion({
-    this.ViaAdmMedicId = const Value.absent(),
-    this.ViaAdmMedicDesc = const Value.absent(),
-    this.ViaAdmMedicAbrev = const Value.absent(),
-    this.ViaAdmMedicFlgHab = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.viaAdmMedicId = const Value.absent(),
+    this.viaAdmMedicDesc = const Value.absent(),
+    this.viaAdmMedicAbrev = const Value.absent(),
+    this.viaAdmMedicFlgHab = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableViaAdmMedicCompanion copyWith(
-      {Value<int> ViaAdmMedicId,
-      Value<String> ViaAdmMedicDesc,
-      Value<String> ViaAdmMedicAbrev,
-      Value<int> ViaAdmMedicFlgHab,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> viaAdmMedicId,
+      Value<String> viaAdmMedicDesc,
+      Value<String> viaAdmMedicAbrev,
+      Value<int> viaAdmMedicFlgHab,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableViaAdmMedicCompanion(
-      ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-      ViaAdmMedicDesc: ViaAdmMedicDesc ?? this.ViaAdmMedicDesc,
-      ViaAdmMedicAbrev: ViaAdmMedicAbrev ?? this.ViaAdmMedicAbrev,
-      ViaAdmMedicFlgHab: ViaAdmMedicFlgHab ?? this.ViaAdmMedicFlgHab,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+      viaAdmMedicDesc: viaAdmMedicDesc ?? this.viaAdmMedicDesc,
+      viaAdmMedicAbrev: viaAdmMedicAbrev ?? this.viaAdmMedicAbrev,
+      viaAdmMedicFlgHab: viaAdmMedicFlgHab ?? this.viaAdmMedicFlgHab,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -10112,23 +9879,23 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
   final GeneratedDatabase _db;
   final String _alias;
   $TableViaAdmMedicTable(this._db, [this._alias]);
-  final VerificationMeta _ViaAdmMedicIdMeta =
-      const VerificationMeta('ViaAdmMedicId');
-  GeneratedIntColumn _ViaAdmMedicId;
+  final VerificationMeta _viaAdmMedicIdMeta =
+      const VerificationMeta('viaAdmMedicId');
+  GeneratedIntColumn _viaAdmMedicId;
   @override
-  GeneratedIntColumn get ViaAdmMedicId =>
-      _ViaAdmMedicId ??= _constructViaAdmMedicId();
+  GeneratedIntColumn get viaAdmMedicId =>
+      _viaAdmMedicId ??= _constructViaAdmMedicId();
   GeneratedIntColumn _constructViaAdmMedicId() {
     return GeneratedIntColumn('via_adm_medic_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _ViaAdmMedicDescMeta =
-      const VerificationMeta('ViaAdmMedicDesc');
-  GeneratedTextColumn _ViaAdmMedicDesc;
+  final VerificationMeta _viaAdmMedicDescMeta =
+      const VerificationMeta('viaAdmMedicDesc');
+  GeneratedTextColumn _viaAdmMedicDesc;
   @override
-  GeneratedTextColumn get ViaAdmMedicDesc =>
-      _ViaAdmMedicDesc ??= _constructViaAdmMedicDesc();
+  GeneratedTextColumn get viaAdmMedicDesc =>
+      _viaAdmMedicDesc ??= _constructViaAdmMedicDesc();
   GeneratedTextColumn _constructViaAdmMedicDesc() {
     return GeneratedTextColumn(
       'via_adm_medic_desc',
@@ -10137,12 +9904,12 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
     );
   }
 
-  final VerificationMeta _ViaAdmMedicAbrevMeta =
-      const VerificationMeta('ViaAdmMedicAbrev');
-  GeneratedTextColumn _ViaAdmMedicAbrev;
+  final VerificationMeta _viaAdmMedicAbrevMeta =
+      const VerificationMeta('viaAdmMedicAbrev');
+  GeneratedTextColumn _viaAdmMedicAbrev;
   @override
-  GeneratedTextColumn get ViaAdmMedicAbrev =>
-      _ViaAdmMedicAbrev ??= _constructViaAdmMedicAbrev();
+  GeneratedTextColumn get viaAdmMedicAbrev =>
+      _viaAdmMedicAbrev ??= _constructViaAdmMedicAbrev();
   GeneratedTextColumn _constructViaAdmMedicAbrev() {
     return GeneratedTextColumn(
       'via_adm_medic_abrev',
@@ -10151,12 +9918,12 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
     );
   }
 
-  final VerificationMeta _ViaAdmMedicFlgHabMeta =
-      const VerificationMeta('ViaAdmMedicFlgHab');
-  GeneratedIntColumn _ViaAdmMedicFlgHab;
+  final VerificationMeta _viaAdmMedicFlgHabMeta =
+      const VerificationMeta('viaAdmMedicFlgHab');
+  GeneratedIntColumn _viaAdmMedicFlgHab;
   @override
-  GeneratedIntColumn get ViaAdmMedicFlgHab =>
-      _ViaAdmMedicFlgHab ??= _constructViaAdmMedicFlgHab();
+  GeneratedIntColumn get viaAdmMedicFlgHab =>
+      _viaAdmMedicFlgHab ??= _constructViaAdmMedicFlgHab();
   GeneratedIntColumn _constructViaAdmMedicFlgHab() {
     return GeneratedIntColumn(
       'via_adm_medic_flg_hab',
@@ -10165,22 +9932,22 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -10221,12 +9988,12 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
 
   @override
   List<GeneratedColumn> get $columns => [
-        ViaAdmMedicId,
-        ViaAdmMedicDesc,
-        ViaAdmMedicAbrev,
-        ViaAdmMedicFlgHab,
-        StatusId,
-        UsuId,
+        viaAdmMedicId,
+        viaAdmMedicDesc,
+        viaAdmMedicAbrev,
+        viaAdmMedicFlgHab,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -10241,49 +10008,49 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
   VerificationContext validateIntegrity(TableViaAdmMedicCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.ViaAdmMedicId.present) {
+    if (d.viaAdmMedicId.present) {
       context.handle(
-          _ViaAdmMedicIdMeta,
-          ViaAdmMedicId.isAcceptableValue(
-              d.ViaAdmMedicId.value, _ViaAdmMedicIdMeta));
-    } else if (ViaAdmMedicId.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicIdMeta);
+          _viaAdmMedicIdMeta,
+          viaAdmMedicId.isAcceptableValue(
+              d.viaAdmMedicId.value, _viaAdmMedicIdMeta));
+    } else if (viaAdmMedicId.isRequired && isInserting) {
+      context.missing(_viaAdmMedicIdMeta);
     }
-    if (d.ViaAdmMedicDesc.present) {
+    if (d.viaAdmMedicDesc.present) {
       context.handle(
-          _ViaAdmMedicDescMeta,
-          ViaAdmMedicDesc.isAcceptableValue(
-              d.ViaAdmMedicDesc.value, _ViaAdmMedicDescMeta));
-    } else if (ViaAdmMedicDesc.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicDescMeta);
+          _viaAdmMedicDescMeta,
+          viaAdmMedicDesc.isAcceptableValue(
+              d.viaAdmMedicDesc.value, _viaAdmMedicDescMeta));
+    } else if (viaAdmMedicDesc.isRequired && isInserting) {
+      context.missing(_viaAdmMedicDescMeta);
     }
-    if (d.ViaAdmMedicAbrev.present) {
+    if (d.viaAdmMedicAbrev.present) {
       context.handle(
-          _ViaAdmMedicAbrevMeta,
-          ViaAdmMedicAbrev.isAcceptableValue(
-              d.ViaAdmMedicAbrev.value, _ViaAdmMedicAbrevMeta));
-    } else if (ViaAdmMedicAbrev.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicAbrevMeta);
+          _viaAdmMedicAbrevMeta,
+          viaAdmMedicAbrev.isAcceptableValue(
+              d.viaAdmMedicAbrev.value, _viaAdmMedicAbrevMeta));
+    } else if (viaAdmMedicAbrev.isRequired && isInserting) {
+      context.missing(_viaAdmMedicAbrevMeta);
     }
-    if (d.ViaAdmMedicFlgHab.present) {
+    if (d.viaAdmMedicFlgHab.present) {
       context.handle(
-          _ViaAdmMedicFlgHabMeta,
-          ViaAdmMedicFlgHab.isAcceptableValue(
-              d.ViaAdmMedicFlgHab.value, _ViaAdmMedicFlgHabMeta));
-    } else if (ViaAdmMedicFlgHab.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicFlgHabMeta);
+          _viaAdmMedicFlgHabMeta,
+          viaAdmMedicFlgHab.isAcceptableValue(
+              d.viaAdmMedicFlgHab.value, _viaAdmMedicFlgHabMeta));
+    } else if (viaAdmMedicFlgHab.isRequired && isInserting) {
+      context.missing(_viaAdmMedicFlgHabMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -10307,7 +10074,7 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {ViaAdmMedicId};
+  Set<GeneratedColumn> get $primaryKey => {viaAdmMedicId};
   @override
   ViaAdmMedic map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -10317,26 +10084,26 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
   @override
   Map<String, Variable> entityToSql(TableViaAdmMedicCompanion d) {
     final map = <String, Variable>{};
-    if (d.ViaAdmMedicId.present) {
-      map['via_adm_medic_id'] = Variable<int, IntType>(d.ViaAdmMedicId.value);
+    if (d.viaAdmMedicId.present) {
+      map['via_adm_medic_id'] = Variable<int, IntType>(d.viaAdmMedicId.value);
     }
-    if (d.ViaAdmMedicDesc.present) {
+    if (d.viaAdmMedicDesc.present) {
       map['via_adm_medic_desc'] =
-          Variable<String, StringType>(d.ViaAdmMedicDesc.value);
+          Variable<String, StringType>(d.viaAdmMedicDesc.value);
     }
-    if (d.ViaAdmMedicAbrev.present) {
+    if (d.viaAdmMedicAbrev.present) {
       map['via_adm_medic_abrev'] =
-          Variable<String, StringType>(d.ViaAdmMedicAbrev.value);
+          Variable<String, StringType>(d.viaAdmMedicAbrev.value);
     }
-    if (d.ViaAdmMedicFlgHab.present) {
+    if (d.viaAdmMedicFlgHab.present) {
       map['via_adm_medic_flg_hab'] =
-          Variable<int, IntType>(d.ViaAdmMedicFlgHab.value);
+          Variable<int, IntType>(d.viaAdmMedicFlgHab.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -10357,32 +10124,32 @@ class $TableViaAdmMedicTable extends TableViaAdmMedic
 }
 
 class ActAsist extends DataClass implements Insertable<ActAsist> {
-  final int ActAsistId;
-  final String ActAsistDesc;
-  final String ActAsistAbrev;
-  final int TipActAsistId;
-  final int ActAsistFlgHab;
-  final int ActAsistTipDat;
-  final int ActAsistValMin;
-  final int ActAsistValMax;
-  final int UnidMedId;
-  final int StatusId;
-  final int UsuId;
+  final int actAsistId;
+  final String actAsistDesc;
+  final String actAsistAbrev;
+  final int tipActAsistId;
+  final int actAsistFlgHab;
+  final int actAsistTipDat;
+  final int actAsistValMin;
+  final int actAsistValMax;
+  final int unidMedId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   ActAsist(
-      {@required this.ActAsistId,
-      @required this.ActAsistDesc,
-      @required this.ActAsistAbrev,
-      @required this.TipActAsistId,
-      @required this.ActAsistFlgHab,
-      @required this.ActAsistTipDat,
-      @required this.ActAsistValMin,
-      @required this.ActAsistValMax,
-      @required this.UnidMedId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.actAsistId,
+      @required this.actAsistDesc,
+      @required this.actAsistAbrev,
+      @required this.tipActAsistId,
+      @required this.actAsistFlgHab,
+      @required this.actAsistTipDat,
+      @required this.actAsistValMin,
+      @required this.actAsistValMax,
+      @required this.unidMedId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -10393,27 +10160,27 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return ActAsist(
-      ActAsistId: intType
+      actAsistId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_id']),
-      ActAsistDesc: stringType
+      actAsistDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_desc']),
-      ActAsistAbrev: stringType
+      actAsistAbrev: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_abrev']),
-      TipActAsistId: intType
+      tipActAsistId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}tip_act_asist_id']),
-      ActAsistFlgHab: intType
+      actAsistFlgHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_flg_hab']),
-      ActAsistTipDat: intType
+      actAsistTipDat: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_tip_dat']),
-      ActAsistValMin: intType
+      actAsistValMin: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_val_min']),
-      ActAsistValMax: intType
+      actAsistValMax: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}act_asist_val_max']),
-      UnidMedId: intType
+      unidMedId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -10425,17 +10192,17 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   factory ActAsist.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ActAsist(
-      ActAsistId: serializer.fromJson<int>(json['ActAsistId']),
-      ActAsistDesc: serializer.fromJson<String>(json['ActAsistDesc']),
-      ActAsistAbrev: serializer.fromJson<String>(json['ActAsistAbrev']),
-      TipActAsistId: serializer.fromJson<int>(json['TipActAsistId']),
-      ActAsistFlgHab: serializer.fromJson<int>(json['ActAsistFlgHab']),
-      ActAsistTipDat: serializer.fromJson<int>(json['ActAsistTipDat']),
-      ActAsistValMin: serializer.fromJson<int>(json['ActAsistValMin']),
-      ActAsistValMax: serializer.fromJson<int>(json['ActAsistValMax']),
-      UnidMedId: serializer.fromJson<int>(json['UnidMedId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      actAsistId: serializer.fromJson<int>(json['actAsistId']),
+      actAsistDesc: serializer.fromJson<String>(json['actAsistDesc']),
+      actAsistAbrev: serializer.fromJson<String>(json['actAsistAbrev']),
+      tipActAsistId: serializer.fromJson<int>(json['tipActAsistId']),
+      actAsistFlgHab: serializer.fromJson<int>(json['actAsistFlgHab']),
+      actAsistTipDat: serializer.fromJson<int>(json['actAsistTipDat']),
+      actAsistValMin: serializer.fromJson<int>(json['actAsistValMin']),
+      actAsistValMax: serializer.fromJson<int>(json['actAsistValMax']),
+      unidMedId: serializer.fromJson<int>(json['unidMedId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -10445,17 +10212,17 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'ActAsistId': serializer.toJson<int>(ActAsistId),
-      'ActAsistDesc': serializer.toJson<String>(ActAsistDesc),
-      'ActAsistAbrev': serializer.toJson<String>(ActAsistAbrev),
-      'TipActAsistId': serializer.toJson<int>(TipActAsistId),
-      'ActAsistFlgHab': serializer.toJson<int>(ActAsistFlgHab),
-      'ActAsistTipDat': serializer.toJson<int>(ActAsistTipDat),
-      'ActAsistValMin': serializer.toJson<int>(ActAsistValMin),
-      'ActAsistValMax': serializer.toJson<int>(ActAsistValMax),
-      'UnidMedId': serializer.toJson<int>(UnidMedId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'actAsistId': serializer.toJson<int>(actAsistId),
+      'actAsistDesc': serializer.toJson<String>(actAsistDesc),
+      'actAsistAbrev': serializer.toJson<String>(actAsistAbrev),
+      'tipActAsistId': serializer.toJson<int>(tipActAsistId),
+      'actAsistFlgHab': serializer.toJson<int>(actAsistFlgHab),
+      'actAsistTipDat': serializer.toJson<int>(actAsistTipDat),
+      'actAsistValMin': serializer.toJson<int>(actAsistValMin),
+      'actAsistValMax': serializer.toJson<int>(actAsistValMax),
+      'unidMedId': serializer.toJson<int>(unidMedId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -10465,38 +10232,38 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   @override
   T createCompanion<T extends UpdateCompanion<ActAsist>>(bool nullToAbsent) {
     return TableActAsistCompanion(
-      ActAsistId: ActAsistId == null && nullToAbsent
+      actAsistId: actAsistId == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistId),
-      ActAsistDesc: ActAsistDesc == null && nullToAbsent
+          : Value(actAsistId),
+      actAsistDesc: actAsistDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistDesc),
-      ActAsistAbrev: ActAsistAbrev == null && nullToAbsent
+          : Value(actAsistDesc),
+      actAsistAbrev: actAsistAbrev == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistAbrev),
-      TipActAsistId: TipActAsistId == null && nullToAbsent
+          : Value(actAsistAbrev),
+      tipActAsistId: tipActAsistId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipActAsistId),
-      ActAsistFlgHab: ActAsistFlgHab == null && nullToAbsent
+          : Value(tipActAsistId),
+      actAsistFlgHab: actAsistFlgHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistFlgHab),
-      ActAsistTipDat: ActAsistTipDat == null && nullToAbsent
+          : Value(actAsistFlgHab),
+      actAsistTipDat: actAsistTipDat == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistTipDat),
-      ActAsistValMin: ActAsistValMin == null && nullToAbsent
+          : Value(actAsistTipDat),
+      actAsistValMin: actAsistValMin == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistValMin),
-      ActAsistValMax: ActAsistValMax == null && nullToAbsent
+          : Value(actAsistValMin),
+      actAsistValMax: actAsistValMax == null && nullToAbsent
           ? const Value.absent()
-          : Value(ActAsistValMax),
-      UnidMedId: UnidMedId == null && nullToAbsent
+          : Value(actAsistValMax),
+      unidMedId: unidMedId == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(unidMedId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -10510,32 +10277,32 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   }
 
   ActAsist copyWith(
-          {int ActAsistId,
-          String ActAsistDesc,
-          String ActAsistAbrev,
-          int TipActAsistId,
-          int ActAsistFlgHab,
-          int ActAsistTipDat,
-          int ActAsistValMin,
-          int ActAsistValMax,
-          int UnidMedId,
-          int StatusId,
-          int UsuId,
+          {int actAsistId,
+          String actAsistDesc,
+          String actAsistAbrev,
+          int tipActAsistId,
+          int actAsistFlgHab,
+          int actAsistTipDat,
+          int actAsistValMin,
+          int actAsistValMax,
+          int unidMedId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       ActAsist(
-        ActAsistId: ActAsistId ?? this.ActAsistId,
-        ActAsistDesc: ActAsistDesc ?? this.ActAsistDesc,
-        ActAsistAbrev: ActAsistAbrev ?? this.ActAsistAbrev,
-        TipActAsistId: TipActAsistId ?? this.TipActAsistId,
-        ActAsistFlgHab: ActAsistFlgHab ?? this.ActAsistFlgHab,
-        ActAsistTipDat: ActAsistTipDat ?? this.ActAsistTipDat,
-        ActAsistValMin: ActAsistValMin ?? this.ActAsistValMin,
-        ActAsistValMax: ActAsistValMax ?? this.ActAsistValMax,
-        UnidMedId: UnidMedId ?? this.UnidMedId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        actAsistId: actAsistId ?? this.actAsistId,
+        actAsistDesc: actAsistDesc ?? this.actAsistDesc,
+        actAsistAbrev: actAsistAbrev ?? this.actAsistAbrev,
+        tipActAsistId: tipActAsistId ?? this.tipActAsistId,
+        actAsistFlgHab: actAsistFlgHab ?? this.actAsistFlgHab,
+        actAsistTipDat: actAsistTipDat ?? this.actAsistTipDat,
+        actAsistValMin: actAsistValMin ?? this.actAsistValMin,
+        actAsistValMax: actAsistValMax ?? this.actAsistValMax,
+        unidMedId: unidMedId ?? this.unidMedId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -10543,17 +10310,17 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   @override
   String toString() {
     return (StringBuffer('ActAsist(')
-          ..write('ActAsistId: $ActAsistId, ')
-          ..write('ActAsistDesc: $ActAsistDesc, ')
-          ..write('ActAsistAbrev: $ActAsistAbrev, ')
-          ..write('TipActAsistId: $TipActAsistId, ')
-          ..write('ActAsistFlgHab: $ActAsistFlgHab, ')
-          ..write('ActAsistTipDat: $ActAsistTipDat, ')
-          ..write('ActAsistValMin: $ActAsistValMin, ')
-          ..write('ActAsistValMax: $ActAsistValMax, ')
-          ..write('UnidMedId: $UnidMedId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('actAsistId: $actAsistId, ')
+          ..write('actAsistDesc: $actAsistDesc, ')
+          ..write('actAsistAbrev: $actAsistAbrev, ')
+          ..write('tipActAsistId: $tipActAsistId, ')
+          ..write('actAsistFlgHab: $actAsistFlgHab, ')
+          ..write('actAsistTipDat: $actAsistTipDat, ')
+          ..write('actAsistValMin: $actAsistValMin, ')
+          ..write('actAsistValMax: $actAsistValMax, ')
+          ..write('unidMedId: $unidMedId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -10563,27 +10330,27 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      ActAsistId.hashCode,
+      actAsistId.hashCode,
       $mrjc(
-          ActAsistDesc.hashCode,
+          actAsistDesc.hashCode,
           $mrjc(
-              ActAsistAbrev.hashCode,
+              actAsistAbrev.hashCode,
               $mrjc(
-                  TipActAsistId.hashCode,
+                  tipActAsistId.hashCode,
                   $mrjc(
-                      ActAsistFlgHab.hashCode,
+                      actAsistFlgHab.hashCode,
                       $mrjc(
-                          ActAsistTipDat.hashCode,
+                          actAsistTipDat.hashCode,
                           $mrjc(
-                              ActAsistValMin.hashCode,
+                              actAsistValMin.hashCode,
                               $mrjc(
-                                  ActAsistValMax.hashCode,
+                                  actAsistValMax.hashCode,
                                   $mrjc(
-                                      UnidMedId.hashCode,
+                                      unidMedId.hashCode,
                                       $mrjc(
-                                          StatusId.hashCode,
+                                          statusId.hashCode,
                                           $mrjc(
-                                              UsuId.hashCode,
+                                              usuId.hashCode,
                                               $mrjc(
                                                   createdAt.hashCode,
                                                   $mrjc(
@@ -10594,80 +10361,80 @@ class ActAsist extends DataClass implements Insertable<ActAsist> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ActAsist &&
-          other.ActAsistId == ActAsistId &&
-          other.ActAsistDesc == ActAsistDesc &&
-          other.ActAsistAbrev == ActAsistAbrev &&
-          other.TipActAsistId == TipActAsistId &&
-          other.ActAsistFlgHab == ActAsistFlgHab &&
-          other.ActAsistTipDat == ActAsistTipDat &&
-          other.ActAsistValMin == ActAsistValMin &&
-          other.ActAsistValMax == ActAsistValMax &&
-          other.UnidMedId == UnidMedId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.actAsistId == actAsistId &&
+          other.actAsistDesc == actAsistDesc &&
+          other.actAsistAbrev == actAsistAbrev &&
+          other.tipActAsistId == tipActAsistId &&
+          other.actAsistFlgHab == actAsistFlgHab &&
+          other.actAsistTipDat == actAsistTipDat &&
+          other.actAsistValMin == actAsistValMin &&
+          other.actAsistValMax == actAsistValMax &&
+          other.unidMedId == unidMedId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableActAsistCompanion extends UpdateCompanion<ActAsist> {
-  final Value<int> ActAsistId;
-  final Value<String> ActAsistDesc;
-  final Value<String> ActAsistAbrev;
-  final Value<int> TipActAsistId;
-  final Value<int> ActAsistFlgHab;
-  final Value<int> ActAsistTipDat;
-  final Value<int> ActAsistValMin;
-  final Value<int> ActAsistValMax;
-  final Value<int> UnidMedId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> actAsistId;
+  final Value<String> actAsistDesc;
+  final Value<String> actAsistAbrev;
+  final Value<int> tipActAsistId;
+  final Value<int> actAsistFlgHab;
+  final Value<int> actAsistTipDat;
+  final Value<int> actAsistValMin;
+  final Value<int> actAsistValMax;
+  final Value<int> unidMedId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableActAsistCompanion({
-    this.ActAsistId = const Value.absent(),
-    this.ActAsistDesc = const Value.absent(),
-    this.ActAsistAbrev = const Value.absent(),
-    this.TipActAsistId = const Value.absent(),
-    this.ActAsistFlgHab = const Value.absent(),
-    this.ActAsistTipDat = const Value.absent(),
-    this.ActAsistValMin = const Value.absent(),
-    this.ActAsistValMax = const Value.absent(),
-    this.UnidMedId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.actAsistId = const Value.absent(),
+    this.actAsistDesc = const Value.absent(),
+    this.actAsistAbrev = const Value.absent(),
+    this.tipActAsistId = const Value.absent(),
+    this.actAsistFlgHab = const Value.absent(),
+    this.actAsistTipDat = const Value.absent(),
+    this.actAsistValMin = const Value.absent(),
+    this.actAsistValMax = const Value.absent(),
+    this.unidMedId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableActAsistCompanion copyWith(
-      {Value<int> ActAsistId,
-      Value<String> ActAsistDesc,
-      Value<String> ActAsistAbrev,
-      Value<int> TipActAsistId,
-      Value<int> ActAsistFlgHab,
-      Value<int> ActAsistTipDat,
-      Value<int> ActAsistValMin,
-      Value<int> ActAsistValMax,
-      Value<int> UnidMedId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> actAsistId,
+      Value<String> actAsistDesc,
+      Value<String> actAsistAbrev,
+      Value<int> tipActAsistId,
+      Value<int> actAsistFlgHab,
+      Value<int> actAsistTipDat,
+      Value<int> actAsistValMin,
+      Value<int> actAsistValMax,
+      Value<int> unidMedId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableActAsistCompanion(
-      ActAsistId: ActAsistId ?? this.ActAsistId,
-      ActAsistDesc: ActAsistDesc ?? this.ActAsistDesc,
-      ActAsistAbrev: ActAsistAbrev ?? this.ActAsistAbrev,
-      TipActAsistId: TipActAsistId ?? this.TipActAsistId,
-      ActAsistFlgHab: ActAsistFlgHab ?? this.ActAsistFlgHab,
-      ActAsistTipDat: ActAsistTipDat ?? this.ActAsistTipDat,
-      ActAsistValMin: ActAsistValMin ?? this.ActAsistValMin,
-      ActAsistValMax: ActAsistValMax ?? this.ActAsistValMax,
-      UnidMedId: UnidMedId ?? this.UnidMedId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      actAsistId: actAsistId ?? this.actAsistId,
+      actAsistDesc: actAsistDesc ?? this.actAsistDesc,
+      actAsistAbrev: actAsistAbrev ?? this.actAsistAbrev,
+      tipActAsistId: tipActAsistId ?? this.tipActAsistId,
+      actAsistFlgHab: actAsistFlgHab ?? this.actAsistFlgHab,
+      actAsistTipDat: actAsistTipDat ?? this.actAsistTipDat,
+      actAsistValMin: actAsistValMin ?? this.actAsistValMin,
+      actAsistValMax: actAsistValMax ?? this.actAsistValMax,
+      unidMedId: unidMedId ?? this.unidMedId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -10680,23 +10447,23 @@ class $TableActAsistTable extends TableActAsist
   final GeneratedDatabase _db;
   final String _alias;
   $TableActAsistTable(this._db, [this._alias]);
-  final VerificationMeta _ActAsistIdMeta = const VerificationMeta('ActAsistId');
-  GeneratedIntColumn _ActAsistId;
+  final VerificationMeta _actAsistIdMeta = const VerificationMeta('actAsistId');
+  GeneratedIntColumn _actAsistId;
   @override
-  GeneratedIntColumn get ActAsistId => _ActAsistId ??= _constructActAsistId();
+  GeneratedIntColumn get actAsistId => _actAsistId ??= _constructActAsistId();
   GeneratedIntColumn _constructActAsistId() {
     return GeneratedIntColumn('act_asist_id', $tableName, false,
         hasAutoIncrement: true,
         declaredAsPrimaryKey: true,
-        $customConstraints: 'REFERENCES TipActAsist(TipActAsistId)');
+        $customConstraints: 'REFERENCES TipActAsist(tipActAsistId)');
   }
 
-  final VerificationMeta _ActAsistDescMeta =
-      const VerificationMeta('ActAsistDesc');
-  GeneratedTextColumn _ActAsistDesc;
+  final VerificationMeta _actAsistDescMeta =
+      const VerificationMeta('actAsistDesc');
+  GeneratedTextColumn _actAsistDesc;
   @override
-  GeneratedTextColumn get ActAsistDesc =>
-      _ActAsistDesc ??= _constructActAsistDesc();
+  GeneratedTextColumn get actAsistDesc =>
+      _actAsistDesc ??= _constructActAsistDesc();
   GeneratedTextColumn _constructActAsistDesc() {
     return GeneratedTextColumn(
       'act_asist_desc',
@@ -10705,12 +10472,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _ActAsistAbrevMeta =
-      const VerificationMeta('ActAsistAbrev');
-  GeneratedTextColumn _ActAsistAbrev;
+  final VerificationMeta _actAsistAbrevMeta =
+      const VerificationMeta('actAsistAbrev');
+  GeneratedTextColumn _actAsistAbrev;
   @override
-  GeneratedTextColumn get ActAsistAbrev =>
-      _ActAsistAbrev ??= _constructActAsistAbrev();
+  GeneratedTextColumn get actAsistAbrev =>
+      _actAsistAbrev ??= _constructActAsistAbrev();
   GeneratedTextColumn _constructActAsistAbrev() {
     return GeneratedTextColumn(
       'act_asist_abrev',
@@ -10719,12 +10486,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _TipActAsistIdMeta =
-      const VerificationMeta('TipActAsistId');
-  GeneratedIntColumn _TipActAsistId;
+  final VerificationMeta _tipActAsistIdMeta =
+      const VerificationMeta('tipActAsistId');
+  GeneratedIntColumn _tipActAsistId;
   @override
-  GeneratedIntColumn get TipActAsistId =>
-      _TipActAsistId ??= _constructTipActAsistId();
+  GeneratedIntColumn get tipActAsistId =>
+      _tipActAsistId ??= _constructTipActAsistId();
   GeneratedIntColumn _constructTipActAsistId() {
     return GeneratedIntColumn(
       'tip_act_asist_id',
@@ -10733,12 +10500,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _ActAsistFlgHabMeta =
-      const VerificationMeta('ActAsistFlgHab');
-  GeneratedIntColumn _ActAsistFlgHab;
+  final VerificationMeta _actAsistFlgHabMeta =
+      const VerificationMeta('actAsistFlgHab');
+  GeneratedIntColumn _actAsistFlgHab;
   @override
-  GeneratedIntColumn get ActAsistFlgHab =>
-      _ActAsistFlgHab ??= _constructActAsistFlgHab();
+  GeneratedIntColumn get actAsistFlgHab =>
+      _actAsistFlgHab ??= _constructActAsistFlgHab();
   GeneratedIntColumn _constructActAsistFlgHab() {
     return GeneratedIntColumn(
       'act_asist_flg_hab',
@@ -10747,12 +10514,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _ActAsistTipDatMeta =
-      const VerificationMeta('ActAsistTipDat');
-  GeneratedIntColumn _ActAsistTipDat;
+  final VerificationMeta _actAsistTipDatMeta =
+      const VerificationMeta('actAsistTipDat');
+  GeneratedIntColumn _actAsistTipDat;
   @override
-  GeneratedIntColumn get ActAsistTipDat =>
-      _ActAsistTipDat ??= _constructActAsistTipDat();
+  GeneratedIntColumn get actAsistTipDat =>
+      _actAsistTipDat ??= _constructActAsistTipDat();
   GeneratedIntColumn _constructActAsistTipDat() {
     return GeneratedIntColumn(
       'act_asist_tip_dat',
@@ -10761,12 +10528,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _ActAsistValMinMeta =
-      const VerificationMeta('ActAsistValMin');
-  GeneratedIntColumn _ActAsistValMin;
+  final VerificationMeta _actAsistValMinMeta =
+      const VerificationMeta('actAsistValMin');
+  GeneratedIntColumn _actAsistValMin;
   @override
-  GeneratedIntColumn get ActAsistValMin =>
-      _ActAsistValMin ??= _constructActAsistValMin();
+  GeneratedIntColumn get actAsistValMin =>
+      _actAsistValMin ??= _constructActAsistValMin();
   GeneratedIntColumn _constructActAsistValMin() {
     return GeneratedIntColumn(
       'act_asist_val_min',
@@ -10775,12 +10542,12 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _ActAsistValMaxMeta =
-      const VerificationMeta('ActAsistValMax');
-  GeneratedIntColumn _ActAsistValMax;
+  final VerificationMeta _actAsistValMaxMeta =
+      const VerificationMeta('actAsistValMax');
+  GeneratedIntColumn _actAsistValMax;
   @override
-  GeneratedIntColumn get ActAsistValMax =>
-      _ActAsistValMax ??= _constructActAsistValMax();
+  GeneratedIntColumn get actAsistValMax =>
+      _actAsistValMax ??= _constructActAsistValMax();
   GeneratedIntColumn _constructActAsistValMax() {
     return GeneratedIntColumn(
       'act_asist_val_max',
@@ -10789,31 +10556,31 @@ class $TableActAsistTable extends TableActAsist
     );
   }
 
-  final VerificationMeta _UnidMedIdMeta = const VerificationMeta('UnidMedId');
-  GeneratedIntColumn _UnidMedId;
+  final VerificationMeta _unidMedIdMeta = const VerificationMeta('unidMedId');
+  GeneratedIntColumn _unidMedId;
   @override
-  GeneratedIntColumn get UnidMedId => _UnidMedId ??= _constructUnidMedId();
+  GeneratedIntColumn get unidMedId => _unidMedId ??= _constructUnidMedId();
   GeneratedIntColumn _constructUnidMedId() {
     return GeneratedIntColumn('unid_med_id', $tableName, false,
-        $customConstraints: 'REFERENCES UnidMed(UnidMedId)');
+        $customConstraints: 'REFERENCES UnidMed(unidMedId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -10854,17 +10621,17 @@ class $TableActAsistTable extends TableActAsist
 
   @override
   List<GeneratedColumn> get $columns => [
-        ActAsistId,
-        ActAsistDesc,
-        ActAsistAbrev,
-        TipActAsistId,
-        ActAsistFlgHab,
-        ActAsistTipDat,
-        ActAsistValMin,
-        ActAsistValMax,
-        UnidMedId,
-        StatusId,
-        UsuId,
+        actAsistId,
+        actAsistDesc,
+        actAsistAbrev,
+        tipActAsistId,
+        actAsistFlgHab,
+        actAsistTipDat,
+        actAsistValMin,
+        actAsistValMax,
+        unidMedId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -10879,85 +10646,85 @@ class $TableActAsistTable extends TableActAsist
   VerificationContext validateIntegrity(TableActAsistCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.ActAsistId.present) {
-      context.handle(_ActAsistIdMeta,
-          ActAsistId.isAcceptableValue(d.ActAsistId.value, _ActAsistIdMeta));
-    } else if (ActAsistId.isRequired && isInserting) {
-      context.missing(_ActAsistIdMeta);
+    if (d.actAsistId.present) {
+      context.handle(_actAsistIdMeta,
+          actAsistId.isAcceptableValue(d.actAsistId.value, _actAsistIdMeta));
+    } else if (actAsistId.isRequired && isInserting) {
+      context.missing(_actAsistIdMeta);
     }
-    if (d.ActAsistDesc.present) {
+    if (d.actAsistDesc.present) {
       context.handle(
-          _ActAsistDescMeta,
-          ActAsistDesc.isAcceptableValue(
-              d.ActAsistDesc.value, _ActAsistDescMeta));
-    } else if (ActAsistDesc.isRequired && isInserting) {
-      context.missing(_ActAsistDescMeta);
+          _actAsistDescMeta,
+          actAsistDesc.isAcceptableValue(
+              d.actAsistDesc.value, _actAsistDescMeta));
+    } else if (actAsistDesc.isRequired && isInserting) {
+      context.missing(_actAsistDescMeta);
     }
-    if (d.ActAsistAbrev.present) {
+    if (d.actAsistAbrev.present) {
       context.handle(
-          _ActAsistAbrevMeta,
-          ActAsistAbrev.isAcceptableValue(
-              d.ActAsistAbrev.value, _ActAsistAbrevMeta));
-    } else if (ActAsistAbrev.isRequired && isInserting) {
-      context.missing(_ActAsistAbrevMeta);
+          _actAsistAbrevMeta,
+          actAsistAbrev.isAcceptableValue(
+              d.actAsistAbrev.value, _actAsistAbrevMeta));
+    } else if (actAsistAbrev.isRequired && isInserting) {
+      context.missing(_actAsistAbrevMeta);
     }
-    if (d.TipActAsistId.present) {
+    if (d.tipActAsistId.present) {
       context.handle(
-          _TipActAsistIdMeta,
-          TipActAsistId.isAcceptableValue(
-              d.TipActAsistId.value, _TipActAsistIdMeta));
-    } else if (TipActAsistId.isRequired && isInserting) {
-      context.missing(_TipActAsistIdMeta);
+          _tipActAsistIdMeta,
+          tipActAsistId.isAcceptableValue(
+              d.tipActAsistId.value, _tipActAsistIdMeta));
+    } else if (tipActAsistId.isRequired && isInserting) {
+      context.missing(_tipActAsistIdMeta);
     }
-    if (d.ActAsistFlgHab.present) {
+    if (d.actAsistFlgHab.present) {
       context.handle(
-          _ActAsistFlgHabMeta,
-          ActAsistFlgHab.isAcceptableValue(
-              d.ActAsistFlgHab.value, _ActAsistFlgHabMeta));
-    } else if (ActAsistFlgHab.isRequired && isInserting) {
-      context.missing(_ActAsistFlgHabMeta);
+          _actAsistFlgHabMeta,
+          actAsistFlgHab.isAcceptableValue(
+              d.actAsistFlgHab.value, _actAsistFlgHabMeta));
+    } else if (actAsistFlgHab.isRequired && isInserting) {
+      context.missing(_actAsistFlgHabMeta);
     }
-    if (d.ActAsistTipDat.present) {
+    if (d.actAsistTipDat.present) {
       context.handle(
-          _ActAsistTipDatMeta,
-          ActAsistTipDat.isAcceptableValue(
-              d.ActAsistTipDat.value, _ActAsistTipDatMeta));
-    } else if (ActAsistTipDat.isRequired && isInserting) {
-      context.missing(_ActAsistTipDatMeta);
+          _actAsistTipDatMeta,
+          actAsistTipDat.isAcceptableValue(
+              d.actAsistTipDat.value, _actAsistTipDatMeta));
+    } else if (actAsistTipDat.isRequired && isInserting) {
+      context.missing(_actAsistTipDatMeta);
     }
-    if (d.ActAsistValMin.present) {
+    if (d.actAsistValMin.present) {
       context.handle(
-          _ActAsistValMinMeta,
-          ActAsistValMin.isAcceptableValue(
-              d.ActAsistValMin.value, _ActAsistValMinMeta));
-    } else if (ActAsistValMin.isRequired && isInserting) {
-      context.missing(_ActAsistValMinMeta);
+          _actAsistValMinMeta,
+          actAsistValMin.isAcceptableValue(
+              d.actAsistValMin.value, _actAsistValMinMeta));
+    } else if (actAsistValMin.isRequired && isInserting) {
+      context.missing(_actAsistValMinMeta);
     }
-    if (d.ActAsistValMax.present) {
+    if (d.actAsistValMax.present) {
       context.handle(
-          _ActAsistValMaxMeta,
-          ActAsistValMax.isAcceptableValue(
-              d.ActAsistValMax.value, _ActAsistValMaxMeta));
-    } else if (ActAsistValMax.isRequired && isInserting) {
-      context.missing(_ActAsistValMaxMeta);
+          _actAsistValMaxMeta,
+          actAsistValMax.isAcceptableValue(
+              d.actAsistValMax.value, _actAsistValMaxMeta));
+    } else if (actAsistValMax.isRequired && isInserting) {
+      context.missing(_actAsistValMaxMeta);
     }
-    if (d.UnidMedId.present) {
-      context.handle(_UnidMedIdMeta,
-          UnidMedId.isAcceptableValue(d.UnidMedId.value, _UnidMedIdMeta));
-    } else if (UnidMedId.isRequired && isInserting) {
-      context.missing(_UnidMedIdMeta);
+    if (d.unidMedId.present) {
+      context.handle(_unidMedIdMeta,
+          unidMedId.isAcceptableValue(d.unidMedId.value, _unidMedIdMeta));
+    } else if (unidMedId.isRequired && isInserting) {
+      context.missing(_unidMedIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -10981,7 +10748,7 @@ class $TableActAsistTable extends TableActAsist
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {ActAsistId};
+  Set<GeneratedColumn> get $primaryKey => {actAsistId};
   @override
   ActAsist map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -10991,40 +10758,40 @@ class $TableActAsistTable extends TableActAsist
   @override
   Map<String, Variable> entityToSql(TableActAsistCompanion d) {
     final map = <String, Variable>{};
-    if (d.ActAsistId.present) {
-      map['act_asist_id'] = Variable<int, IntType>(d.ActAsistId.value);
+    if (d.actAsistId.present) {
+      map['act_asist_id'] = Variable<int, IntType>(d.actAsistId.value);
     }
-    if (d.ActAsistDesc.present) {
+    if (d.actAsistDesc.present) {
       map['act_asist_desc'] =
-          Variable<String, StringType>(d.ActAsistDesc.value);
+          Variable<String, StringType>(d.actAsistDesc.value);
     }
-    if (d.ActAsistAbrev.present) {
+    if (d.actAsistAbrev.present) {
       map['act_asist_abrev'] =
-          Variable<String, StringType>(d.ActAsistAbrev.value);
+          Variable<String, StringType>(d.actAsistAbrev.value);
     }
-    if (d.TipActAsistId.present) {
-      map['tip_act_asist_id'] = Variable<int, IntType>(d.TipActAsistId.value);
+    if (d.tipActAsistId.present) {
+      map['tip_act_asist_id'] = Variable<int, IntType>(d.tipActAsistId.value);
     }
-    if (d.ActAsistFlgHab.present) {
-      map['act_asist_flg_hab'] = Variable<int, IntType>(d.ActAsistFlgHab.value);
+    if (d.actAsistFlgHab.present) {
+      map['act_asist_flg_hab'] = Variable<int, IntType>(d.actAsistFlgHab.value);
     }
-    if (d.ActAsistTipDat.present) {
-      map['act_asist_tip_dat'] = Variable<int, IntType>(d.ActAsistTipDat.value);
+    if (d.actAsistTipDat.present) {
+      map['act_asist_tip_dat'] = Variable<int, IntType>(d.actAsistTipDat.value);
     }
-    if (d.ActAsistValMin.present) {
-      map['act_asist_val_min'] = Variable<int, IntType>(d.ActAsistValMin.value);
+    if (d.actAsistValMin.present) {
+      map['act_asist_val_min'] = Variable<int, IntType>(d.actAsistValMin.value);
     }
-    if (d.ActAsistValMax.present) {
-      map['act_asist_val_max'] = Variable<int, IntType>(d.ActAsistValMax.value);
+    if (d.actAsistValMax.present) {
+      map['act_asist_val_max'] = Variable<int, IntType>(d.actAsistValMax.value);
     }
-    if (d.UnidMedId.present) {
-      map['unid_med_id'] = Variable<int, IntType>(d.UnidMedId.value);
+    if (d.unidMedId.present) {
+      map['unid_med_id'] = Variable<int, IntType>(d.unidMedId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -11045,32 +10812,32 @@ class $TableActAsistTable extends TableActAsist
 }
 
 class AtnClin extends DataClass implements Insertable<AtnClin> {
-  final int AntClinId;
-  final String AntClinDesc;
-  final int AntClinFlgHab;
-  final int TipAntClinId;
-  final int AntClinAlert;
-  final int AntClinAlertDsc;
-  final String AntClinSexo;
-  final int AntClinFlgFactRiesg;
-  final int AntCliFlgHabRep;
-  final int StatusId;
-  final int UsuId;
+  final int antClinId;
+  final String antClinDesc;
+  final int antClinFlgHab;
+  final int tipAntClinId;
+  final int antClinAlert;
+  final int antClinAlertDsc;
+  final String antClinSexo;
+  final int antClinFlgFactRiesg;
+  final int antCliFlgHabRep;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   AtnClin(
-      {@required this.AntClinId,
-      @required this.AntClinDesc,
-      @required this.AntClinFlgHab,
-      @required this.TipAntClinId,
-      @required this.AntClinAlert,
-      @required this.AntClinAlertDsc,
-      @required this.AntClinSexo,
-      @required this.AntClinFlgFactRiesg,
-      @required this.AntCliFlgHabRep,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.antClinId,
+      @required this.antClinDesc,
+      @required this.antClinFlgHab,
+      @required this.tipAntClinId,
+      @required this.antClinAlert,
+      @required this.antClinAlertDsc,
+      @required this.antClinSexo,
+      @required this.antClinFlgFactRiesg,
+      @required this.antCliFlgHabRep,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -11081,27 +10848,27 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return AtnClin(
-      AntClinId: intType
+      antClinId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}ant_clin_id']),
-      AntClinDesc: stringType
+      antClinDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}ant_clin_desc']),
-      AntClinFlgHab: intType
+      antClinFlgHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}ant_clin_flg_hab']),
-      TipAntClinId: intType
+      tipAntClinId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}tip_ant_clin_id']),
-      AntClinAlert: intType
+      antClinAlert: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}ant_clin_alert']),
-      AntClinAlertDsc: intType.mapFromDatabaseResponse(
+      antClinAlertDsc: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ant_clin_alert_dsc']),
-      AntClinSexo: stringType
+      antClinSexo: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}ant_clin_sexo']),
-      AntClinFlgFactRiesg: intType.mapFromDatabaseResponse(
+      antClinFlgFactRiesg: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ant_clin_flg_fact_riesg']),
-      AntCliFlgHabRep: intType.mapFromDatabaseResponse(
+      antCliFlgHabRep: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}ant_cli_flg_hab_rep']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -11113,18 +10880,18 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   factory AtnClin.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return AtnClin(
-      AntClinId: serializer.fromJson<int>(json['AntClinId']),
-      AntClinDesc: serializer.fromJson<String>(json['AntClinDesc']),
-      AntClinFlgHab: serializer.fromJson<int>(json['AntClinFlgHab']),
-      TipAntClinId: serializer.fromJson<int>(json['TipAntClinId']),
-      AntClinAlert: serializer.fromJson<int>(json['AntClinAlert']),
-      AntClinAlertDsc: serializer.fromJson<int>(json['AntClinAlertDsc']),
-      AntClinSexo: serializer.fromJson<String>(json['AntClinSexo']),
-      AntClinFlgFactRiesg:
-          serializer.fromJson<int>(json['AntClinFlgFactRiesg']),
-      AntCliFlgHabRep: serializer.fromJson<int>(json['AntCliFlgHabRep']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      antClinId: serializer.fromJson<int>(json['antClinId']),
+      antClinDesc: serializer.fromJson<String>(json['antClinDesc']),
+      antClinFlgHab: serializer.fromJson<int>(json['antClinFlgHab']),
+      tipAntClinId: serializer.fromJson<int>(json['tipAntClinId']),
+      antClinAlert: serializer.fromJson<int>(json['antClinAlert']),
+      antClinAlertDsc: serializer.fromJson<int>(json['antClinAlertDsc']),
+      antClinSexo: serializer.fromJson<String>(json['antClinSexo']),
+      antClinFlgFactRiesg:
+          serializer.fromJson<int>(json['antClinFlgFactRiesg']),
+      antCliFlgHabRep: serializer.fromJson<int>(json['antCliFlgHabRep']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -11134,17 +10901,17 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'AntClinId': serializer.toJson<int>(AntClinId),
-      'AntClinDesc': serializer.toJson<String>(AntClinDesc),
-      'AntClinFlgHab': serializer.toJson<int>(AntClinFlgHab),
-      'TipAntClinId': serializer.toJson<int>(TipAntClinId),
-      'AntClinAlert': serializer.toJson<int>(AntClinAlert),
-      'AntClinAlertDsc': serializer.toJson<int>(AntClinAlertDsc),
-      'AntClinSexo': serializer.toJson<String>(AntClinSexo),
-      'AntClinFlgFactRiesg': serializer.toJson<int>(AntClinFlgFactRiesg),
-      'AntCliFlgHabRep': serializer.toJson<int>(AntCliFlgHabRep),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'antClinId': serializer.toJson<int>(antClinId),
+      'antClinDesc': serializer.toJson<String>(antClinDesc),
+      'antClinFlgHab': serializer.toJson<int>(antClinFlgHab),
+      'tipAntClinId': serializer.toJson<int>(tipAntClinId),
+      'antClinAlert': serializer.toJson<int>(antClinAlert),
+      'antClinAlertDsc': serializer.toJson<int>(antClinAlertDsc),
+      'antClinSexo': serializer.toJson<String>(antClinSexo),
+      'antClinFlgFactRiesg': serializer.toJson<int>(antClinFlgFactRiesg),
+      'antCliFlgHabRep': serializer.toJson<int>(antCliFlgHabRep),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -11154,38 +10921,38 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   @override
   T createCompanion<T extends UpdateCompanion<AtnClin>>(bool nullToAbsent) {
     return TableAtnClinCompanion(
-      AntClinId: AntClinId == null && nullToAbsent
+      antClinId: antClinId == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinId),
-      AntClinDesc: AntClinDesc == null && nullToAbsent
+          : Value(antClinId),
+      antClinDesc: antClinDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinDesc),
-      AntClinFlgHab: AntClinFlgHab == null && nullToAbsent
+          : Value(antClinDesc),
+      antClinFlgHab: antClinFlgHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinFlgHab),
-      TipAntClinId: TipAntClinId == null && nullToAbsent
+          : Value(antClinFlgHab),
+      tipAntClinId: tipAntClinId == null && nullToAbsent
           ? const Value.absent()
-          : Value(TipAntClinId),
-      AntClinAlert: AntClinAlert == null && nullToAbsent
+          : Value(tipAntClinId),
+      antClinAlert: antClinAlert == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinAlert),
-      AntClinAlertDsc: AntClinAlertDsc == null && nullToAbsent
+          : Value(antClinAlert),
+      antClinAlertDsc: antClinAlertDsc == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinAlertDsc),
-      AntClinSexo: AntClinSexo == null && nullToAbsent
+          : Value(antClinAlertDsc),
+      antClinSexo: antClinSexo == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinSexo),
-      AntClinFlgFactRiesg: AntClinFlgFactRiesg == null && nullToAbsent
+          : Value(antClinSexo),
+      antClinFlgFactRiesg: antClinFlgFactRiesg == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntClinFlgFactRiesg),
-      AntCliFlgHabRep: AntCliFlgHabRep == null && nullToAbsent
+          : Value(antClinFlgFactRiesg),
+      antCliFlgHabRep: antCliFlgHabRep == null && nullToAbsent
           ? const Value.absent()
-          : Value(AntCliFlgHabRep),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(antCliFlgHabRep),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -11199,32 +10966,32 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   }
 
   AtnClin copyWith(
-          {int AntClinId,
-          String AntClinDesc,
-          int AntClinFlgHab,
-          int TipAntClinId,
-          int AntClinAlert,
-          int AntClinAlertDsc,
-          String AntClinSexo,
-          int AntClinFlgFactRiesg,
-          int AntCliFlgHabRep,
-          int StatusId,
-          int UsuId,
+          {int antClinId,
+          String antClinDesc,
+          int antClinFlgHab,
+          int tipAntClinId,
+          int antClinAlert,
+          int antClinAlertDsc,
+          String antClinSexo,
+          int antClinFlgFactRiesg,
+          int antCliFlgHabRep,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       AtnClin(
-        AntClinId: AntClinId ?? this.AntClinId,
-        AntClinDesc: AntClinDesc ?? this.AntClinDesc,
-        AntClinFlgHab: AntClinFlgHab ?? this.AntClinFlgHab,
-        TipAntClinId: TipAntClinId ?? this.TipAntClinId,
-        AntClinAlert: AntClinAlert ?? this.AntClinAlert,
-        AntClinAlertDsc: AntClinAlertDsc ?? this.AntClinAlertDsc,
-        AntClinSexo: AntClinSexo ?? this.AntClinSexo,
-        AntClinFlgFactRiesg: AntClinFlgFactRiesg ?? this.AntClinFlgFactRiesg,
-        AntCliFlgHabRep: AntCliFlgHabRep ?? this.AntCliFlgHabRep,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        antClinId: antClinId ?? this.antClinId,
+        antClinDesc: antClinDesc ?? this.antClinDesc,
+        antClinFlgHab: antClinFlgHab ?? this.antClinFlgHab,
+        tipAntClinId: tipAntClinId ?? this.tipAntClinId,
+        antClinAlert: antClinAlert ?? this.antClinAlert,
+        antClinAlertDsc: antClinAlertDsc ?? this.antClinAlertDsc,
+        antClinSexo: antClinSexo ?? this.antClinSexo,
+        antClinFlgFactRiesg: antClinFlgFactRiesg ?? this.antClinFlgFactRiesg,
+        antCliFlgHabRep: antCliFlgHabRep ?? this.antCliFlgHabRep,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -11232,17 +10999,17 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   @override
   String toString() {
     return (StringBuffer('AtnClin(')
-          ..write('AntClinId: $AntClinId, ')
-          ..write('AntClinDesc: $AntClinDesc, ')
-          ..write('AntClinFlgHab: $AntClinFlgHab, ')
-          ..write('TipAntClinId: $TipAntClinId, ')
-          ..write('AntClinAlert: $AntClinAlert, ')
-          ..write('AntClinAlertDsc: $AntClinAlertDsc, ')
-          ..write('AntClinSexo: $AntClinSexo, ')
-          ..write('AntClinFlgFactRiesg: $AntClinFlgFactRiesg, ')
-          ..write('AntCliFlgHabRep: $AntCliFlgHabRep, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('antClinId: $antClinId, ')
+          ..write('antClinDesc: $antClinDesc, ')
+          ..write('antClinFlgHab: $antClinFlgHab, ')
+          ..write('tipAntClinId: $tipAntClinId, ')
+          ..write('antClinAlert: $antClinAlert, ')
+          ..write('antClinAlertDsc: $antClinAlertDsc, ')
+          ..write('antClinSexo: $antClinSexo, ')
+          ..write('antClinFlgFactRiesg: $antClinFlgFactRiesg, ')
+          ..write('antCliFlgHabRep: $antCliFlgHabRep, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -11252,27 +11019,27 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      AntClinId.hashCode,
+      antClinId.hashCode,
       $mrjc(
-          AntClinDesc.hashCode,
+          antClinDesc.hashCode,
           $mrjc(
-              AntClinFlgHab.hashCode,
+              antClinFlgHab.hashCode,
               $mrjc(
-                  TipAntClinId.hashCode,
+                  tipAntClinId.hashCode,
                   $mrjc(
-                      AntClinAlert.hashCode,
+                      antClinAlert.hashCode,
                       $mrjc(
-                          AntClinAlertDsc.hashCode,
+                          antClinAlertDsc.hashCode,
                           $mrjc(
-                              AntClinSexo.hashCode,
+                              antClinSexo.hashCode,
                               $mrjc(
-                                  AntClinFlgFactRiesg.hashCode,
+                                  antClinFlgFactRiesg.hashCode,
                                   $mrjc(
-                                      AntCliFlgHabRep.hashCode,
+                                      antCliFlgHabRep.hashCode,
                                       $mrjc(
-                                          StatusId.hashCode,
+                                          statusId.hashCode,
                                           $mrjc(
-                                              UsuId.hashCode,
+                                              usuId.hashCode,
                                               $mrjc(
                                                   createdAt.hashCode,
                                                   $mrjc(
@@ -11283,80 +11050,80 @@ class AtnClin extends DataClass implements Insertable<AtnClin> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is AtnClin &&
-          other.AntClinId == AntClinId &&
-          other.AntClinDesc == AntClinDesc &&
-          other.AntClinFlgHab == AntClinFlgHab &&
-          other.TipAntClinId == TipAntClinId &&
-          other.AntClinAlert == AntClinAlert &&
-          other.AntClinAlertDsc == AntClinAlertDsc &&
-          other.AntClinSexo == AntClinSexo &&
-          other.AntClinFlgFactRiesg == AntClinFlgFactRiesg &&
-          other.AntCliFlgHabRep == AntCliFlgHabRep &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.antClinId == antClinId &&
+          other.antClinDesc == antClinDesc &&
+          other.antClinFlgHab == antClinFlgHab &&
+          other.tipAntClinId == tipAntClinId &&
+          other.antClinAlert == antClinAlert &&
+          other.antClinAlertDsc == antClinAlertDsc &&
+          other.antClinSexo == antClinSexo &&
+          other.antClinFlgFactRiesg == antClinFlgFactRiesg &&
+          other.antCliFlgHabRep == antCliFlgHabRep &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableAtnClinCompanion extends UpdateCompanion<AtnClin> {
-  final Value<int> AntClinId;
-  final Value<String> AntClinDesc;
-  final Value<int> AntClinFlgHab;
-  final Value<int> TipAntClinId;
-  final Value<int> AntClinAlert;
-  final Value<int> AntClinAlertDsc;
-  final Value<String> AntClinSexo;
-  final Value<int> AntClinFlgFactRiesg;
-  final Value<int> AntCliFlgHabRep;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> antClinId;
+  final Value<String> antClinDesc;
+  final Value<int> antClinFlgHab;
+  final Value<int> tipAntClinId;
+  final Value<int> antClinAlert;
+  final Value<int> antClinAlertDsc;
+  final Value<String> antClinSexo;
+  final Value<int> antClinFlgFactRiesg;
+  final Value<int> antCliFlgHabRep;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableAtnClinCompanion({
-    this.AntClinId = const Value.absent(),
-    this.AntClinDesc = const Value.absent(),
-    this.AntClinFlgHab = const Value.absent(),
-    this.TipAntClinId = const Value.absent(),
-    this.AntClinAlert = const Value.absent(),
-    this.AntClinAlertDsc = const Value.absent(),
-    this.AntClinSexo = const Value.absent(),
-    this.AntClinFlgFactRiesg = const Value.absent(),
-    this.AntCliFlgHabRep = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.antClinId = const Value.absent(),
+    this.antClinDesc = const Value.absent(),
+    this.antClinFlgHab = const Value.absent(),
+    this.tipAntClinId = const Value.absent(),
+    this.antClinAlert = const Value.absent(),
+    this.antClinAlertDsc = const Value.absent(),
+    this.antClinSexo = const Value.absent(),
+    this.antClinFlgFactRiesg = const Value.absent(),
+    this.antCliFlgHabRep = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableAtnClinCompanion copyWith(
-      {Value<int> AntClinId,
-      Value<String> AntClinDesc,
-      Value<int> AntClinFlgHab,
-      Value<int> TipAntClinId,
-      Value<int> AntClinAlert,
-      Value<int> AntClinAlertDsc,
-      Value<String> AntClinSexo,
-      Value<int> AntClinFlgFactRiesg,
-      Value<int> AntCliFlgHabRep,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> antClinId,
+      Value<String> antClinDesc,
+      Value<int> antClinFlgHab,
+      Value<int> tipAntClinId,
+      Value<int> antClinAlert,
+      Value<int> antClinAlertDsc,
+      Value<String> antClinSexo,
+      Value<int> antClinFlgFactRiesg,
+      Value<int> antCliFlgHabRep,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableAtnClinCompanion(
-      AntClinId: AntClinId ?? this.AntClinId,
-      AntClinDesc: AntClinDesc ?? this.AntClinDesc,
-      AntClinFlgHab: AntClinFlgHab ?? this.AntClinFlgHab,
-      TipAntClinId: TipAntClinId ?? this.TipAntClinId,
-      AntClinAlert: AntClinAlert ?? this.AntClinAlert,
-      AntClinAlertDsc: AntClinAlertDsc ?? this.AntClinAlertDsc,
-      AntClinSexo: AntClinSexo ?? this.AntClinSexo,
-      AntClinFlgFactRiesg: AntClinFlgFactRiesg ?? this.AntClinFlgFactRiesg,
-      AntCliFlgHabRep: AntCliFlgHabRep ?? this.AntCliFlgHabRep,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      antClinId: antClinId ?? this.antClinId,
+      antClinDesc: antClinDesc ?? this.antClinDesc,
+      antClinFlgHab: antClinFlgHab ?? this.antClinFlgHab,
+      tipAntClinId: tipAntClinId ?? this.tipAntClinId,
+      antClinAlert: antClinAlert ?? this.antClinAlert,
+      antClinAlertDsc: antClinAlertDsc ?? this.antClinAlertDsc,
+      antClinSexo: antClinSexo ?? this.antClinSexo,
+      antClinFlgFactRiesg: antClinFlgFactRiesg ?? this.antClinFlgFactRiesg,
+      antCliFlgHabRep: antCliFlgHabRep ?? this.antCliFlgHabRep,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -11369,21 +11136,21 @@ class $TableAtnClinTable extends TableAtnClin
   final GeneratedDatabase _db;
   final String _alias;
   $TableAtnClinTable(this._db, [this._alias]);
-  final VerificationMeta _AntClinIdMeta = const VerificationMeta('AntClinId');
-  GeneratedIntColumn _AntClinId;
+  final VerificationMeta _antClinIdMeta = const VerificationMeta('antClinId');
+  GeneratedIntColumn _antClinId;
   @override
-  GeneratedIntColumn get AntClinId => _AntClinId ??= _constructAntClinId();
+  GeneratedIntColumn get antClinId => _antClinId ??= _constructAntClinId();
   GeneratedIntColumn _constructAntClinId() {
     return GeneratedIntColumn('ant_clin_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _AntClinDescMeta =
-      const VerificationMeta('AntClinDesc');
-  GeneratedTextColumn _AntClinDesc;
+  final VerificationMeta _antClinDescMeta =
+      const VerificationMeta('antClinDesc');
+  GeneratedTextColumn _antClinDesc;
   @override
-  GeneratedTextColumn get AntClinDesc =>
-      _AntClinDesc ??= _constructAntClinDesc();
+  GeneratedTextColumn get antClinDesc =>
+      _antClinDesc ??= _constructAntClinDesc();
   GeneratedTextColumn _constructAntClinDesc() {
     return GeneratedTextColumn(
       'ant_clin_desc',
@@ -11392,12 +11159,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntClinFlgHabMeta =
-      const VerificationMeta('AntClinFlgHab');
-  GeneratedIntColumn _AntClinFlgHab;
+  final VerificationMeta _antClinFlgHabMeta =
+      const VerificationMeta('antClinFlgHab');
+  GeneratedIntColumn _antClinFlgHab;
   @override
-  GeneratedIntColumn get AntClinFlgHab =>
-      _AntClinFlgHab ??= _constructAntClinFlgHab();
+  GeneratedIntColumn get antClinFlgHab =>
+      _antClinFlgHab ??= _constructAntClinFlgHab();
   GeneratedIntColumn _constructAntClinFlgHab() {
     return GeneratedIntColumn(
       'ant_clin_flg_hab',
@@ -11406,12 +11173,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _TipAntClinIdMeta =
-      const VerificationMeta('TipAntClinId');
-  GeneratedIntColumn _TipAntClinId;
+  final VerificationMeta _tipAntClinIdMeta =
+      const VerificationMeta('tipAntClinId');
+  GeneratedIntColumn _tipAntClinId;
   @override
-  GeneratedIntColumn get TipAntClinId =>
-      _TipAntClinId ??= _constructTipAntClinId();
+  GeneratedIntColumn get tipAntClinId =>
+      _tipAntClinId ??= _constructTipAntClinId();
   GeneratedIntColumn _constructTipAntClinId() {
     return GeneratedIntColumn(
       'tip_ant_clin_id',
@@ -11420,12 +11187,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntClinAlertMeta =
-      const VerificationMeta('AntClinAlert');
-  GeneratedIntColumn _AntClinAlert;
+  final VerificationMeta _antClinAlertMeta =
+      const VerificationMeta('antClinAlert');
+  GeneratedIntColumn _antClinAlert;
   @override
-  GeneratedIntColumn get AntClinAlert =>
-      _AntClinAlert ??= _constructAntClinAlert();
+  GeneratedIntColumn get antClinAlert =>
+      _antClinAlert ??= _constructAntClinAlert();
   GeneratedIntColumn _constructAntClinAlert() {
     return GeneratedIntColumn(
       'ant_clin_alert',
@@ -11434,12 +11201,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntClinAlertDscMeta =
-      const VerificationMeta('AntClinAlertDsc');
-  GeneratedIntColumn _AntClinAlertDsc;
+  final VerificationMeta _antClinAlertDscMeta =
+      const VerificationMeta('antClinAlertDsc');
+  GeneratedIntColumn _antClinAlertDsc;
   @override
-  GeneratedIntColumn get AntClinAlertDsc =>
-      _AntClinAlertDsc ??= _constructAntClinAlertDsc();
+  GeneratedIntColumn get antClinAlertDsc =>
+      _antClinAlertDsc ??= _constructAntClinAlertDsc();
   GeneratedIntColumn _constructAntClinAlertDsc() {
     return GeneratedIntColumn(
       'ant_clin_alert_dsc',
@@ -11448,12 +11215,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntClinSexoMeta =
-      const VerificationMeta('AntClinSexo');
-  GeneratedTextColumn _AntClinSexo;
+  final VerificationMeta _antClinSexoMeta =
+      const VerificationMeta('antClinSexo');
+  GeneratedTextColumn _antClinSexo;
   @override
-  GeneratedTextColumn get AntClinSexo =>
-      _AntClinSexo ??= _constructAntClinSexo();
+  GeneratedTextColumn get antClinSexo =>
+      _antClinSexo ??= _constructAntClinSexo();
   GeneratedTextColumn _constructAntClinSexo() {
     return GeneratedTextColumn(
       'ant_clin_sexo',
@@ -11462,12 +11229,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntClinFlgFactRiesgMeta =
-      const VerificationMeta('AntClinFlgFactRiesg');
-  GeneratedIntColumn _AntClinFlgFactRiesg;
+  final VerificationMeta _antClinFlgFactRiesgMeta =
+      const VerificationMeta('antClinFlgFactRiesg');
+  GeneratedIntColumn _antClinFlgFactRiesg;
   @override
-  GeneratedIntColumn get AntClinFlgFactRiesg =>
-      _AntClinFlgFactRiesg ??= _constructAntClinFlgFactRiesg();
+  GeneratedIntColumn get antClinFlgFactRiesg =>
+      _antClinFlgFactRiesg ??= _constructAntClinFlgFactRiesg();
   GeneratedIntColumn _constructAntClinFlgFactRiesg() {
     return GeneratedIntColumn(
       'ant_clin_flg_fact_riesg',
@@ -11476,12 +11243,12 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _AntCliFlgHabRepMeta =
-      const VerificationMeta('AntCliFlgHabRep');
-  GeneratedIntColumn _AntCliFlgHabRep;
+  final VerificationMeta _antCliFlgHabRepMeta =
+      const VerificationMeta('antCliFlgHabRep');
+  GeneratedIntColumn _antCliFlgHabRep;
   @override
-  GeneratedIntColumn get AntCliFlgHabRep =>
-      _AntCliFlgHabRep ??= _constructAntCliFlgHabRep();
+  GeneratedIntColumn get antCliFlgHabRep =>
+      _antCliFlgHabRep ??= _constructAntCliFlgHabRep();
   GeneratedIntColumn _constructAntCliFlgHabRep() {
     return GeneratedIntColumn(
       'ant_cli_flg_hab_rep',
@@ -11490,22 +11257,22 @@ class $TableAtnClinTable extends TableAtnClin
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -11546,17 +11313,17 @@ class $TableAtnClinTable extends TableAtnClin
 
   @override
   List<GeneratedColumn> get $columns => [
-        AntClinId,
-        AntClinDesc,
-        AntClinFlgHab,
-        TipAntClinId,
-        AntClinAlert,
-        AntClinAlertDsc,
-        AntClinSexo,
-        AntClinFlgFactRiesg,
-        AntCliFlgHabRep,
-        StatusId,
-        UsuId,
+        antClinId,
+        antClinDesc,
+        antClinFlgHab,
+        tipAntClinId,
+        antClinAlert,
+        antClinAlertDsc,
+        antClinSexo,
+        antClinFlgFactRiesg,
+        antCliFlgHabRep,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -11571,83 +11338,83 @@ class $TableAtnClinTable extends TableAtnClin
   VerificationContext validateIntegrity(TableAtnClinCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.AntClinId.present) {
-      context.handle(_AntClinIdMeta,
-          AntClinId.isAcceptableValue(d.AntClinId.value, _AntClinIdMeta));
-    } else if (AntClinId.isRequired && isInserting) {
-      context.missing(_AntClinIdMeta);
+    if (d.antClinId.present) {
+      context.handle(_antClinIdMeta,
+          antClinId.isAcceptableValue(d.antClinId.value, _antClinIdMeta));
+    } else if (antClinId.isRequired && isInserting) {
+      context.missing(_antClinIdMeta);
     }
-    if (d.AntClinDesc.present) {
-      context.handle(_AntClinDescMeta,
-          AntClinDesc.isAcceptableValue(d.AntClinDesc.value, _AntClinDescMeta));
-    } else if (AntClinDesc.isRequired && isInserting) {
-      context.missing(_AntClinDescMeta);
+    if (d.antClinDesc.present) {
+      context.handle(_antClinDescMeta,
+          antClinDesc.isAcceptableValue(d.antClinDesc.value, _antClinDescMeta));
+    } else if (antClinDesc.isRequired && isInserting) {
+      context.missing(_antClinDescMeta);
     }
-    if (d.AntClinFlgHab.present) {
+    if (d.antClinFlgHab.present) {
       context.handle(
-          _AntClinFlgHabMeta,
-          AntClinFlgHab.isAcceptableValue(
-              d.AntClinFlgHab.value, _AntClinFlgHabMeta));
-    } else if (AntClinFlgHab.isRequired && isInserting) {
-      context.missing(_AntClinFlgHabMeta);
+          _antClinFlgHabMeta,
+          antClinFlgHab.isAcceptableValue(
+              d.antClinFlgHab.value, _antClinFlgHabMeta));
+    } else if (antClinFlgHab.isRequired && isInserting) {
+      context.missing(_antClinFlgHabMeta);
     }
-    if (d.TipAntClinId.present) {
+    if (d.tipAntClinId.present) {
       context.handle(
-          _TipAntClinIdMeta,
-          TipAntClinId.isAcceptableValue(
-              d.TipAntClinId.value, _TipAntClinIdMeta));
-    } else if (TipAntClinId.isRequired && isInserting) {
-      context.missing(_TipAntClinIdMeta);
+          _tipAntClinIdMeta,
+          tipAntClinId.isAcceptableValue(
+              d.tipAntClinId.value, _tipAntClinIdMeta));
+    } else if (tipAntClinId.isRequired && isInserting) {
+      context.missing(_tipAntClinIdMeta);
     }
-    if (d.AntClinAlert.present) {
+    if (d.antClinAlert.present) {
       context.handle(
-          _AntClinAlertMeta,
-          AntClinAlert.isAcceptableValue(
-              d.AntClinAlert.value, _AntClinAlertMeta));
-    } else if (AntClinAlert.isRequired && isInserting) {
-      context.missing(_AntClinAlertMeta);
+          _antClinAlertMeta,
+          antClinAlert.isAcceptableValue(
+              d.antClinAlert.value, _antClinAlertMeta));
+    } else if (antClinAlert.isRequired && isInserting) {
+      context.missing(_antClinAlertMeta);
     }
-    if (d.AntClinAlertDsc.present) {
+    if (d.antClinAlertDsc.present) {
       context.handle(
-          _AntClinAlertDscMeta,
-          AntClinAlertDsc.isAcceptableValue(
-              d.AntClinAlertDsc.value, _AntClinAlertDscMeta));
-    } else if (AntClinAlertDsc.isRequired && isInserting) {
-      context.missing(_AntClinAlertDscMeta);
+          _antClinAlertDscMeta,
+          antClinAlertDsc.isAcceptableValue(
+              d.antClinAlertDsc.value, _antClinAlertDscMeta));
+    } else if (antClinAlertDsc.isRequired && isInserting) {
+      context.missing(_antClinAlertDscMeta);
     }
-    if (d.AntClinSexo.present) {
-      context.handle(_AntClinSexoMeta,
-          AntClinSexo.isAcceptableValue(d.AntClinSexo.value, _AntClinSexoMeta));
-    } else if (AntClinSexo.isRequired && isInserting) {
-      context.missing(_AntClinSexoMeta);
+    if (d.antClinSexo.present) {
+      context.handle(_antClinSexoMeta,
+          antClinSexo.isAcceptableValue(d.antClinSexo.value, _antClinSexoMeta));
+    } else if (antClinSexo.isRequired && isInserting) {
+      context.missing(_antClinSexoMeta);
     }
-    if (d.AntClinFlgFactRiesg.present) {
+    if (d.antClinFlgFactRiesg.present) {
       context.handle(
-          _AntClinFlgFactRiesgMeta,
-          AntClinFlgFactRiesg.isAcceptableValue(
-              d.AntClinFlgFactRiesg.value, _AntClinFlgFactRiesgMeta));
-    } else if (AntClinFlgFactRiesg.isRequired && isInserting) {
-      context.missing(_AntClinFlgFactRiesgMeta);
+          _antClinFlgFactRiesgMeta,
+          antClinFlgFactRiesg.isAcceptableValue(
+              d.antClinFlgFactRiesg.value, _antClinFlgFactRiesgMeta));
+    } else if (antClinFlgFactRiesg.isRequired && isInserting) {
+      context.missing(_antClinFlgFactRiesgMeta);
     }
-    if (d.AntCliFlgHabRep.present) {
+    if (d.antCliFlgHabRep.present) {
       context.handle(
-          _AntCliFlgHabRepMeta,
-          AntCliFlgHabRep.isAcceptableValue(
-              d.AntCliFlgHabRep.value, _AntCliFlgHabRepMeta));
-    } else if (AntCliFlgHabRep.isRequired && isInserting) {
-      context.missing(_AntCliFlgHabRepMeta);
+          _antCliFlgHabRepMeta,
+          antCliFlgHabRep.isAcceptableValue(
+              d.antCliFlgHabRep.value, _antCliFlgHabRepMeta));
+    } else if (antCliFlgHabRep.isRequired && isInserting) {
+      context.missing(_antCliFlgHabRepMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -11671,7 +11438,7 @@ class $TableAtnClinTable extends TableAtnClin
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {AntClinId};
+  Set<GeneratedColumn> get $primaryKey => {antClinId};
   @override
   AtnClin map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -11681,41 +11448,41 @@ class $TableAtnClinTable extends TableAtnClin
   @override
   Map<String, Variable> entityToSql(TableAtnClinCompanion d) {
     final map = <String, Variable>{};
-    if (d.AntClinId.present) {
-      map['ant_clin_id'] = Variable<int, IntType>(d.AntClinId.value);
+    if (d.antClinId.present) {
+      map['ant_clin_id'] = Variable<int, IntType>(d.antClinId.value);
     }
-    if (d.AntClinDesc.present) {
-      map['ant_clin_desc'] = Variable<String, StringType>(d.AntClinDesc.value);
+    if (d.antClinDesc.present) {
+      map['ant_clin_desc'] = Variable<String, StringType>(d.antClinDesc.value);
     }
-    if (d.AntClinFlgHab.present) {
-      map['ant_clin_flg_hab'] = Variable<int, IntType>(d.AntClinFlgHab.value);
+    if (d.antClinFlgHab.present) {
+      map['ant_clin_flg_hab'] = Variable<int, IntType>(d.antClinFlgHab.value);
     }
-    if (d.TipAntClinId.present) {
-      map['tip_ant_clin_id'] = Variable<int, IntType>(d.TipAntClinId.value);
+    if (d.tipAntClinId.present) {
+      map['tip_ant_clin_id'] = Variable<int, IntType>(d.tipAntClinId.value);
     }
-    if (d.AntClinAlert.present) {
-      map['ant_clin_alert'] = Variable<int, IntType>(d.AntClinAlert.value);
+    if (d.antClinAlert.present) {
+      map['ant_clin_alert'] = Variable<int, IntType>(d.antClinAlert.value);
     }
-    if (d.AntClinAlertDsc.present) {
+    if (d.antClinAlertDsc.present) {
       map['ant_clin_alert_dsc'] =
-          Variable<int, IntType>(d.AntClinAlertDsc.value);
+          Variable<int, IntType>(d.antClinAlertDsc.value);
     }
-    if (d.AntClinSexo.present) {
-      map['ant_clin_sexo'] = Variable<String, StringType>(d.AntClinSexo.value);
+    if (d.antClinSexo.present) {
+      map['ant_clin_sexo'] = Variable<String, StringType>(d.antClinSexo.value);
     }
-    if (d.AntClinFlgFactRiesg.present) {
+    if (d.antClinFlgFactRiesg.present) {
       map['ant_clin_flg_fact_riesg'] =
-          Variable<int, IntType>(d.AntClinFlgFactRiesg.value);
+          Variable<int, IntType>(d.antClinFlgFactRiesg.value);
     }
-    if (d.AntCliFlgHabRep.present) {
+    if (d.antCliFlgHabRep.present) {
       map['ant_cli_flg_hab_rep'] =
-          Variable<int, IntType>(d.AntCliFlgHabRep.value);
+          Variable<int, IntType>(d.antCliFlgHabRep.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -11736,18 +11503,18 @@ class $TableAtnClinTable extends TableAtnClin
 }
 
 class Drogas extends DataClass implements Insertable<Drogas> {
-  final int DroId;
-  final String DroDesc;
-  final int StatusId;
-  final int UsuId;
+  final int droId;
+  final String droDesc;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Drogas(
-      {@required this.DroId,
-      @required this.DroDesc,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.droId,
+      @required this.droDesc,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -11758,12 +11525,12 @@ class Drogas extends DataClass implements Insertable<Drogas> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Drogas(
-      DroId: intType.mapFromDatabaseResponse(data['${effectivePrefix}dro_id']),
-      DroDesc: stringType
+      droId: intType.mapFromDatabaseResponse(data['${effectivePrefix}dro_id']),
+      droDesc: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}dro_desc']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -11775,10 +11542,10 @@ class Drogas extends DataClass implements Insertable<Drogas> {
   factory Drogas.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Drogas(
-      DroId: serializer.fromJson<int>(json['DroId']),
-      DroDesc: serializer.fromJson<String>(json['DroDesc']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      droId: serializer.fromJson<int>(json['droId']),
+      droDesc: serializer.fromJson<String>(json['droDesc']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -11788,10 +11555,10 @@ class Drogas extends DataClass implements Insertable<Drogas> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'DroId': serializer.toJson<int>(DroId),
-      'DroDesc': serializer.toJson<String>(DroDesc),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'droId': serializer.toJson<int>(droId),
+      'droDesc': serializer.toJson<String>(droDesc),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -11801,16 +11568,16 @@ class Drogas extends DataClass implements Insertable<Drogas> {
   @override
   T createCompanion<T extends UpdateCompanion<Drogas>>(bool nullToAbsent) {
     return TableDrogasCompanion(
-      DroId:
-          DroId == null && nullToAbsent ? const Value.absent() : Value(DroId),
-      DroDesc: DroDesc == null && nullToAbsent
+      droId:
+          droId == null && nullToAbsent ? const Value.absent() : Value(droId),
+      droDesc: droDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(DroDesc),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(droDesc),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -11824,18 +11591,18 @@ class Drogas extends DataClass implements Insertable<Drogas> {
   }
 
   Drogas copyWith(
-          {int DroId,
-          String DroDesc,
-          int StatusId,
-          int UsuId,
+          {int droId,
+          String droDesc,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Drogas(
-        DroId: DroId ?? this.DroId,
-        DroDesc: DroDesc ?? this.DroDesc,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        droId: droId ?? this.droId,
+        droDesc: droDesc ?? this.droDesc,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -11843,10 +11610,10 @@ class Drogas extends DataClass implements Insertable<Drogas> {
   @override
   String toString() {
     return (StringBuffer('Drogas(')
-          ..write('DroId: $DroId, ')
-          ..write('DroDesc: $DroDesc, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('droId: $droId, ')
+          ..write('droDesc: $droDesc, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -11856,58 +11623,58 @@ class Drogas extends DataClass implements Insertable<Drogas> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      DroId.hashCode,
+      droId.hashCode,
       $mrjc(
-          DroDesc.hashCode,
+          droDesc.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Drogas &&
-          other.DroId == DroId &&
-          other.DroDesc == DroDesc &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.droId == droId &&
+          other.droDesc == droDesc &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableDrogasCompanion extends UpdateCompanion<Drogas> {
-  final Value<int> DroId;
-  final Value<String> DroDesc;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> droId;
+  final Value<String> droDesc;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableDrogasCompanion({
-    this.DroId = const Value.absent(),
-    this.DroDesc = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.droId = const Value.absent(),
+    this.droDesc = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableDrogasCompanion copyWith(
-      {Value<int> DroId,
-      Value<String> DroDesc,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> droId,
+      Value<String> droDesc,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableDrogasCompanion(
-      DroId: DroId ?? this.DroId,
-      DroDesc: DroDesc ?? this.DroDesc,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      droId: droId ?? this.droId,
+      droDesc: droDesc ?? this.droDesc,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -11920,19 +11687,19 @@ class $TableDrogasTable extends TableDrogas
   final GeneratedDatabase _db;
   final String _alias;
   $TableDrogasTable(this._db, [this._alias]);
-  final VerificationMeta _DroIdMeta = const VerificationMeta('DroId');
-  GeneratedIntColumn _DroId;
+  final VerificationMeta _droIdMeta = const VerificationMeta('droId');
+  GeneratedIntColumn _droId;
   @override
-  GeneratedIntColumn get DroId => _DroId ??= _constructDroId();
+  GeneratedIntColumn get droId => _droId ??= _constructDroId();
   GeneratedIntColumn _constructDroId() {
     return GeneratedIntColumn('dro_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _DroDescMeta = const VerificationMeta('DroDesc');
-  GeneratedTextColumn _DroDesc;
+  final VerificationMeta _droDescMeta = const VerificationMeta('droDesc');
+  GeneratedTextColumn _droDesc;
   @override
-  GeneratedTextColumn get DroDesc => _DroDesc ??= _constructDroDesc();
+  GeneratedTextColumn get droDesc => _droDesc ??= _constructDroDesc();
   GeneratedTextColumn _constructDroDesc() {
     return GeneratedTextColumn(
       'dro_desc',
@@ -11941,22 +11708,22 @@ class $TableDrogasTable extends TableDrogas
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -11997,7 +11764,7 @@ class $TableDrogasTable extends TableDrogas
 
   @override
   List<GeneratedColumn> get $columns =>
-      [DroId, DroDesc, StatusId, UsuId, createdAt, updatedAt, deletedAt];
+      [droId, droDesc, statusId, usuId, createdAt, updatedAt, deletedAt];
   @override
   $TableDrogasTable get asDslTable => this;
   @override
@@ -12008,29 +11775,29 @@ class $TableDrogasTable extends TableDrogas
   VerificationContext validateIntegrity(TableDrogasCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.DroId.present) {
+    if (d.droId.present) {
       context.handle(
-          _DroIdMeta, DroId.isAcceptableValue(d.DroId.value, _DroIdMeta));
-    } else if (DroId.isRequired && isInserting) {
-      context.missing(_DroIdMeta);
+          _droIdMeta, droId.isAcceptableValue(d.droId.value, _droIdMeta));
+    } else if (droId.isRequired && isInserting) {
+      context.missing(_droIdMeta);
     }
-    if (d.DroDesc.present) {
-      context.handle(_DroDescMeta,
-          DroDesc.isAcceptableValue(d.DroDesc.value, _DroDescMeta));
-    } else if (DroDesc.isRequired && isInserting) {
-      context.missing(_DroDescMeta);
+    if (d.droDesc.present) {
+      context.handle(_droDescMeta,
+          droDesc.isAcceptableValue(d.droDesc.value, _droDescMeta));
+    } else if (droDesc.isRequired && isInserting) {
+      context.missing(_droDescMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -12054,7 +11821,7 @@ class $TableDrogasTable extends TableDrogas
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {DroId};
+  Set<GeneratedColumn> get $primaryKey => {droId};
   @override
   Drogas map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -12064,17 +11831,17 @@ class $TableDrogasTable extends TableDrogas
   @override
   Map<String, Variable> entityToSql(TableDrogasCompanion d) {
     final map = <String, Variable>{};
-    if (d.DroId.present) {
-      map['dro_id'] = Variable<int, IntType>(d.DroId.value);
+    if (d.droId.present) {
+      map['dro_id'] = Variable<int, IntType>(d.droId.value);
     }
-    if (d.DroDesc.present) {
-      map['dro_desc'] = Variable<String, StringType>(d.DroDesc.value);
+    if (d.droDesc.present) {
+      map['dro_desc'] = Variable<String, StringType>(d.droDesc.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -12095,32 +11862,32 @@ class $TableDrogasTable extends TableDrogas
 }
 
 class Farmacos extends DataClass implements Insertable<Farmacos> {
-  final int FarId;
-  final String FarNom;
-  final int FarFlgHab;
-  final String FarDrogComp;
-  final int FarPresMedicId;
-  final int FarDosCnt;
-  final int FarDosUnidMedId;
-  final int FarFlgEsSuero;
-  final int FarFlgEsAdit;
-  final int StatusId;
-  final int UsuId;
+  final int farId;
+  final String farNom;
+  final int farFlgHab;
+  final String farDrogComp;
+  final int farPresMedicId;
+  final int farDosCnt;
+  final int farDosUnidMedId;
+  final int farFlgEsSuero;
+  final int farFlgEsAdit;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Farmacos(
-      {@required this.FarId,
-      @required this.FarNom,
-      @required this.FarFlgHab,
-      @required this.FarDrogComp,
-      @required this.FarPresMedicId,
-      @required this.FarDosCnt,
-      @required this.FarDosUnidMedId,
-      @required this.FarFlgEsSuero,
-      @required this.FarFlgEsAdit,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.farId,
+      @required this.farNom,
+      @required this.farFlgHab,
+      @required this.farDrogComp,
+      @required this.farPresMedicId,
+      @required this.farDosCnt,
+      @required this.farDosUnidMedId,
+      @required this.farFlgEsSuero,
+      @required this.farFlgEsAdit,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -12131,26 +11898,26 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Farmacos(
-      FarId: intType.mapFromDatabaseResponse(data['${effectivePrefix}far_id']),
-      FarNom:
+      farId: intType.mapFromDatabaseResponse(data['${effectivePrefix}far_id']),
+      farNom:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}far_nom']),
-      FarFlgHab: intType
+      farFlgHab: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_flg_hab']),
-      FarDrogComp: stringType
+      farDrogComp: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_drog_comp']),
-      FarPresMedicId: intType
+      farPresMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_pres_medic_id']),
-      FarDosCnt: intType
+      farDosCnt: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_dos_cnt']),
-      FarDosUnidMedId: intType.mapFromDatabaseResponse(
+      farDosUnidMedId: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}far_dos_unid_med_id']),
-      FarFlgEsSuero: intType
+      farFlgEsSuero: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_flg_es_suero']),
-      FarFlgEsAdit: intType
+      farFlgEsAdit: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}far_flg_es_adit']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -12162,17 +11929,17 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   factory Farmacos.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Farmacos(
-      FarId: serializer.fromJson<int>(json['FarId']),
-      FarNom: serializer.fromJson<String>(json['FarNom']),
-      FarFlgHab: serializer.fromJson<int>(json['FarFlgHab']),
-      FarDrogComp: serializer.fromJson<String>(json['FarDrogComp']),
-      FarPresMedicId: serializer.fromJson<int>(json['FarPresMedicId']),
-      FarDosCnt: serializer.fromJson<int>(json['FarDosCnt']),
-      FarDosUnidMedId: serializer.fromJson<int>(json['FarDosUnidMedId']),
-      FarFlgEsSuero: serializer.fromJson<int>(json['FarFlgEsSuero']),
-      FarFlgEsAdit: serializer.fromJson<int>(json['FarFlgEsAdit']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      farId: serializer.fromJson<int>(json['farId']),
+      farNom: serializer.fromJson<String>(json['farNom']),
+      farFlgHab: serializer.fromJson<int>(json['farFlgHab']),
+      farDrogComp: serializer.fromJson<String>(json['farDrogComp']),
+      farPresMedicId: serializer.fromJson<int>(json['farPresMedicId']),
+      farDosCnt: serializer.fromJson<int>(json['farDosCnt']),
+      farDosUnidMedId: serializer.fromJson<int>(json['farDosUnidMedId']),
+      farFlgEsSuero: serializer.fromJson<int>(json['farFlgEsSuero']),
+      farFlgEsAdit: serializer.fromJson<int>(json['farFlgEsAdit']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -12182,17 +11949,17 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FarId': serializer.toJson<int>(FarId),
-      'FarNom': serializer.toJson<String>(FarNom),
-      'FarFlgHab': serializer.toJson<int>(FarFlgHab),
-      'FarDrogComp': serializer.toJson<String>(FarDrogComp),
-      'FarPresMedicId': serializer.toJson<int>(FarPresMedicId),
-      'FarDosCnt': serializer.toJson<int>(FarDosCnt),
-      'FarDosUnidMedId': serializer.toJson<int>(FarDosUnidMedId),
-      'FarFlgEsSuero': serializer.toJson<int>(FarFlgEsSuero),
-      'FarFlgEsAdit': serializer.toJson<int>(FarFlgEsAdit),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'farId': serializer.toJson<int>(farId),
+      'farNom': serializer.toJson<String>(farNom),
+      'farFlgHab': serializer.toJson<int>(farFlgHab),
+      'farDrogComp': serializer.toJson<String>(farDrogComp),
+      'farPresMedicId': serializer.toJson<int>(farPresMedicId),
+      'farDosCnt': serializer.toJson<int>(farDosCnt),
+      'farDosUnidMedId': serializer.toJson<int>(farDosUnidMedId),
+      'farFlgEsSuero': serializer.toJson<int>(farFlgEsSuero),
+      'farFlgEsAdit': serializer.toJson<int>(farFlgEsAdit),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -12202,36 +11969,36 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   @override
   T createCompanion<T extends UpdateCompanion<Farmacos>>(bool nullToAbsent) {
     return TableFarmacosCompanion(
-      FarId:
-          FarId == null && nullToAbsent ? const Value.absent() : Value(FarId),
-      FarNom:
-          FarNom == null && nullToAbsent ? const Value.absent() : Value(FarNom),
-      FarFlgHab: FarFlgHab == null && nullToAbsent
+      farId:
+          farId == null && nullToAbsent ? const Value.absent() : Value(farId),
+      farNom:
+          farNom == null && nullToAbsent ? const Value.absent() : Value(farNom),
+      farFlgHab: farFlgHab == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarFlgHab),
-      FarDrogComp: FarDrogComp == null && nullToAbsent
+          : Value(farFlgHab),
+      farDrogComp: farDrogComp == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarDrogComp),
-      FarPresMedicId: FarPresMedicId == null && nullToAbsent
+          : Value(farDrogComp),
+      farPresMedicId: farPresMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarPresMedicId),
-      FarDosCnt: FarDosCnt == null && nullToAbsent
+          : Value(farPresMedicId),
+      farDosCnt: farDosCnt == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarDosCnt),
-      FarDosUnidMedId: FarDosUnidMedId == null && nullToAbsent
+          : Value(farDosCnt),
+      farDosUnidMedId: farDosUnidMedId == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarDosUnidMedId),
-      FarFlgEsSuero: FarFlgEsSuero == null && nullToAbsent
+          : Value(farDosUnidMedId),
+      farFlgEsSuero: farFlgEsSuero == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarFlgEsSuero),
-      FarFlgEsAdit: FarFlgEsAdit == null && nullToAbsent
+          : Value(farFlgEsSuero),
+      farFlgEsAdit: farFlgEsAdit == null && nullToAbsent
           ? const Value.absent()
-          : Value(FarFlgEsAdit),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(farFlgEsAdit),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -12245,32 +12012,32 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   }
 
   Farmacos copyWith(
-          {int FarId,
-          String FarNom,
-          int FarFlgHab,
-          String FarDrogComp,
-          int FarPresMedicId,
-          int FarDosCnt,
-          int FarDosUnidMedId,
-          int FarFlgEsSuero,
-          int FarFlgEsAdit,
-          int StatusId,
-          int UsuId,
+          {int farId,
+          String farNom,
+          int farFlgHab,
+          String farDrogComp,
+          int farPresMedicId,
+          int farDosCnt,
+          int farDosUnidMedId,
+          int farFlgEsSuero,
+          int farFlgEsAdit,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Farmacos(
-        FarId: FarId ?? this.FarId,
-        FarNom: FarNom ?? this.FarNom,
-        FarFlgHab: FarFlgHab ?? this.FarFlgHab,
-        FarDrogComp: FarDrogComp ?? this.FarDrogComp,
-        FarPresMedicId: FarPresMedicId ?? this.FarPresMedicId,
-        FarDosCnt: FarDosCnt ?? this.FarDosCnt,
-        FarDosUnidMedId: FarDosUnidMedId ?? this.FarDosUnidMedId,
-        FarFlgEsSuero: FarFlgEsSuero ?? this.FarFlgEsSuero,
-        FarFlgEsAdit: FarFlgEsAdit ?? this.FarFlgEsAdit,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        farId: farId ?? this.farId,
+        farNom: farNom ?? this.farNom,
+        farFlgHab: farFlgHab ?? this.farFlgHab,
+        farDrogComp: farDrogComp ?? this.farDrogComp,
+        farPresMedicId: farPresMedicId ?? this.farPresMedicId,
+        farDosCnt: farDosCnt ?? this.farDosCnt,
+        farDosUnidMedId: farDosUnidMedId ?? this.farDosUnidMedId,
+        farFlgEsSuero: farFlgEsSuero ?? this.farFlgEsSuero,
+        farFlgEsAdit: farFlgEsAdit ?? this.farFlgEsAdit,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -12278,17 +12045,17 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   @override
   String toString() {
     return (StringBuffer('Farmacos(')
-          ..write('FarId: $FarId, ')
-          ..write('FarNom: $FarNom, ')
-          ..write('FarFlgHab: $FarFlgHab, ')
-          ..write('FarDrogComp: $FarDrogComp, ')
-          ..write('FarPresMedicId: $FarPresMedicId, ')
-          ..write('FarDosCnt: $FarDosCnt, ')
-          ..write('FarDosUnidMedId: $FarDosUnidMedId, ')
-          ..write('FarFlgEsSuero: $FarFlgEsSuero, ')
-          ..write('FarFlgEsAdit: $FarFlgEsAdit, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('farId: $farId, ')
+          ..write('farNom: $farNom, ')
+          ..write('farFlgHab: $farFlgHab, ')
+          ..write('farDrogComp: $farDrogComp, ')
+          ..write('farPresMedicId: $farPresMedicId, ')
+          ..write('farDosCnt: $farDosCnt, ')
+          ..write('farDosUnidMedId: $farDosUnidMedId, ')
+          ..write('farFlgEsSuero: $farFlgEsSuero, ')
+          ..write('farFlgEsAdit: $farFlgEsAdit, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -12298,27 +12065,27 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FarId.hashCode,
+      farId.hashCode,
       $mrjc(
-          FarNom.hashCode,
+          farNom.hashCode,
           $mrjc(
-              FarFlgHab.hashCode,
+              farFlgHab.hashCode,
               $mrjc(
-                  FarDrogComp.hashCode,
+                  farDrogComp.hashCode,
                   $mrjc(
-                      FarPresMedicId.hashCode,
+                      farPresMedicId.hashCode,
                       $mrjc(
-                          FarDosCnt.hashCode,
+                          farDosCnt.hashCode,
                           $mrjc(
-                              FarDosUnidMedId.hashCode,
+                              farDosUnidMedId.hashCode,
                               $mrjc(
-                                  FarFlgEsSuero.hashCode,
+                                  farFlgEsSuero.hashCode,
                                   $mrjc(
-                                      FarFlgEsAdit.hashCode,
+                                      farFlgEsAdit.hashCode,
                                       $mrjc(
-                                          StatusId.hashCode,
+                                          statusId.hashCode,
                                           $mrjc(
-                                              UsuId.hashCode,
+                                              usuId.hashCode,
                                               $mrjc(
                                                   createdAt.hashCode,
                                                   $mrjc(
@@ -12329,80 +12096,80 @@ class Farmacos extends DataClass implements Insertable<Farmacos> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Farmacos &&
-          other.FarId == FarId &&
-          other.FarNom == FarNom &&
-          other.FarFlgHab == FarFlgHab &&
-          other.FarDrogComp == FarDrogComp &&
-          other.FarPresMedicId == FarPresMedicId &&
-          other.FarDosCnt == FarDosCnt &&
-          other.FarDosUnidMedId == FarDosUnidMedId &&
-          other.FarFlgEsSuero == FarFlgEsSuero &&
-          other.FarFlgEsAdit == FarFlgEsAdit &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.farId == farId &&
+          other.farNom == farNom &&
+          other.farFlgHab == farFlgHab &&
+          other.farDrogComp == farDrogComp &&
+          other.farPresMedicId == farPresMedicId &&
+          other.farDosCnt == farDosCnt &&
+          other.farDosUnidMedId == farDosUnidMedId &&
+          other.farFlgEsSuero == farFlgEsSuero &&
+          other.farFlgEsAdit == farFlgEsAdit &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFarmacosCompanion extends UpdateCompanion<Farmacos> {
-  final Value<int> FarId;
-  final Value<String> FarNom;
-  final Value<int> FarFlgHab;
-  final Value<String> FarDrogComp;
-  final Value<int> FarPresMedicId;
-  final Value<int> FarDosCnt;
-  final Value<int> FarDosUnidMedId;
-  final Value<int> FarFlgEsSuero;
-  final Value<int> FarFlgEsAdit;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> farId;
+  final Value<String> farNom;
+  final Value<int> farFlgHab;
+  final Value<String> farDrogComp;
+  final Value<int> farPresMedicId;
+  final Value<int> farDosCnt;
+  final Value<int> farDosUnidMedId;
+  final Value<int> farFlgEsSuero;
+  final Value<int> farFlgEsAdit;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFarmacosCompanion({
-    this.FarId = const Value.absent(),
-    this.FarNom = const Value.absent(),
-    this.FarFlgHab = const Value.absent(),
-    this.FarDrogComp = const Value.absent(),
-    this.FarPresMedicId = const Value.absent(),
-    this.FarDosCnt = const Value.absent(),
-    this.FarDosUnidMedId = const Value.absent(),
-    this.FarFlgEsSuero = const Value.absent(),
-    this.FarFlgEsAdit = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.farId = const Value.absent(),
+    this.farNom = const Value.absent(),
+    this.farFlgHab = const Value.absent(),
+    this.farDrogComp = const Value.absent(),
+    this.farPresMedicId = const Value.absent(),
+    this.farDosCnt = const Value.absent(),
+    this.farDosUnidMedId = const Value.absent(),
+    this.farFlgEsSuero = const Value.absent(),
+    this.farFlgEsAdit = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFarmacosCompanion copyWith(
-      {Value<int> FarId,
-      Value<String> FarNom,
-      Value<int> FarFlgHab,
-      Value<String> FarDrogComp,
-      Value<int> FarPresMedicId,
-      Value<int> FarDosCnt,
-      Value<int> FarDosUnidMedId,
-      Value<int> FarFlgEsSuero,
-      Value<int> FarFlgEsAdit,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> farId,
+      Value<String> farNom,
+      Value<int> farFlgHab,
+      Value<String> farDrogComp,
+      Value<int> farPresMedicId,
+      Value<int> farDosCnt,
+      Value<int> farDosUnidMedId,
+      Value<int> farFlgEsSuero,
+      Value<int> farFlgEsAdit,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFarmacosCompanion(
-      FarId: FarId ?? this.FarId,
-      FarNom: FarNom ?? this.FarNom,
-      FarFlgHab: FarFlgHab ?? this.FarFlgHab,
-      FarDrogComp: FarDrogComp ?? this.FarDrogComp,
-      FarPresMedicId: FarPresMedicId ?? this.FarPresMedicId,
-      FarDosCnt: FarDosCnt ?? this.FarDosCnt,
-      FarDosUnidMedId: FarDosUnidMedId ?? this.FarDosUnidMedId,
-      FarFlgEsSuero: FarFlgEsSuero ?? this.FarFlgEsSuero,
-      FarFlgEsAdit: FarFlgEsAdit ?? this.FarFlgEsAdit,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      farId: farId ?? this.farId,
+      farNom: farNom ?? this.farNom,
+      farFlgHab: farFlgHab ?? this.farFlgHab,
+      farDrogComp: farDrogComp ?? this.farDrogComp,
+      farPresMedicId: farPresMedicId ?? this.farPresMedicId,
+      farDosCnt: farDosCnt ?? this.farDosCnt,
+      farDosUnidMedId: farDosUnidMedId ?? this.farDosUnidMedId,
+      farFlgEsSuero: farFlgEsSuero ?? this.farFlgEsSuero,
+      farFlgEsAdit: farFlgEsAdit ?? this.farFlgEsAdit,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -12415,19 +12182,19 @@ class $TableFarmacosTable extends TableFarmacos
   final GeneratedDatabase _db;
   final String _alias;
   $TableFarmacosTable(this._db, [this._alias]);
-  final VerificationMeta _FarIdMeta = const VerificationMeta('FarId');
-  GeneratedIntColumn _FarId;
+  final VerificationMeta _farIdMeta = const VerificationMeta('farId');
+  GeneratedIntColumn _farId;
   @override
-  GeneratedIntColumn get FarId => _FarId ??= _constructFarId();
+  GeneratedIntColumn get farId => _farId ??= _constructFarId();
   GeneratedIntColumn _constructFarId() {
     return GeneratedIntColumn('far_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _FarNomMeta = const VerificationMeta('FarNom');
-  GeneratedTextColumn _FarNom;
+  final VerificationMeta _farNomMeta = const VerificationMeta('farNom');
+  GeneratedTextColumn _farNom;
   @override
-  GeneratedTextColumn get FarNom => _FarNom ??= _constructFarNom();
+  GeneratedTextColumn get farNom => _farNom ??= _constructFarNom();
   GeneratedTextColumn _constructFarNom() {
     return GeneratedTextColumn(
       'far_nom',
@@ -12436,10 +12203,10 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarFlgHabMeta = const VerificationMeta('FarFlgHab');
-  GeneratedIntColumn _FarFlgHab;
+  final VerificationMeta _farFlgHabMeta = const VerificationMeta('farFlgHab');
+  GeneratedIntColumn _farFlgHab;
   @override
-  GeneratedIntColumn get FarFlgHab => _FarFlgHab ??= _constructFarFlgHab();
+  GeneratedIntColumn get farFlgHab => _farFlgHab ??= _constructFarFlgHab();
   GeneratedIntColumn _constructFarFlgHab() {
     return GeneratedIntColumn(
       'far_flg_hab',
@@ -12448,12 +12215,12 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarDrogCompMeta =
-      const VerificationMeta('FarDrogComp');
-  GeneratedTextColumn _FarDrogComp;
+  final VerificationMeta _farDrogCompMeta =
+      const VerificationMeta('farDrogComp');
+  GeneratedTextColumn _farDrogComp;
   @override
-  GeneratedTextColumn get FarDrogComp =>
-      _FarDrogComp ??= _constructFarDrogComp();
+  GeneratedTextColumn get farDrogComp =>
+      _farDrogComp ??= _constructFarDrogComp();
   GeneratedTextColumn _constructFarDrogComp() {
     return GeneratedTextColumn(
       'far_drog_comp',
@@ -12462,12 +12229,12 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarPresMedicIdMeta =
-      const VerificationMeta('FarPresMedicId');
-  GeneratedIntColumn _FarPresMedicId;
+  final VerificationMeta _farPresMedicIdMeta =
+      const VerificationMeta('farPresMedicId');
+  GeneratedIntColumn _farPresMedicId;
   @override
-  GeneratedIntColumn get FarPresMedicId =>
-      _FarPresMedicId ??= _constructFarPresMedicId();
+  GeneratedIntColumn get farPresMedicId =>
+      _farPresMedicId ??= _constructFarPresMedicId();
   GeneratedIntColumn _constructFarPresMedicId() {
     return GeneratedIntColumn(
       'far_pres_medic_id',
@@ -12476,10 +12243,10 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarDosCntMeta = const VerificationMeta('FarDosCnt');
-  GeneratedIntColumn _FarDosCnt;
+  final VerificationMeta _farDosCntMeta = const VerificationMeta('farDosCnt');
+  GeneratedIntColumn _farDosCnt;
   @override
-  GeneratedIntColumn get FarDosCnt => _FarDosCnt ??= _constructFarDosCnt();
+  GeneratedIntColumn get farDosCnt => _farDosCnt ??= _constructFarDosCnt();
   GeneratedIntColumn _constructFarDosCnt() {
     return GeneratedIntColumn(
       'far_dos_cnt',
@@ -12488,12 +12255,12 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarDosUnidMedIdMeta =
-      const VerificationMeta('FarDosUnidMedId');
-  GeneratedIntColumn _FarDosUnidMedId;
+  final VerificationMeta _farDosUnidMedIdMeta =
+      const VerificationMeta('farDosUnidMedId');
+  GeneratedIntColumn _farDosUnidMedId;
   @override
-  GeneratedIntColumn get FarDosUnidMedId =>
-      _FarDosUnidMedId ??= _constructFarDosUnidMedId();
+  GeneratedIntColumn get farDosUnidMedId =>
+      _farDosUnidMedId ??= _constructFarDosUnidMedId();
   GeneratedIntColumn _constructFarDosUnidMedId() {
     return GeneratedIntColumn(
       'far_dos_unid_med_id',
@@ -12502,12 +12269,12 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarFlgEsSueroMeta =
-      const VerificationMeta('FarFlgEsSuero');
-  GeneratedIntColumn _FarFlgEsSuero;
+  final VerificationMeta _farFlgEsSueroMeta =
+      const VerificationMeta('farFlgEsSuero');
+  GeneratedIntColumn _farFlgEsSuero;
   @override
-  GeneratedIntColumn get FarFlgEsSuero =>
-      _FarFlgEsSuero ??= _constructFarFlgEsSuero();
+  GeneratedIntColumn get farFlgEsSuero =>
+      _farFlgEsSuero ??= _constructFarFlgEsSuero();
   GeneratedIntColumn _constructFarFlgEsSuero() {
     return GeneratedIntColumn(
       'far_flg_es_suero',
@@ -12516,12 +12283,12 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _FarFlgEsAditMeta =
-      const VerificationMeta('FarFlgEsAdit');
-  GeneratedIntColumn _FarFlgEsAdit;
+  final VerificationMeta _farFlgEsAditMeta =
+      const VerificationMeta('farFlgEsAdit');
+  GeneratedIntColumn _farFlgEsAdit;
   @override
-  GeneratedIntColumn get FarFlgEsAdit =>
-      _FarFlgEsAdit ??= _constructFarFlgEsAdit();
+  GeneratedIntColumn get farFlgEsAdit =>
+      _farFlgEsAdit ??= _constructFarFlgEsAdit();
   GeneratedIntColumn _constructFarFlgEsAdit() {
     return GeneratedIntColumn(
       'far_flg_es_adit',
@@ -12530,22 +12297,22 @@ class $TableFarmacosTable extends TableFarmacos
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -12586,17 +12353,17 @@ class $TableFarmacosTable extends TableFarmacos
 
   @override
   List<GeneratedColumn> get $columns => [
-        FarId,
-        FarNom,
-        FarFlgHab,
-        FarDrogComp,
-        FarPresMedicId,
-        FarDosCnt,
-        FarDosUnidMedId,
-        FarFlgEsSuero,
-        FarFlgEsAdit,
-        StatusId,
-        UsuId,
+        farId,
+        farNom,
+        farFlgHab,
+        farDrogComp,
+        farPresMedicId,
+        farDosCnt,
+        farDosUnidMedId,
+        farFlgEsSuero,
+        farFlgEsAdit,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -12611,79 +12378,79 @@ class $TableFarmacosTable extends TableFarmacos
   VerificationContext validateIntegrity(TableFarmacosCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FarId.present) {
+    if (d.farId.present) {
       context.handle(
-          _FarIdMeta, FarId.isAcceptableValue(d.FarId.value, _FarIdMeta));
-    } else if (FarId.isRequired && isInserting) {
-      context.missing(_FarIdMeta);
+          _farIdMeta, farId.isAcceptableValue(d.farId.value, _farIdMeta));
+    } else if (farId.isRequired && isInserting) {
+      context.missing(_farIdMeta);
     }
-    if (d.FarNom.present) {
+    if (d.farNom.present) {
       context.handle(
-          _FarNomMeta, FarNom.isAcceptableValue(d.FarNom.value, _FarNomMeta));
-    } else if (FarNom.isRequired && isInserting) {
-      context.missing(_FarNomMeta);
+          _farNomMeta, farNom.isAcceptableValue(d.farNom.value, _farNomMeta));
+    } else if (farNom.isRequired && isInserting) {
+      context.missing(_farNomMeta);
     }
-    if (d.FarFlgHab.present) {
-      context.handle(_FarFlgHabMeta,
-          FarFlgHab.isAcceptableValue(d.FarFlgHab.value, _FarFlgHabMeta));
-    } else if (FarFlgHab.isRequired && isInserting) {
-      context.missing(_FarFlgHabMeta);
+    if (d.farFlgHab.present) {
+      context.handle(_farFlgHabMeta,
+          farFlgHab.isAcceptableValue(d.farFlgHab.value, _farFlgHabMeta));
+    } else if (farFlgHab.isRequired && isInserting) {
+      context.missing(_farFlgHabMeta);
     }
-    if (d.FarDrogComp.present) {
-      context.handle(_FarDrogCompMeta,
-          FarDrogComp.isAcceptableValue(d.FarDrogComp.value, _FarDrogCompMeta));
-    } else if (FarDrogComp.isRequired && isInserting) {
-      context.missing(_FarDrogCompMeta);
+    if (d.farDrogComp.present) {
+      context.handle(_farDrogCompMeta,
+          farDrogComp.isAcceptableValue(d.farDrogComp.value, _farDrogCompMeta));
+    } else if (farDrogComp.isRequired && isInserting) {
+      context.missing(_farDrogCompMeta);
     }
-    if (d.FarPresMedicId.present) {
+    if (d.farPresMedicId.present) {
       context.handle(
-          _FarPresMedicIdMeta,
-          FarPresMedicId.isAcceptableValue(
-              d.FarPresMedicId.value, _FarPresMedicIdMeta));
-    } else if (FarPresMedicId.isRequired && isInserting) {
-      context.missing(_FarPresMedicIdMeta);
+          _farPresMedicIdMeta,
+          farPresMedicId.isAcceptableValue(
+              d.farPresMedicId.value, _farPresMedicIdMeta));
+    } else if (farPresMedicId.isRequired && isInserting) {
+      context.missing(_farPresMedicIdMeta);
     }
-    if (d.FarDosCnt.present) {
-      context.handle(_FarDosCntMeta,
-          FarDosCnt.isAcceptableValue(d.FarDosCnt.value, _FarDosCntMeta));
-    } else if (FarDosCnt.isRequired && isInserting) {
-      context.missing(_FarDosCntMeta);
+    if (d.farDosCnt.present) {
+      context.handle(_farDosCntMeta,
+          farDosCnt.isAcceptableValue(d.farDosCnt.value, _farDosCntMeta));
+    } else if (farDosCnt.isRequired && isInserting) {
+      context.missing(_farDosCntMeta);
     }
-    if (d.FarDosUnidMedId.present) {
+    if (d.farDosUnidMedId.present) {
       context.handle(
-          _FarDosUnidMedIdMeta,
-          FarDosUnidMedId.isAcceptableValue(
-              d.FarDosUnidMedId.value, _FarDosUnidMedIdMeta));
-    } else if (FarDosUnidMedId.isRequired && isInserting) {
-      context.missing(_FarDosUnidMedIdMeta);
+          _farDosUnidMedIdMeta,
+          farDosUnidMedId.isAcceptableValue(
+              d.farDosUnidMedId.value, _farDosUnidMedIdMeta));
+    } else if (farDosUnidMedId.isRequired && isInserting) {
+      context.missing(_farDosUnidMedIdMeta);
     }
-    if (d.FarFlgEsSuero.present) {
+    if (d.farFlgEsSuero.present) {
       context.handle(
-          _FarFlgEsSueroMeta,
-          FarFlgEsSuero.isAcceptableValue(
-              d.FarFlgEsSuero.value, _FarFlgEsSueroMeta));
-    } else if (FarFlgEsSuero.isRequired && isInserting) {
-      context.missing(_FarFlgEsSueroMeta);
+          _farFlgEsSueroMeta,
+          farFlgEsSuero.isAcceptableValue(
+              d.farFlgEsSuero.value, _farFlgEsSueroMeta));
+    } else if (farFlgEsSuero.isRequired && isInserting) {
+      context.missing(_farFlgEsSueroMeta);
     }
-    if (d.FarFlgEsAdit.present) {
+    if (d.farFlgEsAdit.present) {
       context.handle(
-          _FarFlgEsAditMeta,
-          FarFlgEsAdit.isAcceptableValue(
-              d.FarFlgEsAdit.value, _FarFlgEsAditMeta));
-    } else if (FarFlgEsAdit.isRequired && isInserting) {
-      context.missing(_FarFlgEsAditMeta);
+          _farFlgEsAditMeta,
+          farFlgEsAdit.isAcceptableValue(
+              d.farFlgEsAdit.value, _farFlgEsAditMeta));
+    } else if (farFlgEsAdit.isRequired && isInserting) {
+      context.missing(_farFlgEsAditMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -12707,7 +12474,7 @@ class $TableFarmacosTable extends TableFarmacos
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FarId};
+  Set<GeneratedColumn> get $primaryKey => {farId};
   @override
   Farmacos map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -12717,39 +12484,39 @@ class $TableFarmacosTable extends TableFarmacos
   @override
   Map<String, Variable> entityToSql(TableFarmacosCompanion d) {
     final map = <String, Variable>{};
-    if (d.FarId.present) {
-      map['far_id'] = Variable<int, IntType>(d.FarId.value);
+    if (d.farId.present) {
+      map['far_id'] = Variable<int, IntType>(d.farId.value);
     }
-    if (d.FarNom.present) {
-      map['far_nom'] = Variable<String, StringType>(d.FarNom.value);
+    if (d.farNom.present) {
+      map['far_nom'] = Variable<String, StringType>(d.farNom.value);
     }
-    if (d.FarFlgHab.present) {
-      map['far_flg_hab'] = Variable<int, IntType>(d.FarFlgHab.value);
+    if (d.farFlgHab.present) {
+      map['far_flg_hab'] = Variable<int, IntType>(d.farFlgHab.value);
     }
-    if (d.FarDrogComp.present) {
-      map['far_drog_comp'] = Variable<String, StringType>(d.FarDrogComp.value);
+    if (d.farDrogComp.present) {
+      map['far_drog_comp'] = Variable<String, StringType>(d.farDrogComp.value);
     }
-    if (d.FarPresMedicId.present) {
-      map['far_pres_medic_id'] = Variable<int, IntType>(d.FarPresMedicId.value);
+    if (d.farPresMedicId.present) {
+      map['far_pres_medic_id'] = Variable<int, IntType>(d.farPresMedicId.value);
     }
-    if (d.FarDosCnt.present) {
-      map['far_dos_cnt'] = Variable<int, IntType>(d.FarDosCnt.value);
+    if (d.farDosCnt.present) {
+      map['far_dos_cnt'] = Variable<int, IntType>(d.farDosCnt.value);
     }
-    if (d.FarDosUnidMedId.present) {
+    if (d.farDosUnidMedId.present) {
       map['far_dos_unid_med_id'] =
-          Variable<int, IntType>(d.FarDosUnidMedId.value);
+          Variable<int, IntType>(d.farDosUnidMedId.value);
     }
-    if (d.FarFlgEsSuero.present) {
-      map['far_flg_es_suero'] = Variable<int, IntType>(d.FarFlgEsSuero.value);
+    if (d.farFlgEsSuero.present) {
+      map['far_flg_es_suero'] = Variable<int, IntType>(d.farFlgEsSuero.value);
     }
-    if (d.FarFlgEsAdit.present) {
-      map['far_flg_es_adit'] = Variable<int, IntType>(d.FarFlgEsAdit.value);
+    if (d.farFlgEsAdit.present) {
+      map['far_flg_es_adit'] = Variable<int, IntType>(d.farFlgEsAdit.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -12770,18 +12537,18 @@ class $TableFarmacosTable extends TableFarmacos
 }
 
 class FarVia extends DataClass implements Insertable<FarVia> {
-  final int FarId;
-  final int ViaAdmMedicId;
-  final int StatusId;
-  final int UsuId;
+  final int farId;
+  final int viaAdmMedicId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   FarVia(
-      {@required this.FarId,
-      @required this.ViaAdmMedicId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.farId,
+      @required this.viaAdmMedicId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -12791,12 +12558,12 @@ class FarVia extends DataClass implements Insertable<FarVia> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return FarVia(
-      FarId: intType.mapFromDatabaseResponse(data['${effectivePrefix}far_id']),
-      ViaAdmMedicId: intType
+      farId: intType.mapFromDatabaseResponse(data['${effectivePrefix}far_id']),
+      viaAdmMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}via_adm_medic_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -12808,10 +12575,10 @@ class FarVia extends DataClass implements Insertable<FarVia> {
   factory FarVia.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return FarVia(
-      FarId: serializer.fromJson<int>(json['FarId']),
-      ViaAdmMedicId: serializer.fromJson<int>(json['ViaAdmMedicId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      farId: serializer.fromJson<int>(json['farId']),
+      viaAdmMedicId: serializer.fromJson<int>(json['viaAdmMedicId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -12821,10 +12588,10 @@ class FarVia extends DataClass implements Insertable<FarVia> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'FarId': serializer.toJson<int>(FarId),
-      'ViaAdmMedicId': serializer.toJson<int>(ViaAdmMedicId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'farId': serializer.toJson<int>(farId),
+      'viaAdmMedicId': serializer.toJson<int>(viaAdmMedicId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -12834,16 +12601,16 @@ class FarVia extends DataClass implements Insertable<FarVia> {
   @override
   T createCompanion<T extends UpdateCompanion<FarVia>>(bool nullToAbsent) {
     return TableFarViaCompanion(
-      FarId:
-          FarId == null && nullToAbsent ? const Value.absent() : Value(FarId),
-      ViaAdmMedicId: ViaAdmMedicId == null && nullToAbsent
+      farId:
+          farId == null && nullToAbsent ? const Value.absent() : Value(farId),
+      viaAdmMedicId: viaAdmMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(viaAdmMedicId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -12857,18 +12624,18 @@ class FarVia extends DataClass implements Insertable<FarVia> {
   }
 
   FarVia copyWith(
-          {int FarId,
-          int ViaAdmMedicId,
-          int StatusId,
-          int UsuId,
+          {int farId,
+          int viaAdmMedicId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       FarVia(
-        FarId: FarId ?? this.FarId,
-        ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        farId: farId ?? this.farId,
+        viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -12876,10 +12643,10 @@ class FarVia extends DataClass implements Insertable<FarVia> {
   @override
   String toString() {
     return (StringBuffer('FarVia(')
-          ..write('FarId: $FarId, ')
-          ..write('ViaAdmMedicId: $ViaAdmMedicId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('farId: $farId, ')
+          ..write('viaAdmMedicId: $viaAdmMedicId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -12889,58 +12656,58 @@ class FarVia extends DataClass implements Insertable<FarVia> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      FarId.hashCode,
+      farId.hashCode,
       $mrjc(
-          ViaAdmMedicId.hashCode,
+          viaAdmMedicId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is FarVia &&
-          other.FarId == FarId &&
-          other.ViaAdmMedicId == ViaAdmMedicId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.farId == farId &&
+          other.viaAdmMedicId == viaAdmMedicId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableFarViaCompanion extends UpdateCompanion<FarVia> {
-  final Value<int> FarId;
-  final Value<int> ViaAdmMedicId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> farId;
+  final Value<int> viaAdmMedicId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableFarViaCompanion({
-    this.FarId = const Value.absent(),
-    this.ViaAdmMedicId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.farId = const Value.absent(),
+    this.viaAdmMedicId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableFarViaCompanion copyWith(
-      {Value<int> FarId,
-      Value<int> ViaAdmMedicId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> farId,
+      Value<int> viaAdmMedicId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableFarViaCompanion(
-      FarId: FarId ?? this.FarId,
-      ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      farId: farId ?? this.farId,
+      viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -12953,42 +12720,42 @@ class $TableFarViaTable extends TableFarVia
   final GeneratedDatabase _db;
   final String _alias;
   $TableFarViaTable(this._db, [this._alias]);
-  final VerificationMeta _FarIdMeta = const VerificationMeta('FarId');
-  GeneratedIntColumn _FarId;
+  final VerificationMeta _farIdMeta = const VerificationMeta('farId');
+  GeneratedIntColumn _farId;
   @override
-  GeneratedIntColumn get FarId => _FarId ??= _constructFarId();
+  GeneratedIntColumn get farId => _farId ??= _constructFarId();
   GeneratedIntColumn _constructFarId() {
     return GeneratedIntColumn('far_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _ViaAdmMedicIdMeta =
-      const VerificationMeta('ViaAdmMedicId');
-  GeneratedIntColumn _ViaAdmMedicId;
+  final VerificationMeta _viaAdmMedicIdMeta =
+      const VerificationMeta('viaAdmMedicId');
+  GeneratedIntColumn _viaAdmMedicId;
   @override
-  GeneratedIntColumn get ViaAdmMedicId =>
-      _ViaAdmMedicId ??= _constructViaAdmMedicId();
+  GeneratedIntColumn get viaAdmMedicId =>
+      _viaAdmMedicId ??= _constructViaAdmMedicId();
   GeneratedIntColumn _constructViaAdmMedicId() {
     return GeneratedIntColumn('via_adm_medic_id', $tableName, false,
-        $customConstraints: 'REFERENCES ViaAdmMedic(ViaAdmMedicId)');
+        $customConstraints: 'REFERENCES ViaAdmMedic(viaAdmMedicId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -13029,7 +12796,7 @@ class $TableFarViaTable extends TableFarVia
 
   @override
   List<GeneratedColumn> get $columns =>
-      [FarId, ViaAdmMedicId, StatusId, UsuId, createdAt, updatedAt, deletedAt];
+      [farId, viaAdmMedicId, statusId, usuId, createdAt, updatedAt, deletedAt];
   @override
   $TableFarViaTable get asDslTable => this;
   @override
@@ -13040,31 +12807,31 @@ class $TableFarViaTable extends TableFarVia
   VerificationContext validateIntegrity(TableFarViaCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.FarId.present) {
+    if (d.farId.present) {
       context.handle(
-          _FarIdMeta, FarId.isAcceptableValue(d.FarId.value, _FarIdMeta));
-    } else if (FarId.isRequired && isInserting) {
-      context.missing(_FarIdMeta);
+          _farIdMeta, farId.isAcceptableValue(d.farId.value, _farIdMeta));
+    } else if (farId.isRequired && isInserting) {
+      context.missing(_farIdMeta);
     }
-    if (d.ViaAdmMedicId.present) {
+    if (d.viaAdmMedicId.present) {
       context.handle(
-          _ViaAdmMedicIdMeta,
-          ViaAdmMedicId.isAcceptableValue(
-              d.ViaAdmMedicId.value, _ViaAdmMedicIdMeta));
-    } else if (ViaAdmMedicId.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicIdMeta);
+          _viaAdmMedicIdMeta,
+          viaAdmMedicId.isAcceptableValue(
+              d.viaAdmMedicId.value, _viaAdmMedicIdMeta));
+    } else if (viaAdmMedicId.isRequired && isInserting) {
+      context.missing(_viaAdmMedicIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -13088,7 +12855,7 @@ class $TableFarViaTable extends TableFarVia
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {FarId};
+  Set<GeneratedColumn> get $primaryKey => {farId};
   @override
   FarVia map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -13098,17 +12865,17 @@ class $TableFarViaTable extends TableFarVia
   @override
   Map<String, Variable> entityToSql(TableFarViaCompanion d) {
     final map = <String, Variable>{};
-    if (d.FarId.present) {
-      map['far_id'] = Variable<int, IntType>(d.FarId.value);
+    if (d.farId.present) {
+      map['far_id'] = Variable<int, IntType>(d.farId.value);
     }
-    if (d.ViaAdmMedicId.present) {
-      map['via_adm_medic_id'] = Variable<int, IntType>(d.ViaAdmMedicId.value);
+    if (d.viaAdmMedicId.present) {
+      map['via_adm_medic_id'] = Variable<int, IntType>(d.viaAdmMedicId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -13129,20 +12896,20 @@ class $TableFarViaTable extends TableFarVia
 }
 
 class Materiales extends DataClass implements Insertable<Materiales> {
-  final int MatId;
-  final String MatNom;
-  final int MatBajFlg;
-  final int StatusId;
-  final int UsuId;
+  final int matId;
+  final String matNom;
+  final int matBajFlg;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Materiales(
-      {@required this.MatId,
-      @required this.MatNom,
-      @required this.MatBajFlg,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.matId,
+      @required this.matNom,
+      @required this.matBajFlg,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -13153,14 +12920,14 @@ class Materiales extends DataClass implements Insertable<Materiales> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Materiales(
-      MatId: intType.mapFromDatabaseResponse(data['${effectivePrefix}mat_id']),
-      MatNom:
+      matId: intType.mapFromDatabaseResponse(data['${effectivePrefix}mat_id']),
+      matNom:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}mat_nom']),
-      MatBajFlg: intType
+      matBajFlg: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}mat_baj_flg']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -13172,11 +12939,11 @@ class Materiales extends DataClass implements Insertable<Materiales> {
   factory Materiales.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Materiales(
-      MatId: serializer.fromJson<int>(json['MatId']),
-      MatNom: serializer.fromJson<String>(json['MatNom']),
-      MatBajFlg: serializer.fromJson<int>(json['MatBajFlg']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      matId: serializer.fromJson<int>(json['matId']),
+      matNom: serializer.fromJson<String>(json['matNom']),
+      matBajFlg: serializer.fromJson<int>(json['matBajFlg']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -13186,11 +12953,11 @@ class Materiales extends DataClass implements Insertable<Materiales> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'MatId': serializer.toJson<int>(MatId),
-      'MatNom': serializer.toJson<String>(MatNom),
-      'MatBajFlg': serializer.toJson<int>(MatBajFlg),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'matId': serializer.toJson<int>(matId),
+      'matNom': serializer.toJson<String>(matNom),
+      'matBajFlg': serializer.toJson<int>(matBajFlg),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -13200,18 +12967,18 @@ class Materiales extends DataClass implements Insertable<Materiales> {
   @override
   T createCompanion<T extends UpdateCompanion<Materiales>>(bool nullToAbsent) {
     return TableMaterialesCompanion(
-      MatId:
-          MatId == null && nullToAbsent ? const Value.absent() : Value(MatId),
-      MatNom:
-          MatNom == null && nullToAbsent ? const Value.absent() : Value(MatNom),
-      MatBajFlg: MatBajFlg == null && nullToAbsent
+      matId:
+          matId == null && nullToAbsent ? const Value.absent() : Value(matId),
+      matNom:
+          matNom == null && nullToAbsent ? const Value.absent() : Value(matNom),
+      matBajFlg: matBajFlg == null && nullToAbsent
           ? const Value.absent()
-          : Value(MatBajFlg),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(matBajFlg),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -13225,20 +12992,20 @@ class Materiales extends DataClass implements Insertable<Materiales> {
   }
 
   Materiales copyWith(
-          {int MatId,
-          String MatNom,
-          int MatBajFlg,
-          int StatusId,
-          int UsuId,
+          {int matId,
+          String matNom,
+          int matBajFlg,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Materiales(
-        MatId: MatId ?? this.MatId,
-        MatNom: MatNom ?? this.MatNom,
-        MatBajFlg: MatBajFlg ?? this.MatBajFlg,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        matId: matId ?? this.matId,
+        matNom: matNom ?? this.matNom,
+        matBajFlg: matBajFlg ?? this.matBajFlg,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -13246,11 +13013,11 @@ class Materiales extends DataClass implements Insertable<Materiales> {
   @override
   String toString() {
     return (StringBuffer('Materiales(')
-          ..write('MatId: $MatId, ')
-          ..write('MatNom: $MatNom, ')
-          ..write('MatBajFlg: $MatBajFlg, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('matId: $matId, ')
+          ..write('matNom: $matNom, ')
+          ..write('matBajFlg: $matBajFlg, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -13260,65 +13027,65 @@ class Materiales extends DataClass implements Insertable<Materiales> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      MatId.hashCode,
+      matId.hashCode,
       $mrjc(
-          MatNom.hashCode,
+          matNom.hashCode,
           $mrjc(
-              MatBajFlg.hashCode,
+              matBajFlg.hashCode,
               $mrjc(
-                  StatusId.hashCode,
+                  statusId.hashCode,
                   $mrjc(
-                      UsuId.hashCode,
+                      usuId.hashCode,
                       $mrjc(createdAt.hashCode,
                           $mrjc(updatedAt.hashCode, deletedAt.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Materiales &&
-          other.MatId == MatId &&
-          other.MatNom == MatNom &&
-          other.MatBajFlg == MatBajFlg &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.matId == matId &&
+          other.matNom == matNom &&
+          other.matBajFlg == matBajFlg &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableMaterialesCompanion extends UpdateCompanion<Materiales> {
-  final Value<int> MatId;
-  final Value<String> MatNom;
-  final Value<int> MatBajFlg;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> matId;
+  final Value<String> matNom;
+  final Value<int> matBajFlg;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableMaterialesCompanion({
-    this.MatId = const Value.absent(),
-    this.MatNom = const Value.absent(),
-    this.MatBajFlg = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.matId = const Value.absent(),
+    this.matNom = const Value.absent(),
+    this.matBajFlg = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableMaterialesCompanion copyWith(
-      {Value<int> MatId,
-      Value<String> MatNom,
-      Value<int> MatBajFlg,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> matId,
+      Value<String> matNom,
+      Value<int> matBajFlg,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableMaterialesCompanion(
-      MatId: MatId ?? this.MatId,
-      MatNom: MatNom ?? this.MatNom,
-      MatBajFlg: MatBajFlg ?? this.MatBajFlg,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      matId: matId ?? this.matId,
+      matNom: matNom ?? this.matNom,
+      matBajFlg: matBajFlg ?? this.matBajFlg,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -13331,19 +13098,19 @@ class $TableMaterialesTable extends TableMateriales
   final GeneratedDatabase _db;
   final String _alias;
   $TableMaterialesTable(this._db, [this._alias]);
-  final VerificationMeta _MatIdMeta = const VerificationMeta('MatId');
-  GeneratedIntColumn _MatId;
+  final VerificationMeta _matIdMeta = const VerificationMeta('matId');
+  GeneratedIntColumn _matId;
   @override
-  GeneratedIntColumn get MatId => _MatId ??= _constructMatId();
+  GeneratedIntColumn get matId => _matId ??= _constructMatId();
   GeneratedIntColumn _constructMatId() {
     return GeneratedIntColumn('mat_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _MatNomMeta = const VerificationMeta('MatNom');
-  GeneratedTextColumn _MatNom;
+  final VerificationMeta _matNomMeta = const VerificationMeta('matNom');
+  GeneratedTextColumn _matNom;
   @override
-  GeneratedTextColumn get MatNom => _MatNom ??= _constructMatNom();
+  GeneratedTextColumn get matNom => _matNom ??= _constructMatNom();
   GeneratedTextColumn _constructMatNom() {
     return GeneratedTextColumn(
       'mat_nom',
@@ -13352,10 +13119,10 @@ class $TableMaterialesTable extends TableMateriales
     );
   }
 
-  final VerificationMeta _MatBajFlgMeta = const VerificationMeta('MatBajFlg');
-  GeneratedIntColumn _MatBajFlg;
+  final VerificationMeta _matBajFlgMeta = const VerificationMeta('matBajFlg');
+  GeneratedIntColumn _matBajFlg;
   @override
-  GeneratedIntColumn get MatBajFlg => _MatBajFlg ??= _constructMatBajFlg();
+  GeneratedIntColumn get matBajFlg => _matBajFlg ??= _constructMatBajFlg();
   GeneratedIntColumn _constructMatBajFlg() {
     return GeneratedIntColumn(
       'mat_baj_flg',
@@ -13364,22 +13131,22 @@ class $TableMaterialesTable extends TableMateriales
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -13420,11 +13187,11 @@ class $TableMaterialesTable extends TableMateriales
 
   @override
   List<GeneratedColumn> get $columns => [
-        MatId,
-        MatNom,
-        MatBajFlg,
-        StatusId,
-        UsuId,
+        matId,
+        matNom,
+        matBajFlg,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -13439,35 +13206,35 @@ class $TableMaterialesTable extends TableMateriales
   VerificationContext validateIntegrity(TableMaterialesCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.MatId.present) {
+    if (d.matId.present) {
       context.handle(
-          _MatIdMeta, MatId.isAcceptableValue(d.MatId.value, _MatIdMeta));
-    } else if (MatId.isRequired && isInserting) {
-      context.missing(_MatIdMeta);
+          _matIdMeta, matId.isAcceptableValue(d.matId.value, _matIdMeta));
+    } else if (matId.isRequired && isInserting) {
+      context.missing(_matIdMeta);
     }
-    if (d.MatNom.present) {
+    if (d.matNom.present) {
       context.handle(
-          _MatNomMeta, MatNom.isAcceptableValue(d.MatNom.value, _MatNomMeta));
-    } else if (MatNom.isRequired && isInserting) {
-      context.missing(_MatNomMeta);
+          _matNomMeta, matNom.isAcceptableValue(d.matNom.value, _matNomMeta));
+    } else if (matNom.isRequired && isInserting) {
+      context.missing(_matNomMeta);
     }
-    if (d.MatBajFlg.present) {
-      context.handle(_MatBajFlgMeta,
-          MatBajFlg.isAcceptableValue(d.MatBajFlg.value, _MatBajFlgMeta));
-    } else if (MatBajFlg.isRequired && isInserting) {
-      context.missing(_MatBajFlgMeta);
+    if (d.matBajFlg.present) {
+      context.handle(_matBajFlgMeta,
+          matBajFlg.isAcceptableValue(d.matBajFlg.value, _matBajFlgMeta));
+    } else if (matBajFlg.isRequired && isInserting) {
+      context.missing(_matBajFlgMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -13491,7 +13258,7 @@ class $TableMaterialesTable extends TableMateriales
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {MatId};
+  Set<GeneratedColumn> get $primaryKey => {matId};
   @override
   Materiales map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -13501,20 +13268,20 @@ class $TableMaterialesTable extends TableMateriales
   @override
   Map<String, Variable> entityToSql(TableMaterialesCompanion d) {
     final map = <String, Variable>{};
-    if (d.MatId.present) {
-      map['mat_id'] = Variable<int, IntType>(d.MatId.value);
+    if (d.matId.present) {
+      map['mat_id'] = Variable<int, IntType>(d.matId.value);
     }
-    if (d.MatNom.present) {
-      map['mat_nom'] = Variable<String, StringType>(d.MatNom.value);
+    if (d.matNom.present) {
+      map['mat_nom'] = Variable<String, StringType>(d.matNom.value);
     }
-    if (d.MatBajFlg.present) {
-      map['mat_baj_flg'] = Variable<int, IntType>(d.MatBajFlg.value);
+    if (d.matBajFlg.present) {
+      map['mat_baj_flg'] = Variable<int, IntType>(d.matBajFlg.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -13535,18 +13302,18 @@ class $TableMaterialesTable extends TableMateriales
 }
 
 class MatUniMed extends DataClass implements Insertable<MatUniMed> {
-  final int MatId;
-  final int MatUnidMedId;
-  final int StatusId;
-  final int UsuId;
+  final int matId;
+  final int matUnidMedId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   MatUniMed(
-      {@required this.MatId,
-      @required this.MatUnidMedId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.matId,
+      @required this.matUnidMedId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -13556,12 +13323,12 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return MatUniMed(
-      MatId: intType.mapFromDatabaseResponse(data['${effectivePrefix}mat_id']),
-      MatUnidMedId: intType
+      matId: intType.mapFromDatabaseResponse(data['${effectivePrefix}mat_id']),
+      matUnidMedId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}mat_unid_med_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -13573,10 +13340,10 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
   factory MatUniMed.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return MatUniMed(
-      MatId: serializer.fromJson<int>(json['MatId']),
-      MatUnidMedId: serializer.fromJson<int>(json['MatUnidMedId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      matId: serializer.fromJson<int>(json['matId']),
+      matUnidMedId: serializer.fromJson<int>(json['matUnidMedId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -13586,10 +13353,10 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'MatId': serializer.toJson<int>(MatId),
-      'MatUnidMedId': serializer.toJson<int>(MatUnidMedId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'matId': serializer.toJson<int>(matId),
+      'matUnidMedId': serializer.toJson<int>(matUnidMedId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -13599,16 +13366,16 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
   @override
   T createCompanion<T extends UpdateCompanion<MatUniMed>>(bool nullToAbsent) {
     return TableMatUniMedCompanion(
-      MatId:
-          MatId == null && nullToAbsent ? const Value.absent() : Value(MatId),
-      MatUnidMedId: MatUnidMedId == null && nullToAbsent
+      matId:
+          matId == null && nullToAbsent ? const Value.absent() : Value(matId),
+      matUnidMedId: matUnidMedId == null && nullToAbsent
           ? const Value.absent()
-          : Value(MatUnidMedId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(matUnidMedId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -13622,18 +13389,18 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
   }
 
   MatUniMed copyWith(
-          {int MatId,
-          int MatUnidMedId,
-          int StatusId,
-          int UsuId,
+          {int matId,
+          int matUnidMedId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       MatUniMed(
-        MatId: MatId ?? this.MatId,
-        MatUnidMedId: MatUnidMedId ?? this.MatUnidMedId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        matId: matId ?? this.matId,
+        matUnidMedId: matUnidMedId ?? this.matUnidMedId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -13641,10 +13408,10 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
   @override
   String toString() {
     return (StringBuffer('MatUniMed(')
-          ..write('MatId: $MatId, ')
-          ..write('MatUnidMedId: $MatUnidMedId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('matId: $matId, ')
+          ..write('matUnidMedId: $matUnidMedId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -13654,58 +13421,58 @@ class MatUniMed extends DataClass implements Insertable<MatUniMed> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      MatId.hashCode,
+      matId.hashCode,
       $mrjc(
-          MatUnidMedId.hashCode,
+          matUnidMedId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is MatUniMed &&
-          other.MatId == MatId &&
-          other.MatUnidMedId == MatUnidMedId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.matId == matId &&
+          other.matUnidMedId == matUnidMedId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TableMatUniMedCompanion extends UpdateCompanion<MatUniMed> {
-  final Value<int> MatId;
-  final Value<int> MatUnidMedId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> matId;
+  final Value<int> matUnidMedId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TableMatUniMedCompanion({
-    this.MatId = const Value.absent(),
-    this.MatUnidMedId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.matId = const Value.absent(),
+    this.matUnidMedId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TableMatUniMedCompanion copyWith(
-      {Value<int> MatId,
-      Value<int> MatUnidMedId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> matId,
+      Value<int> matUnidMedId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TableMatUniMedCompanion(
-      MatId: MatId ?? this.MatId,
-      MatUnidMedId: MatUnidMedId ?? this.MatUnidMedId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      matId: matId ?? this.matId,
+      matUnidMedId: matUnidMedId ?? this.matUnidMedId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -13718,21 +13485,21 @@ class $TableMatUniMedTable extends TableMatUniMed
   final GeneratedDatabase _db;
   final String _alias;
   $TableMatUniMedTable(this._db, [this._alias]);
-  final VerificationMeta _MatIdMeta = const VerificationMeta('MatId');
-  GeneratedIntColumn _MatId;
+  final VerificationMeta _matIdMeta = const VerificationMeta('matId');
+  GeneratedIntColumn _matId;
   @override
-  GeneratedIntColumn get MatId => _MatId ??= _constructMatId();
+  GeneratedIntColumn get matId => _matId ??= _constructMatId();
   GeneratedIntColumn _constructMatId() {
     return GeneratedIntColumn('mat_id', $tableName, false,
-        $customConstraints: 'REFERENCES Materiales(MatId)');
+        $customConstraints: 'REFERENCES Materiales(matId)');
   }
 
-  final VerificationMeta _MatUnidMedIdMeta =
-      const VerificationMeta('MatUnidMedId');
-  GeneratedIntColumn _MatUnidMedId;
+  final VerificationMeta _matUnidMedIdMeta =
+      const VerificationMeta('matUnidMedId');
+  GeneratedIntColumn _matUnidMedId;
   @override
-  GeneratedIntColumn get MatUnidMedId =>
-      _MatUnidMedId ??= _constructMatUnidMedId();
+  GeneratedIntColumn get matUnidMedId =>
+      _matUnidMedId ??= _constructMatUnidMedId();
   GeneratedIntColumn _constructMatUnidMedId() {
     return GeneratedIntColumn(
       'mat_unid_med_id',
@@ -13741,22 +13508,22 @@ class $TableMatUniMedTable extends TableMatUniMed
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -13797,7 +13564,7 @@ class $TableMatUniMedTable extends TableMatUniMed
 
   @override
   List<GeneratedColumn> get $columns =>
-      [MatId, MatUnidMedId, StatusId, UsuId, createdAt, updatedAt, deletedAt];
+      [matId, matUnidMedId, statusId, usuId, createdAt, updatedAt, deletedAt];
   @override
   $TableMatUniMedTable get asDslTable => this;
   @override
@@ -13808,31 +13575,31 @@ class $TableMatUniMedTable extends TableMatUniMed
   VerificationContext validateIntegrity(TableMatUniMedCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.MatId.present) {
+    if (d.matId.present) {
       context.handle(
-          _MatIdMeta, MatId.isAcceptableValue(d.MatId.value, _MatIdMeta));
-    } else if (MatId.isRequired && isInserting) {
-      context.missing(_MatIdMeta);
+          _matIdMeta, matId.isAcceptableValue(d.matId.value, _matIdMeta));
+    } else if (matId.isRequired && isInserting) {
+      context.missing(_matIdMeta);
     }
-    if (d.MatUnidMedId.present) {
+    if (d.matUnidMedId.present) {
       context.handle(
-          _MatUnidMedIdMeta,
-          MatUnidMedId.isAcceptableValue(
-              d.MatUnidMedId.value, _MatUnidMedIdMeta));
-    } else if (MatUnidMedId.isRequired && isInserting) {
-      context.missing(_MatUnidMedIdMeta);
+          _matUnidMedIdMeta,
+          matUnidMedId.isAcceptableValue(
+              d.matUnidMedId.value, _matUnidMedIdMeta));
+    } else if (matUnidMedId.isRequired && isInserting) {
+      context.missing(_matUnidMedIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -13866,17 +13633,17 @@ class $TableMatUniMedTable extends TableMatUniMed
   @override
   Map<String, Variable> entityToSql(TableMatUniMedCompanion d) {
     final map = <String, Variable>{};
-    if (d.MatId.present) {
-      map['mat_id'] = Variable<int, IntType>(d.MatId.value);
+    if (d.matId.present) {
+      map['mat_id'] = Variable<int, IntType>(d.matId.value);
     }
-    if (d.MatUnidMedId.present) {
-      map['mat_unid_med_id'] = Variable<int, IntType>(d.MatUnidMedId.value);
+    if (d.matUnidMedId.present) {
+      map['mat_unid_med_id'] = Variable<int, IntType>(d.matUnidMedId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -13897,18 +13664,18 @@ class $TableMatUniMedTable extends TableMatUniMed
 }
 
 class Presentaciones extends DataClass implements Insertable<Presentaciones> {
-  final int PresMedicId;
-  final String PresMedicNom;
-  final int StatusId;
-  final int UsuId;
+  final int presMedicId;
+  final String presMedicNom;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   Presentaciones(
-      {@required this.PresMedicId,
-      @required this.PresMedicNom,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.presMedicId,
+      @required this.presMedicNom,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -13920,13 +13687,13 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
     final stringType = db.typeSystem.forDartType<String>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Presentaciones(
-      PresMedicId: intType
+      presMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}pres_medic_id']),
-      PresMedicNom: stringType
+      presMedicNom: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}pres_medic_nom']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -13938,10 +13705,10 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
   factory Presentaciones.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Presentaciones(
-      PresMedicId: serializer.fromJson<int>(json['PresMedicId']),
-      PresMedicNom: serializer.fromJson<String>(json['PresMedicNom']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      presMedicId: serializer.fromJson<int>(json['presMedicId']),
+      presMedicNom: serializer.fromJson<String>(json['presMedicNom']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -13951,10 +13718,10 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'PresMedicId': serializer.toJson<int>(PresMedicId),
-      'PresMedicNom': serializer.toJson<String>(PresMedicNom),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'presMedicId': serializer.toJson<int>(presMedicId),
+      'presMedicNom': serializer.toJson<String>(presMedicNom),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -13965,17 +13732,17 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
   T createCompanion<T extends UpdateCompanion<Presentaciones>>(
       bool nullToAbsent) {
     return TablePresentacionesCompanion(
-      PresMedicId: PresMedicId == null && nullToAbsent
+      presMedicId: presMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PresMedicId),
-      PresMedicNom: PresMedicNom == null && nullToAbsent
+          : Value(presMedicId),
+      presMedicNom: presMedicNom == null && nullToAbsent
           ? const Value.absent()
-          : Value(PresMedicNom),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(presMedicNom),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -13989,18 +13756,18 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
   }
 
   Presentaciones copyWith(
-          {int PresMedicId,
-          String PresMedicNom,
-          int StatusId,
-          int UsuId,
+          {int presMedicId,
+          String presMedicNom,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       Presentaciones(
-        PresMedicId: PresMedicId ?? this.PresMedicId,
-        PresMedicNom: PresMedicNom ?? this.PresMedicNom,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        presMedicId: presMedicId ?? this.presMedicId,
+        presMedicNom: presMedicNom ?? this.presMedicNom,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -14008,10 +13775,10 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
   @override
   String toString() {
     return (StringBuffer('Presentaciones(')
-          ..write('PresMedicId: $PresMedicId, ')
-          ..write('PresMedicNom: $PresMedicNom, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('presMedicId: $presMedicId, ')
+          ..write('presMedicNom: $presMedicNom, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -14021,58 +13788,58 @@ class Presentaciones extends DataClass implements Insertable<Presentaciones> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      PresMedicId.hashCode,
+      presMedicId.hashCode,
       $mrjc(
-          PresMedicNom.hashCode,
+          presMedicNom.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Presentaciones &&
-          other.PresMedicId == PresMedicId &&
-          other.PresMedicNom == PresMedicNom &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.presMedicId == presMedicId &&
+          other.presMedicNom == presMedicNom &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TablePresentacionesCompanion extends UpdateCompanion<Presentaciones> {
-  final Value<int> PresMedicId;
-  final Value<String> PresMedicNom;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> presMedicId;
+  final Value<String> presMedicNom;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TablePresentacionesCompanion({
-    this.PresMedicId = const Value.absent(),
-    this.PresMedicNom = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.presMedicId = const Value.absent(),
+    this.presMedicNom = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TablePresentacionesCompanion copyWith(
-      {Value<int> PresMedicId,
-      Value<String> PresMedicNom,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> presMedicId,
+      Value<String> presMedicNom,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TablePresentacionesCompanion(
-      PresMedicId: PresMedicId ?? this.PresMedicId,
-      PresMedicNom: PresMedicNom ?? this.PresMedicNom,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      presMedicId: presMedicId ?? this.presMedicId,
+      presMedicNom: presMedicNom ?? this.presMedicNom,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -14085,23 +13852,23 @@ class $TablePresentacionesTable extends TablePresentaciones
   final GeneratedDatabase _db;
   final String _alias;
   $TablePresentacionesTable(this._db, [this._alias]);
-  final VerificationMeta _PresMedicIdMeta =
-      const VerificationMeta('PresMedicId');
-  GeneratedIntColumn _PresMedicId;
+  final VerificationMeta _presMedicIdMeta =
+      const VerificationMeta('presMedicId');
+  GeneratedIntColumn _presMedicId;
   @override
-  GeneratedIntColumn get PresMedicId =>
-      _PresMedicId ??= _constructPresMedicId();
+  GeneratedIntColumn get presMedicId =>
+      _presMedicId ??= _constructPresMedicId();
   GeneratedIntColumn _constructPresMedicId() {
     return GeneratedIntColumn('pres_medic_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _PresMedicNomMeta =
-      const VerificationMeta('PresMedicNom');
-  GeneratedTextColumn _PresMedicNom;
+  final VerificationMeta _presMedicNomMeta =
+      const VerificationMeta('presMedicNom');
+  GeneratedTextColumn _presMedicNom;
   @override
-  GeneratedTextColumn get PresMedicNom =>
-      _PresMedicNom ??= _constructPresMedicNom();
+  GeneratedTextColumn get presMedicNom =>
+      _presMedicNom ??= _constructPresMedicNom();
   GeneratedTextColumn _constructPresMedicNom() {
     return GeneratedTextColumn(
       'pres_medic_nom',
@@ -14110,22 +13877,22 @@ class $TablePresentacionesTable extends TablePresentaciones
     );
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -14166,10 +13933,10 @@ class $TablePresentacionesTable extends TablePresentaciones
 
   @override
   List<GeneratedColumn> get $columns => [
-        PresMedicId,
-        PresMedicNom,
-        StatusId,
-        UsuId,
+        presMedicId,
+        presMedicNom,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -14184,31 +13951,31 @@ class $TablePresentacionesTable extends TablePresentaciones
   VerificationContext validateIntegrity(TablePresentacionesCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.PresMedicId.present) {
-      context.handle(_PresMedicIdMeta,
-          PresMedicId.isAcceptableValue(d.PresMedicId.value, _PresMedicIdMeta));
-    } else if (PresMedicId.isRequired && isInserting) {
-      context.missing(_PresMedicIdMeta);
+    if (d.presMedicId.present) {
+      context.handle(_presMedicIdMeta,
+          presMedicId.isAcceptableValue(d.presMedicId.value, _presMedicIdMeta));
+    } else if (presMedicId.isRequired && isInserting) {
+      context.missing(_presMedicIdMeta);
     }
-    if (d.PresMedicNom.present) {
+    if (d.presMedicNom.present) {
       context.handle(
-          _PresMedicNomMeta,
-          PresMedicNom.isAcceptableValue(
-              d.PresMedicNom.value, _PresMedicNomMeta));
-    } else if (PresMedicNom.isRequired && isInserting) {
-      context.missing(_PresMedicNomMeta);
+          _presMedicNomMeta,
+          presMedicNom.isAcceptableValue(
+              d.presMedicNom.value, _presMedicNomMeta));
+    } else if (presMedicNom.isRequired && isInserting) {
+      context.missing(_presMedicNomMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -14232,7 +13999,7 @@ class $TablePresentacionesTable extends TablePresentaciones
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {PresMedicId};
+  Set<GeneratedColumn> get $primaryKey => {presMedicId};
   @override
   Presentaciones map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -14242,18 +14009,18 @@ class $TablePresentacionesTable extends TablePresentaciones
   @override
   Map<String, Variable> entityToSql(TablePresentacionesCompanion d) {
     final map = <String, Variable>{};
-    if (d.PresMedicId.present) {
-      map['pres_medic_id'] = Variable<int, IntType>(d.PresMedicId.value);
+    if (d.presMedicId.present) {
+      map['pres_medic_id'] = Variable<int, IntType>(d.presMedicId.value);
     }
-    if (d.PresMedicNom.present) {
+    if (d.presMedicNom.present) {
       map['pres_medic_nom'] =
-          Variable<String, StringType>(d.PresMedicNom.value);
+          Variable<String, StringType>(d.presMedicNom.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -14274,18 +14041,18 @@ class $TablePresentacionesTable extends TablePresentaciones
 }
 
 class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
-  final int PresMedicId;
-  final int ViaAdmMedicId;
-  final int StatusId;
-  final int UsuId;
+  final int presMedicId;
+  final int viaAdmMedicId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   PresMedicVia(
-      {@required this.PresMedicId,
-      @required this.ViaAdmMedicId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.presMedicId,
+      @required this.viaAdmMedicId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -14295,13 +14062,13 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return PresMedicVia(
-      PresMedicId: intType
+      presMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}pres_medic_id']),
-      ViaAdmMedicId: intType
+      viaAdmMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}via_adm_medic_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -14313,10 +14080,10 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
   factory PresMedicVia.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return PresMedicVia(
-      PresMedicId: serializer.fromJson<int>(json['PresMedicId']),
-      ViaAdmMedicId: serializer.fromJson<int>(json['ViaAdmMedicId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      presMedicId: serializer.fromJson<int>(json['presMedicId']),
+      viaAdmMedicId: serializer.fromJson<int>(json['viaAdmMedicId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -14326,10 +14093,10 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'PresMedicId': serializer.toJson<int>(PresMedicId),
-      'ViaAdmMedicId': serializer.toJson<int>(ViaAdmMedicId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'presMedicId': serializer.toJson<int>(presMedicId),
+      'viaAdmMedicId': serializer.toJson<int>(viaAdmMedicId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -14340,17 +14107,17 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
   T createCompanion<T extends UpdateCompanion<PresMedicVia>>(
       bool nullToAbsent) {
     return TablePresMedicViaCompanion(
-      PresMedicId: PresMedicId == null && nullToAbsent
+      presMedicId: presMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PresMedicId),
-      ViaAdmMedicId: ViaAdmMedicId == null && nullToAbsent
+          : Value(presMedicId),
+      viaAdmMedicId: viaAdmMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(ViaAdmMedicId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(viaAdmMedicId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -14364,18 +14131,18 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
   }
 
   PresMedicVia copyWith(
-          {int PresMedicId,
-          int ViaAdmMedicId,
-          int StatusId,
-          int UsuId,
+          {int presMedicId,
+          int viaAdmMedicId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       PresMedicVia(
-        PresMedicId: PresMedicId ?? this.PresMedicId,
-        ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        presMedicId: presMedicId ?? this.presMedicId,
+        viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -14383,10 +14150,10 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
   @override
   String toString() {
     return (StringBuffer('PresMedicVia(')
-          ..write('PresMedicId: $PresMedicId, ')
-          ..write('ViaAdmMedicId: $ViaAdmMedicId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('presMedicId: $presMedicId, ')
+          ..write('viaAdmMedicId: $viaAdmMedicId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -14396,58 +14163,58 @@ class PresMedicVia extends DataClass implements Insertable<PresMedicVia> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      PresMedicId.hashCode,
+      presMedicId.hashCode,
       $mrjc(
-          ViaAdmMedicId.hashCode,
+          viaAdmMedicId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is PresMedicVia &&
-          other.PresMedicId == PresMedicId &&
-          other.ViaAdmMedicId == ViaAdmMedicId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.presMedicId == presMedicId &&
+          other.viaAdmMedicId == viaAdmMedicId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TablePresMedicViaCompanion extends UpdateCompanion<PresMedicVia> {
-  final Value<int> PresMedicId;
-  final Value<int> ViaAdmMedicId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> presMedicId;
+  final Value<int> viaAdmMedicId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TablePresMedicViaCompanion({
-    this.PresMedicId = const Value.absent(),
-    this.ViaAdmMedicId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.presMedicId = const Value.absent(),
+    this.viaAdmMedicId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TablePresMedicViaCompanion copyWith(
-      {Value<int> PresMedicId,
-      Value<int> ViaAdmMedicId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> presMedicId,
+      Value<int> viaAdmMedicId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TablePresMedicViaCompanion(
-      PresMedicId: PresMedicId ?? this.PresMedicId,
-      ViaAdmMedicId: ViaAdmMedicId ?? this.ViaAdmMedicId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      presMedicId: presMedicId ?? this.presMedicId,
+      viaAdmMedicId: viaAdmMedicId ?? this.viaAdmMedicId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -14460,44 +14227,44 @@ class $TablePresMedicViaTable extends TablePresMedicVia
   final GeneratedDatabase _db;
   final String _alias;
   $TablePresMedicViaTable(this._db, [this._alias]);
-  final VerificationMeta _PresMedicIdMeta =
-      const VerificationMeta('PresMedicId');
-  GeneratedIntColumn _PresMedicId;
+  final VerificationMeta _presMedicIdMeta =
+      const VerificationMeta('presMedicId');
+  GeneratedIntColumn _presMedicId;
   @override
-  GeneratedIntColumn get PresMedicId =>
-      _PresMedicId ??= _constructPresMedicId();
+  GeneratedIntColumn get presMedicId =>
+      _presMedicId ??= _constructPresMedicId();
   GeneratedIntColumn _constructPresMedicId() {
     return GeneratedIntColumn('pres_medic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Presentaciones(PresMedicId)');
+        $customConstraints: 'REFERENCES Presentaciones(presMedicId)');
   }
 
-  final VerificationMeta _ViaAdmMedicIdMeta =
-      const VerificationMeta('ViaAdmMedicId');
-  GeneratedIntColumn _ViaAdmMedicId;
+  final VerificationMeta _viaAdmMedicIdMeta =
+      const VerificationMeta('viaAdmMedicId');
+  GeneratedIntColumn _viaAdmMedicId;
   @override
-  GeneratedIntColumn get ViaAdmMedicId =>
-      _ViaAdmMedicId ??= _constructViaAdmMedicId();
+  GeneratedIntColumn get viaAdmMedicId =>
+      _viaAdmMedicId ??= _constructViaAdmMedicId();
   GeneratedIntColumn _constructViaAdmMedicId() {
     return GeneratedIntColumn('via_adm_medic_id', $tableName, false,
-        $customConstraints: 'REFERENCES ViaAdmMedic(ViaAdmMedicId)');
+        $customConstraints: 'REFERENCES ViaAdmMedic(viaAdmMedicId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -14538,10 +14305,10 @@ class $TablePresMedicViaTable extends TablePresMedicVia
 
   @override
   List<GeneratedColumn> get $columns => [
-        PresMedicId,
-        ViaAdmMedicId,
-        StatusId,
-        UsuId,
+        presMedicId,
+        viaAdmMedicId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -14556,31 +14323,31 @@ class $TablePresMedicViaTable extends TablePresMedicVia
   VerificationContext validateIntegrity(TablePresMedicViaCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.PresMedicId.present) {
-      context.handle(_PresMedicIdMeta,
-          PresMedicId.isAcceptableValue(d.PresMedicId.value, _PresMedicIdMeta));
-    } else if (PresMedicId.isRequired && isInserting) {
-      context.missing(_PresMedicIdMeta);
+    if (d.presMedicId.present) {
+      context.handle(_presMedicIdMeta,
+          presMedicId.isAcceptableValue(d.presMedicId.value, _presMedicIdMeta));
+    } else if (presMedicId.isRequired && isInserting) {
+      context.missing(_presMedicIdMeta);
     }
-    if (d.ViaAdmMedicId.present) {
+    if (d.viaAdmMedicId.present) {
       context.handle(
-          _ViaAdmMedicIdMeta,
-          ViaAdmMedicId.isAcceptableValue(
-              d.ViaAdmMedicId.value, _ViaAdmMedicIdMeta));
-    } else if (ViaAdmMedicId.isRequired && isInserting) {
-      context.missing(_ViaAdmMedicIdMeta);
+          _viaAdmMedicIdMeta,
+          viaAdmMedicId.isAcceptableValue(
+              d.viaAdmMedicId.value, _viaAdmMedicIdMeta));
+    } else if (viaAdmMedicId.isRequired && isInserting) {
+      context.missing(_viaAdmMedicIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -14614,17 +14381,17 @@ class $TablePresMedicViaTable extends TablePresMedicVia
   @override
   Map<String, Variable> entityToSql(TablePresMedicViaCompanion d) {
     final map = <String, Variable>{};
-    if (d.PresMedicId.present) {
-      map['pres_medic_id'] = Variable<int, IntType>(d.PresMedicId.value);
+    if (d.presMedicId.present) {
+      map['pres_medic_id'] = Variable<int, IntType>(d.presMedicId.value);
     }
-    if (d.ViaAdmMedicId.present) {
-      map['via_adm_medic_id'] = Variable<int, IntType>(d.ViaAdmMedicId.value);
+    if (d.viaAdmMedicId.present) {
+      map['via_adm_medic_id'] = Variable<int, IntType>(d.viaAdmMedicId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -14645,18 +14412,18 @@ class $TablePresMedicViaTable extends TablePresMedicVia
 }
 
 class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
-  final int PresMedicId;
-  final int UnidMedId;
-  final int StatusId;
-  final int UsuId;
+  final int presMedicId;
+  final int unidMedId;
+  final int statusId;
+  final int usuId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime deletedAt;
   PresMedicUniMed(
-      {@required this.PresMedicId,
-      @required this.UnidMedId,
-      @required this.StatusId,
-      @required this.UsuId,
+      {@required this.presMedicId,
+      @required this.unidMedId,
+      @required this.statusId,
+      @required this.usuId,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -14667,13 +14434,13 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
     final intType = db.typeSystem.forDartType<int>();
     final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return PresMedicUniMed(
-      PresMedicId: intType
+      presMedicId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}pres_medic_id']),
-      UnidMedId: intType
+      unidMedId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}unid_med_id']),
-      StatusId:
+      statusId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}status_id']),
-      UsuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
+      usuId: intType.mapFromDatabaseResponse(data['${effectivePrefix}usu_id']),
       createdAt: dateTimeType
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at']),
       updatedAt: dateTimeType
@@ -14685,10 +14452,10 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
   factory PresMedicUniMed.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return PresMedicUniMed(
-      PresMedicId: serializer.fromJson<int>(json['PresMedicId']),
-      UnidMedId: serializer.fromJson<int>(json['UnidMedId']),
-      StatusId: serializer.fromJson<int>(json['StatusId']),
-      UsuId: serializer.fromJson<int>(json['UsuId']),
+      presMedicId: serializer.fromJson<int>(json['presMedicId']),
+      unidMedId: serializer.fromJson<int>(json['unidMedId']),
+      statusId: serializer.fromJson<int>(json['statusId']),
+      usuId: serializer.fromJson<int>(json['usuId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
@@ -14698,10 +14465,10 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
-      'PresMedicId': serializer.toJson<int>(PresMedicId),
-      'UnidMedId': serializer.toJson<int>(UnidMedId),
-      'StatusId': serializer.toJson<int>(StatusId),
-      'UsuId': serializer.toJson<int>(UsuId),
+      'presMedicId': serializer.toJson<int>(presMedicId),
+      'unidMedId': serializer.toJson<int>(unidMedId),
+      'statusId': serializer.toJson<int>(statusId),
+      'usuId': serializer.toJson<int>(usuId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
@@ -14712,17 +14479,17 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
   T createCompanion<T extends UpdateCompanion<PresMedicUniMed>>(
       bool nullToAbsent) {
     return TablePresMedicUniMedCompanion(
-      PresMedicId: PresMedicId == null && nullToAbsent
+      presMedicId: presMedicId == null && nullToAbsent
           ? const Value.absent()
-          : Value(PresMedicId),
-      UnidMedId: UnidMedId == null && nullToAbsent
+          : Value(presMedicId),
+      unidMedId: unidMedId == null && nullToAbsent
           ? const Value.absent()
-          : Value(UnidMedId),
-      StatusId: StatusId == null && nullToAbsent
+          : Value(unidMedId),
+      statusId: statusId == null && nullToAbsent
           ? const Value.absent()
-          : Value(StatusId),
-      UsuId:
-          UsuId == null && nullToAbsent ? const Value.absent() : Value(UsuId),
+          : Value(statusId),
+      usuId:
+          usuId == null && nullToAbsent ? const Value.absent() : Value(usuId),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -14736,18 +14503,18 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
   }
 
   PresMedicUniMed copyWith(
-          {int PresMedicId,
-          int UnidMedId,
-          int StatusId,
-          int UsuId,
+          {int presMedicId,
+          int unidMedId,
+          int statusId,
+          int usuId,
           DateTime createdAt,
           DateTime updatedAt,
           DateTime deletedAt}) =>
       PresMedicUniMed(
-        PresMedicId: PresMedicId ?? this.PresMedicId,
-        UnidMedId: UnidMedId ?? this.UnidMedId,
-        StatusId: StatusId ?? this.StatusId,
-        UsuId: UsuId ?? this.UsuId,
+        presMedicId: presMedicId ?? this.presMedicId,
+        unidMedId: unidMedId ?? this.unidMedId,
+        statusId: statusId ?? this.statusId,
+        usuId: usuId ?? this.usuId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         deletedAt: deletedAt ?? this.deletedAt,
@@ -14755,10 +14522,10 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
   @override
   String toString() {
     return (StringBuffer('PresMedicUniMed(')
-          ..write('PresMedicId: $PresMedicId, ')
-          ..write('UnidMedId: $UnidMedId, ')
-          ..write('StatusId: $StatusId, ')
-          ..write('UsuId: $UsuId, ')
+          ..write('presMedicId: $presMedicId, ')
+          ..write('unidMedId: $unidMedId, ')
+          ..write('statusId: $statusId, ')
+          ..write('usuId: $usuId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deletedAt: $deletedAt')
@@ -14768,58 +14535,58 @@ class PresMedicUniMed extends DataClass implements Insertable<PresMedicUniMed> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      PresMedicId.hashCode,
+      presMedicId.hashCode,
       $mrjc(
-          UnidMedId.hashCode,
+          unidMedId.hashCode,
           $mrjc(
-              StatusId.hashCode,
+              statusId.hashCode,
               $mrjc(
-                  UsuId.hashCode,
+                  usuId.hashCode,
                   $mrjc(createdAt.hashCode,
                       $mrjc(updatedAt.hashCode, deletedAt.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is PresMedicUniMed &&
-          other.PresMedicId == PresMedicId &&
-          other.UnidMedId == UnidMedId &&
-          other.StatusId == StatusId &&
-          other.UsuId == UsuId &&
+          other.presMedicId == presMedicId &&
+          other.unidMedId == unidMedId &&
+          other.statusId == statusId &&
+          other.usuId == usuId &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
           other.deletedAt == deletedAt);
 }
 
 class TablePresMedicUniMedCompanion extends UpdateCompanion<PresMedicUniMed> {
-  final Value<int> PresMedicId;
-  final Value<int> UnidMedId;
-  final Value<int> StatusId;
-  final Value<int> UsuId;
+  final Value<int> presMedicId;
+  final Value<int> unidMedId;
+  final Value<int> statusId;
+  final Value<int> usuId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> deletedAt;
   const TablePresMedicUniMedCompanion({
-    this.PresMedicId = const Value.absent(),
-    this.UnidMedId = const Value.absent(),
-    this.StatusId = const Value.absent(),
-    this.UsuId = const Value.absent(),
+    this.presMedicId = const Value.absent(),
+    this.unidMedId = const Value.absent(),
+    this.statusId = const Value.absent(),
+    this.usuId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   TablePresMedicUniMedCompanion copyWith(
-      {Value<int> PresMedicId,
-      Value<int> UnidMedId,
-      Value<int> StatusId,
-      Value<int> UsuId,
+      {Value<int> presMedicId,
+      Value<int> unidMedId,
+      Value<int> statusId,
+      Value<int> usuId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<DateTime> deletedAt}) {
     return TablePresMedicUniMedCompanion(
-      PresMedicId: PresMedicId ?? this.PresMedicId,
-      UnidMedId: UnidMedId ?? this.UnidMedId,
-      StatusId: StatusId ?? this.StatusId,
-      UsuId: UsuId ?? this.UsuId,
+      presMedicId: presMedicId ?? this.presMedicId,
+      unidMedId: unidMedId ?? this.unidMedId,
+      statusId: statusId ?? this.statusId,
+      usuId: usuId ?? this.usuId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -14832,42 +14599,42 @@ class $TablePresMedicUniMedTable extends TablePresMedicUniMed
   final GeneratedDatabase _db;
   final String _alias;
   $TablePresMedicUniMedTable(this._db, [this._alias]);
-  final VerificationMeta _PresMedicIdMeta =
-      const VerificationMeta('PresMedicId');
-  GeneratedIntColumn _PresMedicId;
+  final VerificationMeta _presMedicIdMeta =
+      const VerificationMeta('presMedicId');
+  GeneratedIntColumn _presMedicId;
   @override
-  GeneratedIntColumn get PresMedicId =>
-      _PresMedicId ??= _constructPresMedicId();
+  GeneratedIntColumn get presMedicId =>
+      _presMedicId ??= _constructPresMedicId();
   GeneratedIntColumn _constructPresMedicId() {
     return GeneratedIntColumn('pres_medic_id', $tableName, false,
-        $customConstraints: 'REFERENCES Presentaciones(PresMedicId)');
+        $customConstraints: 'REFERENCES Presentaciones(presMedicId)');
   }
 
-  final VerificationMeta _UnidMedIdMeta = const VerificationMeta('UnidMedId');
-  GeneratedIntColumn _UnidMedId;
+  final VerificationMeta _unidMedIdMeta = const VerificationMeta('unidMedId');
+  GeneratedIntColumn _unidMedId;
   @override
-  GeneratedIntColumn get UnidMedId => _UnidMedId ??= _constructUnidMedId();
+  GeneratedIntColumn get unidMedId => _unidMedId ??= _constructUnidMedId();
   GeneratedIntColumn _constructUnidMedId() {
     return GeneratedIntColumn('unid_med_id', $tableName, false,
-        $customConstraints: 'REFERENCES UnidMed(UnidMedId)');
+        $customConstraints: 'REFERENCES UnidMed(unidMedId)');
   }
 
-  final VerificationMeta _StatusIdMeta = const VerificationMeta('StatusId');
-  GeneratedIntColumn _StatusId;
+  final VerificationMeta _statusIdMeta = const VerificationMeta('statusId');
+  GeneratedIntColumn _statusId;
   @override
-  GeneratedIntColumn get StatusId => _StatusId ??= _constructStatusId();
+  GeneratedIntColumn get statusId => _statusId ??= _constructStatusId();
   GeneratedIntColumn _constructStatusId() {
     return GeneratedIntColumn('status_id', $tableName, false,
-        $customConstraints: 'REFERENCES Ficha(FicId)');
+        $customConstraints: 'REFERENCES Ficha(ficId)');
   }
 
-  final VerificationMeta _UsuIdMeta = const VerificationMeta('UsuId');
-  GeneratedIntColumn _UsuId;
+  final VerificationMeta _usuIdMeta = const VerificationMeta('usuId');
+  GeneratedIntColumn _usuId;
   @override
-  GeneratedIntColumn get UsuId => _UsuId ??= _constructUsuId();
+  GeneratedIntColumn get usuId => _usuId ??= _constructUsuId();
   GeneratedIntColumn _constructUsuId() {
     return GeneratedIntColumn('usu_id', $tableName, false,
-        $customConstraints: 'REFERENCES Usuarios(UsuId)');
+        $customConstraints: 'REFERENCES Usuarios(usuId)');
   }
 
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
@@ -14908,10 +14675,10 @@ class $TablePresMedicUniMedTable extends TablePresMedicUniMed
 
   @override
   List<GeneratedColumn> get $columns => [
-        PresMedicId,
-        UnidMedId,
-        StatusId,
-        UsuId,
+        presMedicId,
+        unidMedId,
+        statusId,
+        usuId,
         createdAt,
         updatedAt,
         deletedAt
@@ -14926,29 +14693,29 @@ class $TablePresMedicUniMedTable extends TablePresMedicUniMed
   VerificationContext validateIntegrity(TablePresMedicUniMedCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.PresMedicId.present) {
-      context.handle(_PresMedicIdMeta,
-          PresMedicId.isAcceptableValue(d.PresMedicId.value, _PresMedicIdMeta));
-    } else if (PresMedicId.isRequired && isInserting) {
-      context.missing(_PresMedicIdMeta);
+    if (d.presMedicId.present) {
+      context.handle(_presMedicIdMeta,
+          presMedicId.isAcceptableValue(d.presMedicId.value, _presMedicIdMeta));
+    } else if (presMedicId.isRequired && isInserting) {
+      context.missing(_presMedicIdMeta);
     }
-    if (d.UnidMedId.present) {
-      context.handle(_UnidMedIdMeta,
-          UnidMedId.isAcceptableValue(d.UnidMedId.value, _UnidMedIdMeta));
-    } else if (UnidMedId.isRequired && isInserting) {
-      context.missing(_UnidMedIdMeta);
+    if (d.unidMedId.present) {
+      context.handle(_unidMedIdMeta,
+          unidMedId.isAcceptableValue(d.unidMedId.value, _unidMedIdMeta));
+    } else if (unidMedId.isRequired && isInserting) {
+      context.missing(_unidMedIdMeta);
     }
-    if (d.StatusId.present) {
-      context.handle(_StatusIdMeta,
-          StatusId.isAcceptableValue(d.StatusId.value, _StatusIdMeta));
-    } else if (StatusId.isRequired && isInserting) {
-      context.missing(_StatusIdMeta);
+    if (d.statusId.present) {
+      context.handle(_statusIdMeta,
+          statusId.isAcceptableValue(d.statusId.value, _statusIdMeta));
+    } else if (statusId.isRequired && isInserting) {
+      context.missing(_statusIdMeta);
     }
-    if (d.UsuId.present) {
+    if (d.usuId.present) {
       context.handle(
-          _UsuIdMeta, UsuId.isAcceptableValue(d.UsuId.value, _UsuIdMeta));
-    } else if (UsuId.isRequired && isInserting) {
-      context.missing(_UsuIdMeta);
+          _usuIdMeta, usuId.isAcceptableValue(d.usuId.value, _usuIdMeta));
+    } else if (usuId.isRequired && isInserting) {
+      context.missing(_usuIdMeta);
     }
     if (d.createdAt.present) {
       context.handle(_createdAtMeta,
@@ -14982,17 +14749,17 @@ class $TablePresMedicUniMedTable extends TablePresMedicUniMed
   @override
   Map<String, Variable> entityToSql(TablePresMedicUniMedCompanion d) {
     final map = <String, Variable>{};
-    if (d.PresMedicId.present) {
-      map['pres_medic_id'] = Variable<int, IntType>(d.PresMedicId.value);
+    if (d.presMedicId.present) {
+      map['pres_medic_id'] = Variable<int, IntType>(d.presMedicId.value);
     }
-    if (d.UnidMedId.present) {
-      map['unid_med_id'] = Variable<int, IntType>(d.UnidMedId.value);
+    if (d.unidMedId.present) {
+      map['unid_med_id'] = Variable<int, IntType>(d.unidMedId.value);
     }
-    if (d.StatusId.present) {
-      map['status_id'] = Variable<int, IntType>(d.StatusId.value);
+    if (d.statusId.present) {
+      map['status_id'] = Variable<int, IntType>(d.statusId.value);
     }
-    if (d.UsuId.present) {
-      map['usu_id'] = Variable<int, IntType>(d.UsuId.value);
+    if (d.usuId.present) {
+      map['usu_id'] = Variable<int, IntType>(d.usuId.value);
     }
     if (d.createdAt.present) {
       map['created_at'] = Variable<DateTime, DateTimeType>(d.createdAt.value);
@@ -15014,8 +14781,6 @@ class $TablePresMedicUniMedTable extends TablePresMedicUniMed
 
 abstract class _$GeoDatabase extends GeneratedDatabase {
   _$GeoDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
-  $UsuariosTable _usuarios;
-  $UsuariosTable get usuarios => _usuarios ??= $UsuariosTable(this);
   $TableFichaTable _tableFicha;
   $TableFichaTable get tableFicha => _tableFicha ??= $TableFichaTable(this);
   $TableFichaVerTable _tableFichaVer;
@@ -15109,7 +14874,6 @@ abstract class _$GeoDatabase extends GeneratedDatabase {
   UsuarioDao get usuarioDao => _usuarioDao ??= UsuarioDao(this as GeoDatabase);
   @override
   List<TableInfo> get allTables => [
-        usuarios,
         tableFicha,
         tableFichaVer,
         tableFichaVerItems,
@@ -15149,7 +14913,7 @@ abstract class _$GeoDatabase extends GeneratedDatabase {
 // **************************************************************************
 
 mixin _$UsuarioDaoMixin on DatabaseAccessor<GeoDatabase> {
-  $UsuariosTable get usuarios => db.usuarios;
+  $TableUsuariosTable get tableUsuarios => db.tableUsuarios;
 }
 
 mixin _$DaoFichaMixin on DatabaseAccessor<GeoDatabase> {

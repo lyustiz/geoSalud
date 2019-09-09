@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geosalud/widgets/logo_image.dart';
 import 'package:geosalud/screens/login/login_form.dart';
-import "package:geosalud/minxins/tools.dart";
+import "package:geosalud/mixins/tools.dart";
 
 class LoginScreen extends StatelessWidget with Tools {
   const LoginScreen({Key key}) : super(key: key);

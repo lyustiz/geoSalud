@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:geosalud/minxins/tools.dart";
+import "package:geosalud/mixins/tools.dart";
 import "../../widgets/form/custom_text_form_field_contained.dart";
 import "../../widgets/form/custom_dropdown_button_contained.dart";
 

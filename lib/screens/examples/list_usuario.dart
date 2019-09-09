@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:geosalud/blocs/usuario/usuario_bloc.dart';
-import 'package:geosalud/blocs/usuario/usuario_state.dart';
-import 'package:geosalud/blocs/usuario/usuario_event.dart';
-import 'package:geosalud/database/database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geosalud/database/database.dart';
+import 'package:geosalud/blocs/usuario/usuario_bloc_index.dart';
 import 'package:geosalud/widgets/actions_buttons.dart';
 
 class ListUsuario extends StatelessWidget {
-  const ListUsuario({Key key}) : super(key: key);
+  const ListUsuario({Key key, BuildContext context}) : super(key: key);
 
   @override
   Widget build(BuildContext buildContext) {
@@ -33,8 +31,20 @@ class ListUsuario extends StatelessWidget {
             iconData: Icons.add,
             backgroudColor: Colors.green,
             onPressed: () {
-              //agregar formulario (navegacion pantalla AddUser) 
-              final usuario = Usuario(id: null, nombre: 'Otro Usuario', password: '123456', active: 1);
+              //agregar formulario (navegacion pantalla AddUser)
+              final usuario = Usuarios(
+                  usuId: null,
+                  usuNom: 'Luis',
+                  usuNom2: 'Daniel',
+                  usuApe: 'Yustiz',
+                  usuApe2: 'Azuaje',
+                  usuNick: 'lyustiz',
+                  usuKeyPass: '123456',
+                  usuHashPass: '123456',
+                  usuPassAlgoritmo: 'SHA256',
+                  usuFlgAct: 1,
+                  usuFlgGenerico: 1,
+                  statusId: 1);
               bloc.dispatch(InsertUsuario(usuario));
             },
           ),
@@ -49,14 +59,13 @@ class TableUsuario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final bloc = BlocProvider.of<UsuarioBloc>(context);
     return Container(
       child: BlocBuilder<UsuarioBloc, UsuarioState>(builder: (context, state) {
         print(state);
         if (state is UsuarioInitial) {
           bloc.dispatch(GetAllUsuario());
-          return  Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         } else if (state is UsuarioLoading) {
           return Center(child: CircularProgressIndicator());
         } else {
@@ -81,22 +90,49 @@ Container listarUsuarios(context, state) {
         title: Row(
           children: <Widget>[
             Expanded(
-              child: Text(itemUser.id.toString()),
+              child: Text(itemUser.usuId.toString()),
             ),
             Expanded(
-              child: Text(itemUser.nombre),
+              child: Text(itemUser.usuNom),
             ),
             Expanded(
-              child: Text(itemUser.password),
+              child: Text(itemUser.usuApe),
             ),
             Expanded(
-              child: Text(itemUser.active.toString()),
+              child: Text(itemUser.statusId.toString()),
             ),
             Expanded(
               child: IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: () {
-                  bloc.dispatch(DeleteUsuario(itemUser));
+                onPressed: () async {
+                  bool value = await Navigator.push(context,
+                      MaterialPageRoute<bool>(builder: (BuildContext context) {
+                    return Scaffold(
+                      body: Row(
+                        children: <Widget>[
+                          GestureDetector(
+                              child: Text('OK'),
+                              onTap: () {
+                                Navigator.pop(context, true);
+                              }),
+                              GestureDetector(
+                              child: Text('Cancelar'),
+                              onTap: () {
+                                Navigator.pop(context, false);
+                              }),
+                        ],
+                      ),
+                    );
+                  }));
+                 if(value)
+                 {
+                    bloc.dispatch(DeleteUsuario(itemUser));
+                    final snackBar = SnackBar(content: Text('Borrado'), elevation: 6.0, backgroundColor: Colors.redAccent,);
+                    Scaffold.of(context).showSnackBar(snackBar);
+                    
+                 }
+
+                 
                 },
               ),
             ),
@@ -111,5 +147,4 @@ Container listarUsuarios(context, state) {
       );
     },
   ));
-  
 }

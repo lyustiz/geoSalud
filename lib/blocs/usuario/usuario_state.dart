@@ -20,7 +20,7 @@ class UsuarioLoading extends UsuarioState{
 }
 
 class UsuarioLoaded extends UsuarioState  {
-  final List<Usuario> usuarios;
+  final List<Usuarios> usuarios;
   UsuarioLoaded(this.usuarios) : super([usuarios]);
 
   @override
