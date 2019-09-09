@@ -1,0 +1,687 @@
+
+
+
+//@DataClassName('Ficha') // Ficha
+class ClassFicha extends Table {
+
+    IntColumn  get FicId => integer().autoIncrement()(); // Id. de Ficha
+    TextColumn get FicNom => text()(); // Descripción de Ficha
+    IntColumn  get FicFlagHab => integer()(); // Ficha Habilitada
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FichaVer') // Versiones de las fichas
+class ClassFichaVer extends Table {
+
+    IntColumn  get FicId => integer().customConstraint('REFERENCES Ficha(FicId)')(); // Id. de ficha
+    IntColumn  get FicVerId => integer().autoIncrement()(); // Número de versión
+    TextColumn get FicVerSts => text()(); // Estatus de la versión
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FichaVerItems') // Items de las fichas
+class ClassFichaVerItems extends Table {
+
+    IntColumn  get FicId => integer().customConstraint('REFERENCES Ficha(FicId)')(); // Id. de ficha
+    IntColumn  get FicVerId => integer().customConstraint('REFERENCES FichaVer(FicVerId)')(); // Número de versión
+    IntColumn  get FicVerItemsId => integer().autoIncrement()(); // Código del Item
+    TextColumn get FicVerItemsNom => text()(); // Nombre del Item
+    IntColumn  get FicVerItemsOrd => integer()(); // Orden del Item
+    IntColumn  get FicVerItemsFlgEvolu => integer()(); // Es evolutivo 
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('PregFrmDina') // Preguntas dinámicas
+class ClassPregFrmDina extends Table {
+
+    IntColumn  get PregFrmDinaId => integer().autoIncrement()(); // Código de pregunta
+    TextColumn get PregFrmDinaDesc => text()(); // Descripción de la pregunta
+    TextColumn get PregFrmDinaTitulo => text()(); // Título de la pregunta
+    IntColumn  get PregFrmDinaTipPreg => integer()(); // Tipo de pregunta
+    IntColumn  get PregFrmDinaDefaNomTabDinId => integer()(); // Código de tabla dinámica sobre la que va a preguntar
+    IntColumn  get PregFrmDinaValMin => integer()(); // Valor mínimo
+    IntColumn  get PregFrmDinaValMax => integer()(); // Valor máximo
+    TextColumn get PregFrmDinaTipDefa => text()(); // Tipo de valor por defecto
+    TextColumn get PregFrmDinaValDefa => text()(); // Valor por defecto Entero, Caracter, fecha, numero (9,2), numero(9,3)
+    TextColumn get PregFrmDinaDefaValMemo => text()(); //Valor por defecto Memo
+    IntColumn  get PregFrmDinaDefaTabDinValId => integer()(); // Valor por defecto de la pregunta, aplica a Combo
+    TextColumn get PregFrmDinaSufijo => text()(); // Sufijo de la pregunta
+    TextColumn get PregFrmDinaHelp => text()(); // Ayuda de la pregunta
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FichaVerPreg') // Preguntas de los ítems
+class ClassFichaVerPreg extends Table {
+
+    IntColumn  get FicId => integer().customConstraint('REFERENCES Ficha(FicId)')(); // Id. de ficha
+    IntColumn  get FicVerId => integer().customConstraint('REFERENCES FichaVer(FicVerId)')(); // Número de versión
+    IntColumn  get FicVerItemsId => integer().customConstraint('REFERENCES FichaVerItems(FicVerItemsId)')(); // Código del Item
+    IntColumn  get PregFrmDinaId => integer().customConstraint('REFERENCES PregFrmDina(PregFrmDinaId)')(); ; // Código de pregunta
+    IntColumn  get PregFrmDinaOrd => integer()(); // Orden de la pregunta
+    IntColumn  get FichaVerPregFlgObli => integer()(); // Pregunta Obligatoria
+    IntColumn  get FichaVerCondPregFrmDinaId => integer()(); // Pregunta que la condiciona
+    TextColumn get FichaVerPregSex => text()(); // Sexo al que aplica la pregunta
+    TextColumn get FichaVerPregFlgSexObl => text()(); // Obligatoria para ese sexo
+    IntColumn  get FichaVerPregEdadMin => integer()(); // Edad mínima
+    IntColumn  get FichaVerPregEdadMax => integer()(); // Edad máxima
+    TextColumn get FichaVerPregEdadEd => text()(); // Unidad de la edad mínima y máxima
+    IntColumn  get FichaVerPregFlgEdadObl => integer()(); // Obligatoria para el rango de edades
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FichaVerItemsPregTabDin') // Valores que condicionan preguntas
+class ClassFichaVerItemsPregTabDin extends Table {
+
+    IntColumn  get FicId => integer().customConstraint('REFERENCES Ficha(FicId)')(); // Id. de ficha
+    IntColumn  get FicVerId => integer().customConstraint('REFERENCES FichaVer(FicVerId)')(); // Número de versión
+    IntColumn  get FicVerItemsId => integer().customConstraint('REFERENCES FichaVerItems(FicVerItemsId)')(); // Código del Item
+    IntColumn  get PregFrmDinaId => integer().customConstraint('REFERENCES PregFrmDina(PregFrmDinaId)')(); // Código de pregunta
+    IntColumn  get FichaVerTabDinId => integer().autoIncrement()(); // Código de la tabla dinámica
+    IntColumn  get FichaVerTabDinValId => integer()(); // Código de la respuesta de Tabla Dinámica
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('OpcFich') // Opciones
+class ClassOpcFich extends Table {
+
+    TextColumn get OpcFichCod => text()(); // Código de opción   (PRIMARY KEY NOT NULL)
+    TextColumn get OpcFichDesc => text()(); // Descripción de opción
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FichaOpc') // Opciones de ficha
+class ClassFichaOpc extends Table {
+
+    IntColumn  get FicId => integer().customConstraint('REFERENCES Ficha(FicId)')(); // Id. de ficha
+    TextColumn get OpcFichCod => text().customConstraint('REFERENCES OpcFich(OpcFichCod)')(); // Código de opción
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('NomTabDin') // Tablas dinamicas
+class ClassNomTabDin extends Table {
+
+    IntColumn  get NomTabDinId => integer().autoIncrement()(); // Código de Tabla dinámica
+    TextColumn get NomTabDinNom => text()(); // Nombre de tabla dinámica
+    IntColumn  get NomTabDinFlgAct => integer()(); // Tabla dinámica esta activa
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('TabDinVal') // Valores de la tabla dinámica
+class ClassTabDinVal extends Table {
+
+    IntColumn  get NomTabDinId => integer().customConstraint('REFERENCES NomTabDin(NomTabDinId)')(); // Código de Tabla dinámica
+    IntColumn  get TabDinValId => integer().autoIncrement()(); // Código del valor de la tabla dinámica
+    IntColumn  get TabDinValFlgAct => integer()(); // Valor de la tabla dinámica esta activo
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('TabDinValCond') // Valores de la tabla dinámica
+class ClassTabDinValCond extends Table {
+
+    IntColumn  get TabDinValCondTDId => integer().customConstraint('REFERENCES NomTabDin(NomTabDinId)')(); // Código de Tabla dinámica que condiciona
+    IntColumn  get TabDinValCondTDValId => integer().customConstraint('REFERENCES TabDinVal(TabDinValId)')(); // Código del valor de la tabla dinámica que condiciona
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Usuarios') // Usuarios
+class ClassUsuarios extends Table {
+
+    IntColumn  get UsuId => integer().autoIncrement()(); // Codigo de usuario
+    TextColumn get UsuNom => text()(); // Primer Nombre del usuario
+    TextColumn get UsuNom2 => text()(); // Segundo Nombre del usuario
+    TextColumn get UsuApe => text()(); // Primer Apellido del usuario
+    TextColumn get UsuApe2 => text()(); // Segundo Apellido del usuario
+    TextColumn get UsuNick => text()(); // Nick del usuario
+    TextColumn get UsuKeyPass => text()(); // Clave para desencriptar
+    TextColumn get UsuHashPass => text()(); // Hash de la contraseña
+    TextColumn get UsuPassAlgoritmo => text()(); // Algoritmo de la contraseña
+    IntColumn  get UsuFlgAct => integer()(); // Usuario activo
+    IntColumn  get UsuFlgGenerico => integer()(); // Usuario genérico
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('PerfSis') // Perfiles del usuario por sistema
+class ClassPerfSis extends Table {
+
+    IntColumn  get PerfSisId => integer().autoIncrement()(); // Código de perfil
+    TextColumn get PerfSisDesc => text()(); // Descripcion del perfil
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('SisUsuPerf') // Perfiles del usuario por sistema
+class ClassSisUsuPerf extends Table {
+
+    IntColumn  get SisId => integer()(); // Código de sistema
+    IntColumn  get PerfSisId => integer().customConstraint('REFERENCES PerfSis(PerfSisId)')(); ; // Código de perfil
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')(); // Código de Usuario
+    IntColumn  get SisUsuPerfHab => integer()(); // Perfil Habilitado
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Roles') // Roles
+class ClassRoles extends Table {
+
+    IntColumn  get RolId => integer().autoIncrement()(); // Código de rol
+    TextColumn get RolNom => text()(); // nombre de rol
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('RRHH') // Recursos Humanos
+class ClassRRHH extends Table {
+
+    IntColumn  get RRHHId => integer().autoIncrement()(); // Código de RRHH
+    TextColumn get RRHHDesc => text()(); // Descripción del RRHH
+    IntColumn  get RRHHFlgAct => integer()(); // El RRHH está activo
+    TextColumn get RRHHPref => text()(); // Prefijo del RRHH 
+    TextColumn get RRHHSuf => text()(); // Sufijo del RRHH
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('RRHHPers')
+class ClassRRHHPers extends Table {
+
+    IntColumn  get RRHHId => integer()(); // Código de RRHH
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')(); ; // Codigo de usuario
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('RRHHRol')
+class ClassRRHHRol extends Table {
+
+    IntColumn  get RRHHId => integer()(); // Código RRHH
+    TextColumn get RRHHRolFchIni => text()(); // Fecha RRHH
+    IntColumn  get RolId => integer().customConstraint('REFERENCES Roles(RolId)')(); // Codigo Rol
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('TipActAsist') // Tipos de Actos Asistenciales
+class ClassTipActAsist extends Table {
+
+    IntColumn  get TipActAsistId => integer().autoIncrement()(); // Codigo de tipo de acto asistencial
+    TextColumn get TipActAsistDesc => text()(); // Descripcion de tipo de acto asistencial
+    IntColumn  get TipActAsistFlgSeIndica => integer()(); // Se puede indicar
+    IntColumn  get TipActAsistFlgParacl => integer()(); // Es paraclinica
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('UnidMed') // Unidades de medida
+class ClassUnidMed extends Table {
+
+    IntColumn  get UnidMedId => integer().autoIncrement()(); // Codigo unidad de medida
+    TextColumn get UnidMedDesc => text()(); // Descripcion de unidad de medida
+    TextColumn get UnidMedAbrev => text()(); // Abreviacion de unidad de medida
+    IntColumn  get UnidMedFlgHab => integer()(); // Habilitado
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('ViaAdmMedic') // Vias de administracion
+class ClassViaAdmMedic extends Table {
+
+    IntColumn  get ViaAdmMedicId => integer().autoIncrement()(); // Codigo de via de administracion
+    TextColumn get ViaAdmMedicDesc => text()(); // Descripcion de via de administracion
+    TextColumn get ViaAdmMedicAbrev => text()(); // Abreviacion de via de administracion
+    IntColumn  get ViaAdmMedicFlgHab => integer()(); // Habilitada
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('ActAsist') // Actos asistenciales
+class ClassActAsist extends Table {
+
+    IntColumn  get ActAsistId => integer().autoIncrement().customConstraint('REFERENCES TipActAsist(TipActAsistId)')(); // Codigo de acto asistencial
+    TextColumn get ActAsistDesc => text()(); // Descripcion del acto asistencial
+    TextColumn get ActAsistAbrev => text()(); // Abreviación de acto asistencial
+    IntColumn  get TipActAsistId => integer()(); // Código de tipo de acto asistencial
+    IntColumn  get ActAsistFlgHab => integer()(); // Habilitado
+    IntColumn  get ActAsistTipDat => integer()(); // Tipo de datos del resultado
+    IntColumn  get ActAsistValMin => integer()(); // Valor mínimo
+    IntColumn  get ActAsistValMax => integer()(); // Valor máximo
+    IntColumn  get UnidMedId => integer().customConstraint('REFERENCES UnidMed(UnidMedId)')(); // Código unidad de medida
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('AtnClin') // Antecedentes clínicos
+class ClassAtnClin extends Table {
+
+    IntColumn  get AntClinId => integer().autoIncrement()(); // Código de antecedente
+    TextColumn get AntClinDesc => text()(); // Descripción de antecedente
+    IntColumn  get AntClinFlgHab => integer()(); // Habilitado
+    IntColumn  get TipAntClinId => integer()(); // Código de tipo de antecedente
+    IntColumn  get AntClinAlert => integer()(); // Alertar
+    IntColumn  get AntClinAlertDsc => integer()(); // Texto del alerta
+    TextColumn get AntClinSexo => text()(); // Sexo del antecedente
+    IntColumn  get AntClinFlgFactRiesg => integer()(); // Es factor de riesgo
+    IntColumn  get AntCliFlgHabRep => integer()(); // Puede repetirse
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Drogas') // Drogas
+class ClassDrogas extends Table {
+
+    IntColumn  get DroId => integer().autoIncrement()(); // Código de droga
+    TextColumn get DroDesc => text()(); // Descripción de droga 
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Farmacos') // Farmacos
+class ClassFarmacos extends Table {
+
+    IntColumn  get FarId => integer().autoIncrement()(); // Código de farmaco
+    TextColumn get FarNom => text()(); // Nombre del farmaco
+    IntColumn  get FarFlgHab => integer()(); // Farmaco habilitado
+    TextColumn get FarDrogComp => text()(); // Composicion
+    IntColumn  get FarPresMedicId => integer()(); // Codigo de la presentacion
+    IntColumn  get FarDosCnt => integer()(); // Cantidad de la presentacion
+    IntColumn  get FarDosUnidMedId => integer()(); // Codigo de unidad de la presentacion
+    IntColumn  get FarFlgEsSuero => integer()(); // Es suero
+    IntColumn  get FarFlgEsAdit => integer()(); // Es aditivo 
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('FarVia') // Vias de administración del fármaco
+class ClassFarVia extends Table {
+
+    IntColumn  get FarId => integer().autoIncrement()(); // Código del fármaco
+    IntColumn  get ViaAdmMedicId => integer().customConstraint('REFERENCES ViaAdmMedic(ViaAdmMedicId)')(); // Código de la vía de administración
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Materiales') // Materiales
+class ClassMateriales extends Table {
+
+    IntColumn  get MatId => integer().autoIncrement()(); // Codigo de material
+    TextColumn get MatNom => text()(); // Nombre de material
+    IntColumn  get MatBajFlg => integer()(); // De baja
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('MatUniMed') // Unidades de medida de los materiales
+class ClassMatUniMed extends Table {
+
+    IntColumn  get MatId => integer().customConstraint('REFERENCES Materiales(MatId)')(); // Codigo de material
+    IntColumn  get MatUnidMedId => integer()(); // Codigo de unidad de medida del material
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('Presentaciones') // Presentaciones
+class ClassPresentaciones extends Table {
+
+    IntColumn  get PresMedicId => integer().autoIncrement()(); // codigo de presentacion
+    TextColumn get PresMedicNom => text()(); // Nombre de presentacion
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('PresMedicVia') // Vias de administración de presentacion
+class ClassPresMedicVia extends Table {
+
+    IntColumn  get PresMedicId => integer().customConstraint('REFERENCES Presentaciones(PresMedicId)')(); // Codigo de presentacion
+    IntColumn  get ViaAdmMedicId => integer().customConstraint('REFERENCES ViaAdmMedic(ViaAdmMedicId)')(); // Codigo de via de administracion
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+//@DataClassName('PresMedicUniMed') // Unidades de medida de la presentacion
+class ClassPresMedicUniMed extends Table {
+
+    IntColumn  get PresMedicId => integer().customConstraint('REFERENCES Presentaciones(PresMedicId)')(); // Código de la presentacion
+    IntColumn  get UnidMedId => integer().customConstraint('REFERENCES UnidMed(UnidMedId)')(); // Codigo de unidad de medida
+    //Columnas AppMovil
+    IntColumn  get StatusId => integer().customConstraint('REFERENCES Ficha(FicId)')();
+    IntColumn  get UsuId => integer().customConstraint('REFERENCES Usuarios(UsuId)')();
+    DateTimeColumn get createdAt => dateTime().nullable()();
+    DateTimeColumn get updatedAt => dateTime().nullable()();
+    DateTimeColumn get deletedAt => dateTime().nullable()();
+}
+
+
+/**
+ Ficha.
+    FicId
+    FicNom
+    FicFlagHab
+FichaVer.
+    FicId
+    FicVerId
+    FicVerSts
+FichaVerItems.
+    FicId
+    FicVerId
+    FicVerItemsId
+    FicVerItemsNom
+    FicVerItemsOrd
+    FicVerItemsFlgEvolu
+PregFrmDina.
+    PregFrmDinaId
+    PregFrmDinaDesc
+    PregFrmDinaTitulo
+    PregFrmDinaTipPreg
+    PregFrmDinaDefaNomTabDinId
+    PregFrmDinaValMin
+    PregFrmDinaValMax
+    PregFrmDinaTipDefa
+    PregFrmDinaValDefa
+    PregFrmDinaDefaValMemo
+    PregFrmDinaDefaTabDinValId
+    PregFrmDinaSufijo
+    PregFrmDinaHelp
+FichaVerPreg.
+    FicId
+    FicVerId
+    FicVerItemsId
+    PregFrmDinaId
+    PregFrmDinaOrd
+    FichaVerPregFlgObli
+    FichaVerCondPregFrmDinaId
+    FichaVerPregSex
+    FichaVerPregFlgSexObl
+    FichaVerPregEdadMin
+    FichaVerPregEdadMax
+    FichaVerPregEdadEd
+    FichaVerPregFlgEdadObl
+FichaVerItemsPregTabDin.
+    FicId
+    FicVerId
+    FicVerItemsId
+    PregFrmDinaId
+    FichaVerTabDinId
+    FichaVerTabDinValId
+OpcFich.
+    OpcFichCod
+    OpcFichDesc
+FichaOpc.
+    FicId
+    OpcFichCod
+NomTabDin.
+    NomTabDinId
+    NomTabDinNom
+    NomTabDinFlgAct
+TabDinVal.
+    NomTabDinId
+    TabDinValId
+    TabDinValFlgAct
+TabDinValCond.
+    TabDinValCondTDId
+    TabDinValCondTDValId
+Usuarios.
+    UsuId
+    UsuNom
+    UsuNom2
+    UsuApe
+    UsuApe2
+    UsuNick
+    UsuKeyPass
+    UsuHashPass
+    UsuPassAlgoritmo
+    UsuFlgAct
+    UsuFlgGenerico
+PerfSis.
+    PerfSisId
+    PerfSisDesc
+SisUsuPerf.
+    SisId
+    PerfSisId
+    UsuId
+    SisUsuPerfHab
+Roles.
+    RolId
+    RolNom
+RRHH.
+    RRHHId
+    RRHHDesc
+    RRHHFlgAct
+    RRHHPref
+    RRHHSuf
+RRHHPers.
+    RRHHId
+    UsuId
+RRHHRol.
+    RRHHId
+    RRHHRolFchIni
+    RolId
+TipActAsist.
+    TipActAsistId
+    TipActAsistDesc
+    TipActAsistFlgSeIndica
+    TipActAsistFlgParacl
+UnidMed.
+    UnidMedId
+    UnidMedDesc
+    UnidMedAbrev
+    UnidMedFlgHab
+ViaAdmMedic.
+    ViaAdmMedicId
+    ViaAdmMedicDesc
+    ViaAdmMedicAbrev
+    ViaAdmMedicFlgHab
+ActAsist.
+    ActAsistId
+    ActAsistDesc
+    ActAsistAbrev
+    TipActAsistId
+    ActAsistFlgHab
+    ActAsistTipDat
+    ActAsistValMin
+    ActAsistValMax
+    UnidMedId
+AtnClin.
+    AntClinId
+    AntClinDesc
+    AntClinFlgHab
+    TipAntClinId
+    AntClinAlert
+    AntClinAlertDsc
+    AntClinSexo
+    AntClinFlgFactRiesg
+    AntCliFlgHabRep
+Drogas.
+    DroId
+    DroDesc
+Farmacos.
+    FarId
+    FarNom
+    FarFlgHab
+    FarDrogComp
+    FarPresMedicId
+    FarDosCnt
+    FarDosUnidMedId
+    FarFlgEsSuero
+    FarFlgEsAdit
+FarVia.
+    FarId
+    ViaAdmMedicId
+Materiales.
+    MatId
+    MatNom
+    MatBajFlg
+MatUniMed.
+    MatId
+    MatUnidMedId
+Presentaciones.
+    PresMedicId
+    PresMedicNom
+PresMedicVia.
+    PresMedicId
+    ViaAdmMedicId
+PresMedicUniMed.
+    PresMedicId
+    UnidMedId
+
+
+Ficha
+FichaVer
+FichaVerItems
+PregFrmDina
+FichaVerPreg
+FichaVerItemsPregTabDin
+OpcFich
+FichaOpc
+NomTabDin
+TabDinVal
+TabDinValCond
+Usuarios
+PerfSis
+SisUsuPerf
+Roles
+RRHH
+RRHHPers
+RRHHRol
+TipActAsist
+UnidMed
+ViaAdmMedic
+ActAsist
+AtnClin
+Drogas
+Farmacos
+FarVia
+Materiales
+MatUniMed
+Presentaciones
+PresMedicVia
+PresMedicUniMed
+
+ */

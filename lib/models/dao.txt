@@ -1,0 +1,760 @@
+
+
+class DaoFicha extends DatabaseAccessor<GeoDatabase> with _$DaoFichaMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFicha(this.db) : super(db);
+
+    Future<List<Ficha>> allFicha() => select(Ficha).get();
+
+    Stream<List<Ficha>> watchFicha() => select(Ficha).watch();
+
+    Future insFicha(Ficha Ficha) => into(Ficha).insert(Ficha);
+
+    Future updFicha(Ficha Ficha) => update(Ficha).replace(Ficha);
+
+    Future delFicha(Ficha Ficha) => delete(Ficha).delete(Ficha);
+
+    /*
+    FicId
+    FicNom
+    FicFlagHab
+    */
+}
+
+class DaoFichaVer extends DatabaseAccessor<GeoDatabase> with _$DaoFichaVerMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFichaVer(this.db) : super(db);
+
+    Future<List<FichaVer>> allFichaVer() => select(FichaVer).get();
+
+    Stream<List<FichaVer>> watchFichaVer() => select(FichaVer).watch();
+
+    Future insFichaVer(FichaVer FichaVer) => into(FichaVer).insert(FichaVer);
+
+    Future updFichaVer(FichaVer FichaVer) => update(FichaVer).replace(FichaVer);
+
+    Future delFichaVer(FichaVer FichaVer) => delete(FichaVer).delete(FichaVer);
+
+    /*
+    FicId
+    FicVerId
+    FicVerSts
+    */
+}
+
+class DaoFichaVerItems extends DatabaseAccessor<GeoDatabase> with _$DaoFichaVerItemsMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFichaVerItems(this.db) : super(db);
+
+    Future<List<FichaVerItems>> allFichaVerItems() => select(FichaVerItems).get();
+
+    Stream<List<FichaVerItems>> watchFichaVerItems() => select(FichaVerItems).watch();
+
+    Future insFichaVerItems(FichaVerItems FichaVerItems) => into(FichaVerItems).insert(FichaVerItems);
+
+    Future updFichaVerItems(FichaVerItems FichaVerItems) => update(FichaVerItems).replace(FichaVerItems);
+
+    Future delFichaVerItems(FichaVerItems FichaVerItems) => delete(FichaVerItems).delete(FichaVerItems);
+
+    /*
+    FicId
+    FicVerId
+    FicVerItemsId
+    FicVerItemsNom
+    FicVerItemsOrd
+    FicVerItemsFlgEvolu
+    */
+}
+
+class DaoPregFrmDina extends DatabaseAccessor<GeoDatabase> with _$DaoPregFrmDinaMixin {
+    
+    final GeoDatabase db;
+    
+    DaoPregFrmDina(this.db) : super(db);
+
+    Future<List<PregFrmDina>> allPregFrmDina() => select(PregFrmDina).get();
+
+    Stream<List<PregFrmDina>> watchPregFrmDina() => select(PregFrmDina).watch();
+
+    Future insPregFrmDina(PregFrmDina PregFrmDina) => into(PregFrmDina).insert(PregFrmDina);
+
+    Future updPregFrmDina(PregFrmDina PregFrmDina) => update(PregFrmDina).replace(PregFrmDina);
+
+    Future delPregFrmDina(PregFrmDina PregFrmDina) => delete(PregFrmDina).delete(PregFrmDina);
+
+    /*
+    PregFrmDinaId
+    PregFrmDinaDesc
+    PregFrmDinaTitulo
+    PregFrmDinaTipPreg
+    PregFrmDinaDefaNomTabDinId
+    PregFrmDinaValMin
+    PregFrmDinaValMax
+    PregFrmDinaTipDefa
+    PregFrmDinaValDefa
+    PregFrmDinaDefaValMemo
+    PregFrmDinaDefaTabDinValId
+    PregFrmDinaSufijo
+    PregFrmDinaHelp
+    */
+}
+
+class DaoFichaVerPreg extends DatabaseAccessor<GeoDatabase> with _$DaoFichaVerPregMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFichaVerPreg(this.db) : super(db);
+
+    Future<List<FichaVerPreg>> allFichaVerPreg() => select(FichaVerPreg).get();
+
+    Stream<List<FichaVerPreg>> watchFichaVerPreg() => select(FichaVerPreg).watch();
+
+    Future insFichaVerPreg(FichaVerPreg FichaVerPreg) => into(FichaVerPreg).insert(FichaVerPreg);
+
+    Future updFichaVerPreg(FichaVerPreg FichaVerPreg) => update(FichaVerPreg).replace(FichaVerPreg);
+
+    Future delFichaVerPreg(FichaVerPreg FichaVerPreg) => delete(FichaVerPreg).delete(FichaVerPreg);
+
+    /*
+    FicId
+    FicVerId
+    FicVerItemsId
+    PregFrmDinaId
+    PregFrmDinaOrd
+    FichaVerPregFlgObli
+    FichaVerCondPregFrmDinaId
+    FichaVerPregSex
+    FichaVerPregFlgSexObl
+    FichaVerPregEdadMin
+    FichaVerPregEdadMax
+    FichaVerPregEdadEd
+    FichaVerPregFlgEdadObl
+    */
+}
+
+class DaoFichaVerItemsPregTabDin extends DatabaseAccessor<GeoDatabase> with _$DaoFichaVerItemsPregTabDinMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFichaVerItemsPregTabDin(this.db) : super(db);
+
+    Future<List<FichaVerItemsPregTabDin>> allFichaVerItemsPregTabDin() => select(FichaVerItemsPregTabDin).get();
+
+    Stream<List<FichaVerItemsPregTabDin>> watchFichaVerItemsPregTabDin() => select(FichaVerItemsPregTabDin).watch();
+
+    Future insFichaVerItemsPregTabDin(FichaVerItemsPregTabDin FichaVerItemsPregTabDin) => into(FichaVerItemsPregTabDin).insert(FichaVerItemsPregTabDin);
+
+    Future updFichaVerItemsPregTabDin(FichaVerItemsPregTabDin FichaVerItemsPregTabDin) => update(FichaVerItemsPregTabDin).replace(FichaVerItemsPregTabDin);
+
+    Future delFichaVerItemsPregTabDin(FichaVerItemsPregTabDin FichaVerItemsPregTabDin) => delete(FichaVerItemsPregTabDin).delete(FichaVerItemsPregTabDin);
+
+    /*
+    FicId
+    FicVerId
+    FicVerItemsId
+    PregFrmDinaId
+    FichaVerTabDinId
+    FichaVerTabDinValId
+    */
+}
+
+class DaoOpcFich extends DatabaseAccessor<GeoDatabase> with _$DaoOpcFichMixin {
+    
+    final GeoDatabase db;
+    
+    DaoOpcFich(this.db) : super(db);
+
+    Future<List<OpcFich>> allOpcFich() => select(OpcFich).get();
+
+    Stream<List<OpcFich>> watchOpcFich() => select(OpcFich).watch();
+
+    Future insOpcFich(OpcFich OpcFich) => into(OpcFich).insert(OpcFich);
+
+    Future updOpcFich(OpcFich OpcFich) => update(OpcFich).replace(OpcFich);
+
+    Future delOpcFich(OpcFich OpcFich) => delete(OpcFich).delete(OpcFich);
+
+    /*
+    OpcFichCod
+    OpcFichDesc
+    */
+}
+
+class DaoFichaOpc extends DatabaseAccessor<GeoDatabase> with _$DaoFichaOpcMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFichaOpc(this.db) : super(db);
+
+    Future<List<FichaOpc>> allFichaOpc() => select(FichaOpc).get();
+
+    Stream<List<FichaOpc>> watchFichaOpc() => select(FichaOpc).watch();
+
+    Future insFichaOpc(FichaOpc FichaOpc) => into(FichaOpc).insert(FichaOpc);
+
+    Future updFichaOpc(FichaOpc FichaOpc) => update(FichaOpc).replace(FichaOpc);
+
+    Future delFichaOpc(FichaOpc FichaOpc) => delete(FichaOpc).delete(FichaOpc);
+
+    /*
+    FicId
+    OpcFichCod
+    */
+}
+
+class DaoNomTabDin extends DatabaseAccessor<GeoDatabase> with _$DaoNomTabDinMixin {
+    
+    final GeoDatabase db;
+    
+    DaoNomTabDin(this.db) : super(db);
+
+    Future<List<NomTabDin>> allNomTabDin() => select(NomTabDin).get();
+
+    Stream<List<NomTabDin>> watchNomTabDin() => select(NomTabDin).watch();
+
+    Future insNomTabDin(NomTabDin NomTabDin) => into(NomTabDin).insert(NomTabDin);
+
+    Future updNomTabDin(NomTabDin NomTabDin) => update(NomTabDin).replace(NomTabDin);
+
+    Future delNomTabDin(NomTabDin NomTabDin) => delete(NomTabDin).delete(NomTabDin);
+
+    /*
+    NomTabDinId
+    NomTabDinNom
+    NomTabDinFlgAct
+    */
+}
+
+class DaoTabDinVal extends DatabaseAccessor<GeoDatabase> with _$DaoTabDinValMixin {
+    
+    final GeoDatabase db;
+    
+    DaoTabDinVal(this.db) : super(db);
+
+    Future<List<TabDinVal>> allTabDinVal() => select(TabDinVal).get();
+
+    Stream<List<TabDinVal>> watchTabDinVal() => select(TabDinVal).watch();
+
+    Future insTabDinVal(TabDinVal TabDinVal) => into(TabDinVal).insert(TabDinVal);
+
+    Future updTabDinVal(TabDinVal TabDinVal) => update(TabDinVal).replace(TabDinVal);
+
+    Future delTabDinVal(TabDinVal TabDinVal) => delete(TabDinVal).delete(TabDinVal);
+
+    /*
+    NomTabDinId
+    TabDinValId
+    TabDinValFlgAct
+    */
+}
+
+class DaoTabDinValCond extends DatabaseAccessor<GeoDatabase> with _$DaoTabDinValCondMixin {
+    
+    final GeoDatabase db;
+    
+    DaoTabDinValCond(this.db) : super(db);
+
+    Future<List<TabDinValCond>> allTabDinValCond() => select(TabDinValCond).get();
+
+    Stream<List<TabDinValCond>> watchTabDinValCond() => select(TabDinValCond).watch();
+
+    Future insTabDinValCond(TabDinValCond TabDinValCond) => into(TabDinValCond).insert(TabDinValCond);
+
+    Future updTabDinValCond(TabDinValCond TabDinValCond) => update(TabDinValCond).replace(TabDinValCond);
+
+    Future delTabDinValCond(TabDinValCond TabDinValCond) => delete(TabDinValCond).delete(TabDinValCond);
+
+    /*
+    TabDinValCondTDId
+    TabDinValCondTDValId
+    */
+}
+
+class DaoUsuarios extends DatabaseAccessor<GeoDatabase> with _$DaoUsuariosMixin {
+    
+    final GeoDatabase db;
+    
+    DaoUsuarios(this.db) : super(db);
+
+    Future<List<Usuarios>> allUsuarios() => select(Usuarios).get();
+
+    Stream<List<Usuarios>> watchUsuarios() => select(Usuarios).watch();
+
+    Future insUsuarios(Usuarios Usuarios) => into(Usuarios).insert(Usuarios);
+
+    Future updUsuarios(Usuarios Usuarios) => update(Usuarios).replace(Usuarios);
+
+    Future delUsuarios(Usuarios Usuarios) => delete(Usuarios).delete(Usuarios);
+
+    /*
+    UsuId
+    UsuNom
+    UsuNom2
+    UsuApe
+    UsuApe2
+    UsuNick
+    UsuKeyPass
+    UsuHashPass
+    UsuPassAlgoritmo
+    UsuFlgAct
+    UsuFlgGenerico
+    */
+}
+
+class DaoPerfSis extends DatabaseAccessor<GeoDatabase> with _$DaoPerfSisMixin {
+    
+    final GeoDatabase db;
+    
+    DaoPerfSis(this.db) : super(db);
+
+    Future<List<PerfSis>> allPerfSis() => select(PerfSis).get();
+
+    Stream<List<PerfSis>> watchPerfSis() => select(PerfSis).watch();
+
+    Future insPerfSis(PerfSis PerfSis) => into(PerfSis).insert(PerfSis);
+
+    Future updPerfSis(PerfSis PerfSis) => update(PerfSis).replace(PerfSis);
+
+    Future delPerfSis(PerfSis PerfSis) => delete(PerfSis).delete(PerfSis);
+
+    /*
+    PerfSisId
+    PerfSisDesc
+    */
+}
+
+class DaoSisUsuPerf extends DatabaseAccessor<GeoDatabase> with _$DaoSisUsuPerfMixin {
+    
+    final GeoDatabase db;
+    
+    DaoSisUsuPerf(this.db) : super(db);
+
+    Future<List<SisUsuPerf>> allSisUsuPerf() => select(SisUsuPerf).get();
+
+    Stream<List<SisUsuPerf>> watchSisUsuPerf() => select(SisUsuPerf).watch();
+
+    Future insSisUsuPerf(SisUsuPerf SisUsuPerf) => into(SisUsuPerf).insert(SisUsuPerf);
+
+    Future updSisUsuPerf(SisUsuPerf SisUsuPerf) => update(SisUsuPerf).replace(SisUsuPerf);
+
+    Future delSisUsuPerf(SisUsuPerf SisUsuPerf) => delete(SisUsuPerf).delete(SisUsuPerf);
+
+    /*
+    SisId
+    PerfSisId
+    UsuId
+    SisUsuPerfHab
+    */
+}
+
+class DaoRoles extends DatabaseAccessor<GeoDatabase> with _$DaoRolesMixin {
+    
+    final GeoDatabase db;
+    
+    DaoRoles(this.db) : super(db);
+
+    Future<List<Roles>> allRoles() => select(Roles).get();
+
+    Stream<List<Roles>> watchRoles() => select(Roles).watch();
+
+    Future insRoles(Roles Roles) => into(Roles).insert(Roles);
+
+    Future updRoles(Roles Roles) => update(Roles).replace(Roles);
+
+    Future delRoles(Roles Roles) => delete(Roles).delete(Roles);
+
+    /*
+    RolId
+    RolNom
+    */
+}
+
+class DaoRRHH extends DatabaseAccessor<GeoDatabase> with _$DaoRRHHMixin {
+    
+    final GeoDatabase db;
+    
+    DaoRRHH(this.db) : super(db);
+
+    Future<List<RRHH>> allRRHH() => select(RRHH).get();
+
+    Stream<List<RRHH>> watchRRHH() => select(RRHH).watch();
+
+    Future insRRHH(RRHH RRHH) => into(RRHH).insert(RRHH);
+
+    Future updRRHH(RRHH RRHH) => update(RRHH).replace(RRHH);
+
+    Future delRRHH(RRHH RRHH) => delete(RRHH).delete(RRHH);
+
+    /*
+    RRHHId
+    RRHHDesc
+    RRHHFlgAct
+    RRHHPref
+    RRHHSuf
+    */
+}
+
+class DaoRRHHPers extends DatabaseAccessor<GeoDatabase> with _$DaoRRHHPersMixin {
+    
+    final GeoDatabase db;
+    
+    DaoRRHHPers(this.db) : super(db);
+
+    Future<List<RRHHPers>> allRRHHPers() => select(RRHHPers).get();
+
+    Stream<List<RRHHPers>> watchRRHHPers() => select(RRHHPers).watch();
+
+    Future insRRHHPers(RRHHPers RRHHPers) => into(RRHHPers).insert(RRHHPers);
+
+    Future updRRHHPers(RRHHPers RRHHPers) => update(RRHHPers).replace(RRHHPers);
+
+    Future delRRHHPers(RRHHPers RRHHPers) => delete(RRHHPers).delete(RRHHPers);
+
+    /*
+    RRHHId
+    UsuId
+    */
+}
+
+class DaoRRHHRol extends DatabaseAccessor<GeoDatabase> with _$DaoRRHHRolMixin {
+    
+    final GeoDatabase db;
+    
+    DaoRRHHRol(this.db) : super(db);
+
+    Future<List<RRHHRol>> allRRHHRol() => select(RRHHRol).get();
+
+    Stream<List<RRHHRol>> watchRRHHRol() => select(RRHHRol).watch();
+
+    Future insRRHHRol(RRHHRol RRHHRol) => into(RRHHRol).insert(RRHHRol);
+
+    Future updRRHHRol(RRHHRol RRHHRol) => update(RRHHRol).replace(RRHHRol);
+
+    Future delRRHHRol(RRHHRol RRHHRol) => delete(RRHHRol).delete(RRHHRol);
+
+    /*
+    RRHHId
+    RRHHRolFchIni
+    RolId
+    */
+}
+
+class DaoTipActAsist extends DatabaseAccessor<GeoDatabase> with _$DaoTipActAsistMixin {
+    
+    final GeoDatabase db;
+    
+    DaoTipActAsist(this.db) : super(db);
+
+    Future<List<TipActAsist>> allTipActAsist() => select(TipActAsist).get();
+
+    Stream<List<TipActAsist>> watchTipActAsist() => select(TipActAsist).watch();
+
+    Future insTipActAsist(TipActAsist TipActAsist) => into(TipActAsist).insert(TipActAsist);
+
+    Future updTipActAsist(TipActAsist TipActAsist) => update(TipActAsist).replace(TipActAsist);
+
+    Future delTipActAsist(TipActAsist TipActAsist) => delete(TipActAsist).delete(TipActAsist);
+
+    /*
+    TipActAsistId
+    TipActAsistDesc
+    TipActAsistFlgSeIndica
+    TipActAsistFlgParacl
+    */
+}
+
+class DaoUnidMed extends DatabaseAccessor<GeoDatabase> with _$DaoUnidMedMixin {
+    
+    final GeoDatabase db;
+    
+    DaoUnidMed(this.db) : super(db);
+
+    Future<List<UnidMed>> allUnidMed() => select(UnidMed).get();
+
+    Stream<List<UnidMed>> watchUnidMed() => select(UnidMed).watch();
+
+    Future insUnidMed(UnidMed UnidMed) => into(UnidMed).insert(UnidMed);
+
+    Future updUnidMed(UnidMed UnidMed) => update(UnidMed).replace(UnidMed);
+
+    Future delUnidMed(UnidMed UnidMed) => delete(UnidMed).delete(UnidMed);
+
+    /*
+    UnidMedId
+    UnidMedDesc
+    UnidMedAbrev
+    UnidMedFlgHab
+    */
+}
+
+class DaoViaAdmMedic extends DatabaseAccessor<GeoDatabase> with _$DaoViaAdmMedicMixin {
+    
+    final GeoDatabase db;
+    
+    DaoViaAdmMedic(this.db) : super(db);
+
+    Future<List<ViaAdmMedic>> allViaAdmMedic() => select(ViaAdmMedic).get();
+
+    Stream<List<ViaAdmMedic>> watchViaAdmMedic() => select(ViaAdmMedic).watch();
+
+    Future insViaAdmMedic(ViaAdmMedic ViaAdmMedic) => into(ViaAdmMedic).insert(ViaAdmMedic);
+
+    Future updViaAdmMedic(ViaAdmMedic ViaAdmMedic) => update(ViaAdmMedic).replace(ViaAdmMedic);
+
+    Future delViaAdmMedic(ViaAdmMedic ViaAdmMedic) => delete(ViaAdmMedic).delete(ViaAdmMedic);
+
+    /*
+    ViaAdmMedicId
+    ViaAdmMedicDesc
+    ViaAdmMedicAbrev
+    ViaAdmMedicFlgHab
+    */
+}
+
+class DaoActAsist extends DatabaseAccessor<GeoDatabase> with _$DaoActAsistMixin {
+    
+    final GeoDatabase db;
+    
+    DaoActAsist(this.db) : super(db);
+
+    Future<List<ActAsist>> allActAsist() => select(ActAsist).get();
+
+    Stream<List<ActAsist>> watchActAsist() => select(ActAsist).watch();
+
+    Future insActAsist(ActAsist ActAsist) => into(ActAsist).insert(ActAsist);
+
+    Future updActAsist(ActAsist ActAsist) => update(ActAsist).replace(ActAsist);
+
+    Future delActAsist(ActAsist ActAsist) => delete(ActAsist).delete(ActAsist);
+
+    /*
+    ActAsistId
+    ActAsistDesc
+    ActAsistAbrev
+    TipActAsistId
+    ActAsistFlgHab
+    ActAsistTipDat
+    ActAsistValMin
+    ActAsistValMax
+    UnidMedId
+    */
+}
+
+class DaoAtnClin extends DatabaseAccessor<GeoDatabase> with _$DaoAtnClinMixin {
+    
+    final GeoDatabase db;
+    
+    DaoAtnClin(this.db) : super(db);
+
+    Future<List<AtnClin>> allAtnClin() => select(AtnClin).get();
+
+    Stream<List<AtnClin>> watchAtnClin() => select(AtnClin).watch();
+
+    Future insAtnClin(AtnClin AtnClin) => into(AtnClin).insert(AtnClin);
+
+    Future updAtnClin(AtnClin AtnClin) => update(AtnClin).replace(AtnClin);
+
+    Future delAtnClin(AtnClin AtnClin) => delete(AtnClin).delete(AtnClin);
+
+    /*
+    AntClinId
+    AntClinDesc
+    AntClinFlgHab
+    TipAntClinId
+    AntClinAlert
+    AntClinAlertDsc
+    AntClinSexo
+    AntClinFlgFactRiesg
+    AntCliFlgHabRep
+    */
+}
+
+class DaoDrogas extends DatabaseAccessor<GeoDatabase> with _$DaoDrogasMixin {
+    
+    final GeoDatabase db;
+    
+    DaoDrogas(this.db) : super(db);
+
+    Future<List<Drogas>> allDrogas() => select(Drogas).get();
+
+    Stream<List<Drogas>> watchDrogas() => select(Drogas).watch();
+
+    Future insDrogas(Drogas Drogas) => into(Drogas).insert(Drogas);
+
+    Future updDrogas(Drogas Drogas) => update(Drogas).replace(Drogas);
+
+    Future delDrogas(Drogas Drogas) => delete(Drogas).delete(Drogas);
+
+    /*
+    DroId
+    DroDesc
+    */
+}
+
+class DaoFarmacos extends DatabaseAccessor<GeoDatabase> with _$DaoFarmacosMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFarmacos(this.db) : super(db);
+
+    Future<List<Farmacos>> allFarmacos() => select(Farmacos).get();
+
+    Stream<List<Farmacos>> watchFarmacos() => select(Farmacos).watch();
+
+    Future insFarmacos(Farmacos Farmacos) => into(Farmacos).insert(Farmacos);
+
+    Future updFarmacos(Farmacos Farmacos) => update(Farmacos).replace(Farmacos);
+
+    Future delFarmacos(Farmacos Farmacos) => delete(Farmacos).delete(Farmacos);
+
+    /*
+    FarId
+    FarNom
+    FarFlgHab
+    FarDrogComp
+    FarPresMedicId
+    FarDosCnt
+    FarDosUnidMedId
+    FarFlgEsSuero
+    FarFlgEsAdit
+    */
+}
+
+class DaoFarVia extends DatabaseAccessor<GeoDatabase> with _$DaoFarViaMixin {
+    
+    final GeoDatabase db;
+    
+    DaoFarVia(this.db) : super(db);
+
+    Future<List<FarVia>> allFarVia() => select(FarVia).get();
+
+    Stream<List<FarVia>> watchFarVia() => select(FarVia).watch();
+
+    Future insFarVia(FarVia FarVia) => into(FarVia).insert(FarVia);
+
+    Future updFarVia(FarVia FarVia) => update(FarVia).replace(FarVia);
+
+    Future delFarVia(FarVia FarVia) => delete(FarVia).delete(FarVia);
+
+    /*
+    FarId
+    ViaAdmMedicId
+    */
+}
+
+class DaoMateriales extends DatabaseAccessor<GeoDatabase> with _$DaoMaterialesMixin {
+    
+    final GeoDatabase db;
+    
+    DaoMateriales(this.db) : super(db);
+
+    Future<List<Materiales>> allMateriales() => select(Materiales).get();
+
+    Stream<List<Materiales>> watchMateriales() => select(Materiales).watch();
+
+    Future insMateriales(Materiales Materiales) => into(Materiales).insert(Materiales);
+
+    Future updMateriales(Materiales Materiales) => update(Materiales).replace(Materiales);
+
+    Future delMateriales(Materiales Materiales) => delete(Materiales).delete(Materiales);
+
+    /*
+    MatId
+    MatNom
+    MatBajFlg
+    */
+}
+
+class DaoMatUniMed extends DatabaseAccessor<GeoDatabase> with _$DaoMatUniMedMixin {
+    
+    final GeoDatabase db;
+    
+    DaoMatUniMed(this.db) : super(db);
+
+    Future<List<MatUniMed>> allMatUniMed() => select(MatUniMed).get();
+
+    Stream<List<MatUniMed>> watchMatUniMed() => select(MatUniMed).watch();
+
+    Future insMatUniMed(MatUniMed MatUniMed) => into(MatUniMed).insert(MatUniMed);
+
+    Future updMatUniMed(MatUniMed MatUniMed) => update(MatUniMed).replace(MatUniMed);
+
+    Future delMatUniMed(MatUniMed MatUniMed) => delete(MatUniMed).delete(MatUniMed);
+
+    /*
+    MatId
+    MatUnidMedId
+    */
+}
+
+class DaoPresentaciones extends DatabaseAccessor<GeoDatabase> with _$DaoPresentacionesMixin {
+    
+    final GeoDatabase db;
+    
+    DaoPresentaciones(this.db) : super(db);
+
+    Future<List<Presentaciones>> allPresentaciones() => select(Presentaciones).get();
+
+    Stream<List<Presentaciones>> watchPresentaciones() => select(Presentaciones).watch();
+
+    Future insPresentaciones(Presentaciones Presentaciones) => into(Presentaciones).insert(Presentaciones);
+
+    Future updPresentaciones(Presentaciones Presentaciones) => update(Presentaciones).replace(Presentaciones);
+
+    Future delPresentaciones(Presentaciones Presentaciones) => delete(Presentaciones).delete(Presentaciones);
+
+    /*
+    PresMedicId
+    PresMedicNom
+    */
+}
+
+class DaoPresMedicVia extends DatabaseAccessor<GeoDatabase> with _$DaoPresMedicViaMixin {
+    
+    final GeoDatabase db;
+    
+    DaoPresMedicVia(this.db) : super(db);
+
+    Future<List<PresMedicVia>> allPresMedicVia() => select(PresMedicVia).get();
+
+    Stream<List<PresMedicVia>> watchPresMedicVia() => select(PresMedicVia).watch();
+
+    Future insPresMedicVia(PresMedicVia PresMedicVia) => into(PresMedicVia).insert(PresMedicVia);
+
+    Future updPresMedicVia(PresMedicVia PresMedicVia) => update(PresMedicVia).replace(PresMedicVia);
+
+    Future delPresMedicVia(PresMedicVia PresMedicVia) => delete(PresMedicVia).delete(PresMedicVia);
+
+    /*
+    PresMedicId
+    ViaAdmMedicId
+    */
+}
+
+class DaoPresMedicUniMed extends DatabaseAccessor<GeoDatabase> with _$DaoPresMedicUniMedMixin {
+    
+    final GeoDatabase db;
+    
+    DaoPresMedicUniMed(this.db) : super(db);
+
+    Future<List<PresMedicUniMed>> allPresMedicUniMed() => select(PresMedicUniMed).get();
+
+    Stream<List<PresMedicUniMed>> watchPresMedicUniMed() => select(PresMedicUniMed).watch();
+
+    Future insPresMedicUniMed(PresMedicUniMed PresMedicUniMed) => into(PresMedicUniMed).insert(PresMedicUniMed);
+
+    Future updPresMedicUniMed(PresMedicUniMed PresMedicUniMed) => update(PresMedicUniMed).replace(PresMedicUniMed);
+
+    Future delPresMedicUniMed(PresMedicUniMed PresMedicUniMed) => delete(PresMedicUniMed).delete(PresMedicUniMed);
+
+    /*
+    PresMedicId
+    UnidMedId
+    */
+}
