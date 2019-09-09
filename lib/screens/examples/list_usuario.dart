@@ -108,38 +108,78 @@ Container listarUsuarios(context, state) {
                   bool value = await Navigator.push(context,
                       MaterialPageRoute<bool>(builder: (BuildContext context) {
                     return Scaffold(
-                      body: Row(
-                        children: <Widget>[
-                          GestureDetector(
-                              child: Text('OK'),
-                              onTap: () {
-                                Navigator.pop(context, true);
-                              }),
-                              GestureDetector(
+                      appBar: AppBar(
+                        title: Text('Esta de Acuerdo?'),
+                      ),
+                      body: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          verticalDirection: VerticalDirection.up,
+                          children: <Widget>[
+                            RaisedButton(
+                              child: Text('Aceptar'),
+                              onPressed: () => Navigator.pop(context, true),
+                            ),
+                            RaisedButton(
                               child: Text('Cancelar'),
-                              onTap: () {
-                                Navigator.pop(context, false);
-                              }),
-                        ],
+                              onPressed: () => Navigator.pop(context, false),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }));
-                 if(value)
-                 {
+                  if (value) {
                     bloc.dispatch(DeleteUsuario(itemUser));
-                    final snackBar = SnackBar(content: Text('Borrado'), elevation: 6.0, backgroundColor: Colors.redAccent,);
+                    final snackBar = SnackBar(
+                      content: Text('Borrado'),
+                      elevation: 6.0,
+                      backgroundColor: Colors.redAccent,
+                    );
+                    Scaffold.of(context).removeCurrentSnackBar();
                     Scaffold.of(context).showSnackBar(snackBar);
-                    
-                 }
-
-                 
+                  } else {
+                    final snackBar = SnackBar(
+                        content: Text('Accion Cancelada'),
+                        elevation: 6.0,
+                        backgroundColor: Colors.orange);
+                        Scaffold.of(context).removeCurrentSnackBar();
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  }
                 },
               ),
             ),
             Expanded(
               child: IconButton(
                 icon: Icon(Icons.edit),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute<bool>(builder: (BuildContext context) {
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: Text('Formulario'),
+                      ),
+                      body: Center(
+                        child: Form(
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                decoration:
+                                    InputDecoration(labelText: 'campo 1'),
+                              ),
+                              TextFormField(
+                                  decoration:
+                                      InputDecoration(labelText: 'campo 2')),
+                              TextFormField(
+                                  decoration:
+                                      InputDecoration(labelText: 'campo 3'))
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }));
+                },
               ),
             )
           ],
