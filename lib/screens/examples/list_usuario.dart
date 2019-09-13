@@ -102,6 +102,9 @@ Container listarUsuarios(context, state) {
               child: Text(itemUser.statusId.toString()),
             ),
             Expanded(
+              child: Text(itemUser.usuApe2),
+            ),
+            Expanded(
               child: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () async {
@@ -143,7 +146,7 @@ Container listarUsuarios(context, state) {
                         content: Text('Accion Cancelada'),
                         elevation: 6.0,
                         backgroundColor: Colors.orange);
-                        Scaffold.of(context).removeCurrentSnackBar();
+                    Scaffold.of(context).removeCurrentSnackBar();
                     Scaffold.of(context).showSnackBar(snackBar);
                   }
                 },
@@ -159,23 +162,8 @@ Container listarUsuarios(context, state) {
                       appBar: AppBar(
                         title: Text('Formulario'),
                       ),
-                      body: Center(
-                        child: Form(
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                decoration:
-                                    InputDecoration(labelText: 'campo 1'),
-                              ),
-                              TextFormField(
-                                  decoration:
-                                      InputDecoration(labelText: 'campo 2')),
-                              TextFormField(
-                                  decoration:
-                                      InputDecoration(labelText: 'campo 3'))
-                            ],
-                          ),
-                        ),
+                      body: new FormContainer(
+                        usuario: itemUser,
                       ),
                     );
                   }));
@@ -187,4 +175,54 @@ Container listarUsuarios(context, state) {
       );
     },
   ));
+}
+
+class FormContainer extends StatelessWidget {
+  final Usuarios usuario;
+  const FormContainer({Key key, this.usuario}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10),
+          child: Form(
+            autovalidate: true,
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Primer Nombre'),
+                  initialValue: usuario.usuNom,
+                  validator: (String value) {
+                    return value.contains('@')
+                        ? 'Do not use the @ char.'
+                        : null;
+                  },
+                ),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'Segundo Nombre'),
+                    initialValue: usuario.usuNom2),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'Prmer Apellido'),
+                    initialValue: null),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'Segundo Apellido'),
+                    initialValue: usuario.usuApe2),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'Usuario'),
+                    initialValue: usuario.usuNick),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'password'),
+                    initialValue: usuario.usuKeyPass),
+                TextFormField(
+                    decoration: InputDecoration(labelText: 'Status'),
+                    initialValue: usuario.statusId.toString())
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
